@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <!--Boton Nuevo-->
+    <item
+        android:id="@+id/Nombre_usuario"
+        android:title=""
+        android:visible="true"
+        />
+
+    <item
+        android:id="@+id/action_add"
+        android:icon="@mipmap/ic_action_new"
+        android:title="action_add"
+        app:showAsAction="always">
+        <!--MENU-->
+        <menu>
+        <item android:id="@+id/insertar_usuario" android:title="Registrar Usuario" />
+        <item android:id="@+id/insertar_producto" android:title="Registrar Producto" />
+        </menu>
+    </item>
+
+    <!--Boton Editar-->
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@mipmap/ic_action_edit"
+        android:title="action_edit"
+        app:showAsAction="always" >
+        <!--MENU-->
+        <menu>
+            <item android:id="@+id/editar_usuario" android:title="Editar Usuario" />
+            <item android:id="@+id/borrar_producto" android:title="Borrar Usuario" />
+        </menu>
+    </item>
+
+    <!--MENU-->
+    <item android:id="@+id/setting" android:title="Setting" />
+    <item android:id="@+id/Help" android:title="Help" />
+    <item android:id="@+id/About" android:title="About" />
+</menu>
