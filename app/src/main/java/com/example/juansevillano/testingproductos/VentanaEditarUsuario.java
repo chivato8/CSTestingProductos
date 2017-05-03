@@ -33,7 +33,7 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
     SQLiteDatabase db;
 
     //ID Usuario Elegido.
-    String elegido="-1";
+    String elegido;
 
     //Definimos una Variable de tipo Cursor
     Cursor res;
@@ -75,10 +75,80 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
         setupTabIcons();
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
-        //Pedimos al Usuario que elige un usuario de la lista.
-        createRadioListDialog();
+        elegido= getIntent().getStringExtra("elegido");
 
     }
+
+    /**
+     * @name private void  funcionBD()
+     * @description Funcion gestion de la base de datos
+     * @return void
+     */
+    /*private void  funcionBD()
+    {
+
+        //Abrimos la Base de datos "BDUsuario" en modo escritura.
+        BDUsuarioIngrediente UsuarioIngrediente=new BDUsuarioIngrediente(this,"BDUsuarioIngrediente",null,1);
+
+        //Ponemos la Base de datos en Modo Escritura.
+        db= UsuarioIngrediente.getWritableDatabase();
+
+        //Toast.makeText(getBaseContext(), "Usuario Cargado Correctamente", Toast.LENGTH_LONG).show();
+
+        //Comprobamos que la base de datos existe
+        if(db!=null)
+        {
+
+            //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan','Santander')");
+            //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan2','Santander2')");
+
+            //Obtenemos el id_usuario que hemos elegido
+            String[] elegido = new String[] {objeto.toString()};
+
+            //Realizamos una consulta, en la que buscamos el usaurio elegido.
+            Cursor cu=db.rawQuery("SELECT Nombre, Apellidos, Telefono, Correo_Electronico FROM Usuarios WHERE ID=?",elegido);
+
+            //Realizamos una consulta, en la que buscamos los ingredientes con los que esta relacionado el usuario elegido.
+            Cursor cui=db.rawQuery("SELECT id_ingrediente FROM Usuario_Ingrediente WHERE id_usuario=?",elegido);
+
+            if(cu.getCount()>0) //La Base de Datos SI tiene Usuario Registrado
+            {
+                //count.moveToFirst();
+                //Toast.makeText(getBaseContext(), "Usuarios Registrados: " + count.getCount(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "Accediendo a la Aplicación.", Toast.LENGTH_SHORT).show();
+
+                //Cerramos la Base de Datos
+                //db.close();
+
+                //Accedemos a la Aplición para la Eleccion del Modo de Escaneo
+                //Intent ListSong = new Intent(getApplicationContext(), VentanaOpcionesEscaner.class);
+                //startActivity(ListSong);
+                //finish();
+
+            }//La Base de Datos NO tiene Ningun Usuario Registrado
+            else
+            {
+                Toast.makeText(getBaseContext(), "!BASE DE DATOS VACIA¡ - Procederemos al Registro de un Usuario.", Toast.LENGTH_SHORT).show();
+
+                //Esperamos 50 milisegundos
+                SystemClock.sleep(50);
+
+                //Cerramos la Base de Datos
+                //db.close();
+
+                //Accedemos a la Pantalla del Registro del Usuario
+                //Intent ListSong = new Intent(getApplicationContext(), VentanaRegistroUsuario.class);
+                //startActivity(ListSong);
+                //finish();
+            }
+
+            //Log.i(this.getClass().toString(), "Datos Iniciales INSERTADOS");
+        }
+
+        //Cerramos la Base de Datos
+        db.close();
+
+    }*/
 
     private void setupTabIcons() {
 
@@ -130,63 +200,6 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-    }
-
-    /**
-     * @name public int createRadioListDialog()
-     * @description Crea un diálogo con una lista de radios para la Eleccion de Usuario
-     * @return int
-     */
-    public void createRadioListDialog() {
-
-        //Definimos un vector MenuItem, que representa los elementos que tienen.
-        final CharSequence[] items;
-
-        //Abrimos la Base de datos "BDUsuario" en modo escritura.
-        BDUsuario bdUsuarios=new BDUsuario(this,"BDUsuario",null,1);
-
-        SQLiteDatabase db = bdUsuarios.getWritableDatabase();
-        res=db.rawQuery("SELECT ID, Nombre, Apellidos FROM Usuarios",null);
-        //db.close();
-
-        //Definimos una variable de tipo CharSequence de tamaño res.getCount()
-        items=new CharSequence[res.getCount()];
-
-        //Movemos el cursor al primer elemento
-        res.moveToFirst();
-
-        //Mostramos los datos mediente un bucle for
-        for (int i=0;i<items.length;i++) {
-            items[i]=res.getString(1) + " "+res.getString(2);
-            res.moveToNext();
-        }
-
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-        builder.setTitle("Selecciones el Usuario que deseas Editar:");
-
-        //Mostramos la lista de usuarios a elegir para poder empezar la lectura de codigos de barras
-        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int item) {
-                //Movemos el cursor al primer elemento
-                res.moveToPosition(item);
-                elegido=res.getString(0);
-                int num=Integer.parseInt(elegido);
-                Toast toast = Toast.makeText(getApplicationContext(), "Haz elegido la opcion: " +res.getString(1)+" "+elegido, Toast.LENGTH_SHORT);
-                toast.show();
-                dialog.cancel();
-                if(!elegido.equals("-1"))
-                {
-                    Intent ListSong = new Intent(getApplicationContext(), VentanaEditarUsuario.class);
-                    startActivity(ListSong);
-                    finish();
-                }
-            }
-
-        });
-
-        android.support.v7.app.AlertDialog alert = builder.create();
-        alert.show();
     }
 
     /**

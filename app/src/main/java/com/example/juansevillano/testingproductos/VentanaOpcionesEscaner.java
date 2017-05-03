@@ -106,12 +106,70 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 startActivity(intentregistro);
                 return true;
             case R.id.editar_usuario:
-                Intent intenteditar = new Intent (this,VentanaEditarUsuario.class);
-                startActivity(intenteditar);
+                //Pedimos al Usuario que elige un usuario de la lista.
+                createRadioListDialogEditar();
                 return true;
             default:
                 return true;
         }
+    }
+
+    /**
+     * @name public int createRadioListDialogEditar()
+     * @description Crea un diálogo con una lista de radios para la Eleccion de Usuario
+     * @return int
+     */
+    public void createRadioListDialogEditar() {
+
+        //Definimos un vector MenuItem, que representa los elementos que tienen.
+        final CharSequence[] items;
+
+        //Abrimos la Base de datos "BDUsuario" en modo escritura.
+        BDUsuario bdUsuarios=new BDUsuario(this,"BDUsuario",null,1);
+
+        SQLiteDatabase db = bdUsuarios.getWritableDatabase();
+        res=db.rawQuery("SELECT ID, Nombre, Apellidos FROM Usuarios",null);
+        //db.close();
+
+        //Definimos una variable de tipo CharSequence de tamaño res.getCount()
+        items=new CharSequence[res.getCount()];
+
+        //Movemos el cursor al primer elemento
+        res.moveToFirst();
+
+        //Mostramos los datos mediente un bucle for
+        for (int i=0;i<items.length;i++) {
+            items[i]=res.getString(1) + " "+res.getString(2);
+            res.moveToNext();
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Selecciona el Usuario que deseas Editar:");
+
+        //Mostramos la lista de usuarios a elegir para poder empezar la lectura de codigos de barras
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int item) {
+                //Movemos el cursor al primer elemento
+                res.moveToPosition(item);
+                elegido=res.getString(0);
+                int num=Integer.parseInt(elegido);
+                Toast toast = Toast.makeText(getApplicationContext(), "Haz elegido la opcion: " +res.getString(1)+" "+elegido, Toast.LENGTH_SHORT);
+                toast.show();
+                dialog.cancel();
+                if(!elegido.equals("-1"))
+                {
+                    Intent ListSong = new Intent (VentanaOpcionesEscaner.this, VentanaEditarUsuario.class);
+                    ListSong.putExtra("elegido", elegido);
+                    startActivity(ListSong);
+                    finish();
+                }
+            }
+
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     /**
