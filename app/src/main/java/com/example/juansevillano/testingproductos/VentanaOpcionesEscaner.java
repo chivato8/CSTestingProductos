@@ -70,7 +70,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
         {
             if(elegido.equals("-1"))
             {
-                createRadioListDialog();
+
             }
             else
             {
@@ -153,7 +153,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 //Movemos el cursor al primer elemento
                 res.moveToPosition(item);
                 elegido=res.getString(0);
-                int num=Integer.parseInt(elegido);
+                //int num=Integer.parseInt(elegido);
                 Toast toast = Toast.makeText(getApplicationContext(), "Haz elegido la opcion: " +res.getString(1)+" "+elegido, Toast.LENGTH_SHORT);
                 toast.show();
                 dialog.cancel();
@@ -211,7 +211,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 //Movemos el cursor al primer elemento
                 res.moveToPosition(item);
                 elegido=res.getString(0);
-                int num=Integer.parseInt(elegido);
+                //int num=Integer.parseInt(elegido);
                 Toast toast = Toast.makeText(getApplicationContext(), "Haz elegido la opcion: " +res.getString(1)+" "+elegido, Toast.LENGTH_SHORT);
                 toast.show();
                 dialog.cancel();

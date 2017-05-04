@@ -32,11 +32,10 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
     //Definimos una variable de tipo SQLiteDatabase
     SQLiteDatabase db;
 
+    //Definimos una Variable de tipo Cursor
+    public Cursor res;
     //ID Usuario Elegido.
     String elegido;
-
-    //Definimos una Variable de tipo Cursor
-    Cursor res;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
 
         manager = getFragmentManager();
 
-        fragments.add(new RegistroUsuario());
+        fragments.add(new EditarUsuario());
         fragments.add(new AlergenicoAltamuz());
         fragments.add(new FinRegistroUsuario());
 
@@ -67,6 +66,9 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //ID Usuario Elegido.
+        elegido=getIntent().getStringExtra("elegido");
+
 
         FragmentViewPagerAdapter2 adapter = new FragmentViewPagerAdapter2(this.getSupportFragmentManager(), viewPager,fragments);
 
@@ -75,80 +77,11 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
         setupTabIcons();
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
-        elegido= getIntent().getStringExtra("elegido");
-
     }
 
-    /**
-     * @name private void  funcionBD()
-     * @description Funcion gestion de la base de datos
-     * @return void
-     */
-    /*private void  funcionBD()
-    {
-
-        //Abrimos la Base de datos "BDUsuario" en modo escritura.
-        BDUsuarioIngrediente UsuarioIngrediente=new BDUsuarioIngrediente(this,"BDUsuarioIngrediente",null,1);
-
-        //Ponemos la Base de datos en Modo Escritura.
-        db= UsuarioIngrediente.getWritableDatabase();
-
-        //Toast.makeText(getBaseContext(), "Usuario Cargado Correctamente", Toast.LENGTH_LONG).show();
-
-        //Comprobamos que la base de datos existe
-        if(db!=null)
-        {
-
-            //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan','Santander')");
-            //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan2','Santander2')");
-
-            //Obtenemos el id_usuario que hemos elegido
-            String[] elegido = new String[] {objeto.toString()};
-
-            //Realizamos una consulta, en la que buscamos el usaurio elegido.
-            Cursor cu=db.rawQuery("SELECT Nombre, Apellidos, Telefono, Correo_Electronico FROM Usuarios WHERE ID=?",elegido);
-
-            //Realizamos una consulta, en la que buscamos los ingredientes con los que esta relacionado el usuario elegido.
-            Cursor cui=db.rawQuery("SELECT id_ingrediente FROM Usuario_Ingrediente WHERE id_usuario=?",elegido);
-
-            if(cu.getCount()>0) //La Base de Datos SI tiene Usuario Registrado
-            {
-                //count.moveToFirst();
-                //Toast.makeText(getBaseContext(), "Usuarios Registrados: " + count.getCount(), Toast.LENGTH_LONG).show();
-                Toast.makeText(getBaseContext(), "Accediendo a la Aplicación.", Toast.LENGTH_SHORT).show();
-
-                //Cerramos la Base de Datos
-                //db.close();
-
-                //Accedemos a la Aplición para la Eleccion del Modo de Escaneo
-                //Intent ListSong = new Intent(getApplicationContext(), VentanaOpcionesEscaner.class);
-                //startActivity(ListSong);
-                //finish();
-
-            }//La Base de Datos NO tiene Ningun Usuario Registrado
-            else
-            {
-                Toast.makeText(getBaseContext(), "!BASE DE DATOS VACIA¡ - Procederemos al Registro de un Usuario.", Toast.LENGTH_SHORT).show();
-
-                //Esperamos 50 milisegundos
-                SystemClock.sleep(50);
-
-                //Cerramos la Base de Datos
-                //db.close();
-
-                //Accedemos a la Pantalla del Registro del Usuario
-                //Intent ListSong = new Intent(getApplicationContext(), VentanaRegistroUsuario.class);
-                //startActivity(ListSong);
-                //finish();
-            }
-
-            //Log.i(this.getClass().toString(), "Datos Iniciales INSERTADOS");
-        }
-
-        //Cerramos la Base de Datos
-        db.close();
-
-    }*/
+    public String getMyData() {
+        return elegido;
+    }
 
     private void setupTabIcons() {
 
@@ -163,7 +96,7 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
      */
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new RegistroUsuario(), "Registro");
+        adapter.addFrag(new EditarUsuario(), "Editar");
         adapter.addFrag(new AlergenicoAltamuz(), "Altamuces");
         //adapter.addFrag(new ThreeFragment(), "Tres");
         //adapter.addFrag(new FourFragment(), "Cuatro");

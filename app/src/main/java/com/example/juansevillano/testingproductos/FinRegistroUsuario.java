@@ -62,7 +62,7 @@ public class FinRegistroUsuario extends Fragment {
                 // Se une FragmentActivity
                 final VentanaRegistroUsuario activity = ((VentanaRegistroUsuario)getActivity());
 
-                // Obtener el control de la TabAFm
+                // Obtener el control de los EditText de los Fragment
                 System.out.println("PRUEBA - 1");
                 EditText nom = (EditText)activity.fragments.get(0).getView().findViewById(R.id.nombreU);
                 String nombre= nom.getText().toString();
