@@ -1,7 +1,6 @@
 package com.example.juansevillano.testingproductos;
 
 import android.app.Activity;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,9 +28,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by Juan Sevillano on 12/04/2017.
+ * Created by Juan Sevillano on 09/05/2017.
  */
-public class AlergenicoAltamuz extends Fragment{
+public class AlergenicoCacahuete extends Fragment{
 
     //Se crea un ArrayList de tipo Dias//
     ArrayList<Ingredientes> ingredientes = new ArrayList<Ingredientes>();
@@ -42,7 +41,7 @@ public class AlergenicoAltamuz extends Fragment{
     //Se crear un objetio de tipo ObtenerWebService
     ObtenerWebService hiloconexion;
 
-    public AlergenicoAltamuz() {
+    public AlergenicoCacahuete() {
         // Required empty public constructor
     }
 
@@ -58,7 +57,7 @@ public class AlergenicoAltamuz extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_alergenico_altamuz, container, false);
+        return inflater.inflate(R.layout.activity_alergenico_cacahuete, container, false);
     }
 
     public void onActivityCreated(Bundle state) {
@@ -66,7 +65,7 @@ public class AlergenicoAltamuz extends Fragment{
         // IP de mi Url
         String IP = "http://tfgalimentos.16mb.com";
         // Rutas de los Web Services
-        String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=1";
+        String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=4";
 
         lstLista = (ListView) getView().findViewById(R.id.lstLista);
 

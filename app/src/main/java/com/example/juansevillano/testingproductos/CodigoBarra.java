@@ -10,6 +10,9 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+/**
+ * Created by Juan Sevillano on 29/03/2017.
+ */
 public class CodigoBarra extends AppCompatActivity {
 
     private TextView formatTxt, contentTxt;

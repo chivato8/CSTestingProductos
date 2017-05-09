@@ -61,6 +61,9 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
 
         fragments.add(new RegistroUsuario());
         fragments.add(new AlergenicoAltamuz());
+        fragments.add(new AlergenicoApio());
+        fragments.add(new AlergenicoAzufreySulfitos());
+        fragments.add(new AlergenicoCacahuete());
         fragments.add(new FinRegistroUsuario());
 
         //fragments.add(new FourFragment());
@@ -84,7 +87,10 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
 
         tabLayout.getTabAt(0).setIcon(R.mipmap.registrousuario);
         tabLayout.getTabAt(1).setIcon(R.mipmap.altamucesmini);
-        tabLayout.getTabAt(2).setIcon(R.mipmap.finregistroico);
+        tabLayout.getTabAt(2).setIcon(R.mipmap.apiomini);
+        tabLayout.getTabAt(3).setIcon(R.mipmap.azucarmini);
+        tabLayout.getTabAt(4).setIcon(R.mipmap.cacahuetesmini);
+        tabLayout.getTabAt(5).setIcon(R.mipmap.finregistroico);
     }
 
     /**
@@ -94,7 +100,8 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new RegistroUsuario(), "Registro");
-        adapter.addFrag(new AlergenicoAltamuz(), "Altamuces");
+        adapter.addFrag(new AlergenicoAltamuz(), "Altamuz");
+        adapter.addFrag(new AlergenicoApio(), "Apio");
         //adapter.addFrag(new ThreeFragment(), "Tres");
         //adapter.addFrag(new FourFragment(), "Cuatro");
         //adapter.addFrag(new FiveFragment(), "Cinco");
