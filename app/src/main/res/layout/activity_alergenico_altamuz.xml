@@ -7,58 +7,48 @@
     android:layout_height="match_parent"
     tools:context="com.example.juansevillano.testingproductos.AlergenicoAltamuz">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/proceso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Proceso 2/17"
+            android:textSize="14dp"
+            android:layout_gravity="right"/>
+
+        <TextView
+            android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center|right"
-            android:orientation="vertical" >
-            <TextView
-                android:id="@+id/proceso"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Proceso 2/17"
-                android:textSize="14dp"
-                />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="10sp"
+            android:text="Todos los Ingrediente Alergenicos del tipo Altamuz"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
 
-                        <TextView
-                            android:id="@+id/textView6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:lineSpacingExtra="10sp"
-                            android:text="Todos los Ingrediente Alergenicos del tipo Altamuz"
-                            android:textAlignment="center"
-                            android:textAllCaps="false"
-                            android:textColor="#000000"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:typeface="serif" />
-
-                    </LinearLayout>
-            <ListView
-                android:id="@+id/lstLista"
-                android:layout_width="match_parent"
-                android:layout_height="392dp" >
-            </ListView>
-        </LinearLayout>
-    </ScrollView>
+        <ListView
+            android:id="@+id/lstLista"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="55dp"></ListView>
+    </LinearLayout>
 </RelativeLayout>
-

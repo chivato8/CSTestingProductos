@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.juansevillano.testingproductos.AlergenicoCacahuete">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -48,21 +47,10 @@
 
         <ListView
             android:id="@+id/lstLista"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"></ListView>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="55dp"></ListView>
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="200dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:gravity="center|right"
-            android:orientation="vertical">
-
-        </LinearLayout>
-    </ScrollView>
 </RelativeLayout>
 

@@ -64,6 +64,17 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
         fragments.add(new AlergenicoApio());
         fragments.add(new AlergenicoAzufreySulfitos());
         fragments.add(new AlergenicoCacahuete());
+        fragments.add(new AlergenicoCrustaceos());
+        fragments.add(new AlergenicoFrutosCascara());
+        fragments.add(new AlergenicoGluten());
+        fragments.add(new AlergenicoSesamo());
+        fragments.add(new AlergenicoHuevo());
+        fragments.add(new AlergenicoLacteos());
+        fragments.add(new AlergenicoMolusco());
+        fragments.add(new AlergenicoMostaza());
+        fragments.add(new AlergenicoPescado());
+        fragments.add(new AlergenicoSoja());
+        fragments.add(new AlergenicoOtros());
         fragments.add(new FinRegistroUsuario());
 
         //fragments.add(new FourFragment());
@@ -90,7 +101,18 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
         tabLayout.getTabAt(2).setIcon(R.mipmap.apiomini);
         tabLayout.getTabAt(3).setIcon(R.mipmap.azucarmini);
         tabLayout.getTabAt(4).setIcon(R.mipmap.cacahuetesmini);
-        tabLayout.getTabAt(5).setIcon(R.mipmap.finregistroico);
+        tabLayout.getTabAt(5).setIcon(R.mipmap.mariscomini);
+        tabLayout.getTabAt(6).setIcon(R.mipmap.frutosdecascaramini);
+        tabLayout.getTabAt(7).setIcon(R.mipmap.glutenmini);
+        tabLayout.getTabAt(8).setIcon(R.mipmap.sesamomini);
+        tabLayout.getTabAt(9).setIcon(R.mipmap.huevosmini);
+        tabLayout.getTabAt(10).setIcon(R.mipmap.lacteosmini);
+        tabLayout.getTabAt(11).setIcon(R.mipmap.moluscosmini);
+        tabLayout.getTabAt(12).setIcon(R.mipmap.mostazamini);
+        tabLayout.getTabAt(13).setIcon(R.mipmap.pescadomini);
+        tabLayout.getTabAt(14).setIcon(R.mipmap.sojamini);
+        tabLayout.getTabAt(15).setIcon(R.mipmap.otrosmini);
+        tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);
     }
 
     /**
@@ -102,10 +124,19 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
         adapter.addFrag(new RegistroUsuario(), "Registro");
         adapter.addFrag(new AlergenicoAltamuz(), "Altamuz");
         adapter.addFrag(new AlergenicoApio(), "Apio");
-        //adapter.addFrag(new ThreeFragment(), "Tres");
-        //adapter.addFrag(new FourFragment(), "Cuatro");
-        //adapter.addFrag(new FiveFragment(), "Cinco");
-        //adapter.addFrag(new FiveFragment(), "Seis");
+        adapter.addFrag(new AlergenicoAzufreySulfitos(), "Azufre y Sulfitos");
+        adapter.addFrag(new AlergenicoCacahuete(), "Cacahuete");
+        adapter.addFrag(new AlergenicoCrustaceos(), "Crustaceos");
+        adapter.addFrag(new AlergenicoFrutosCascara(), "Frutos con Cascara");
+        adapter.addFrag(new AlergenicoGluten(), "Gluten");
+        adapter.addFrag(new AlergenicoSesamo(), "Sesamo");
+        adapter.addFrag(new AlergenicoHuevo(), "Huevo");
+        adapter.addFrag(new AlergenicoLacteos(), "Lacteos");
+        adapter.addFrag(new AlergenicoMolusco(), "Moluscos");
+        adapter.addFrag(new AlergenicoMostaza(), "Mostaza");
+        adapter.addFrag(new AlergenicoPescado(), "Pescado");
+        adapter.addFrag(new AlergenicoSoja(), "Soja");
+        adapter.addFrag(new AlergenicoOtros(), "Otros");
         adapter.addFrag(new FinRegistroUsuario(), "Fin Registro");
         viewPager.setAdapter(adapter);
     }
