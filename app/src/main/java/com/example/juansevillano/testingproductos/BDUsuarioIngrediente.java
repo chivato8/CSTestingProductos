@@ -32,8 +32,11 @@ public class BDUsuarioIngrediente extends SQLiteOpenHelper {
         //Si no Existe la BD la crea y ejecuta los siguientes comandos.
         db.execSQL( "CREATE TABLE Usuario_Ingrediente(" +
                 " id_usuario_ingrediente INTEGER PRIMARY KEY AUTOINCREMENT," +
-                " id_usuario INTEGER," +
-                " id_ingrediente INTEGER");
+                " id_usuario TEXT," +
+                " id_ingrediente TEXT)");
+
+        Log.i(this.getClass().toString(), "Tabla UsuariosIngredientes creada");
+        //db.close();
     }
 
     /**
@@ -44,12 +47,13 @@ public class BDUsuarioIngrediente extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //Se Elimina la Tabla anterior y la volvemos a crear.
-        db.execSQL("DROP TABLE IF EXISTS Usuarios");
+        db.execSQL("DROP TABLE IF EXISTS Ingrediente");
 
         //Vovemos a craer de nuevo la Tabla Alumnos.
         db.execSQL( "CREATE TABLE Usuario_Ingrediente(" +
                 " id_usuario_ingrediente INTEGER PRIMARY KEY AUTOINCREMENT," +
-                " id_usuario INTEGER," +
-                " id_ingrediente INTEGER");
+                " id_usuario TEXT," +
+                " id_ingrediente TEXT)");
+        db.close();
     }
 }

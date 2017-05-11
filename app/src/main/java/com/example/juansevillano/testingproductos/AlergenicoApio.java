@@ -100,6 +100,7 @@ public class AlergenicoApio extends Fragment{
         });
     }
 
+
     /**
      * Esta clase extiende de ArrayAdapter para poder personalizarla a nuestro gusto
      */
@@ -146,10 +147,13 @@ public class AlergenicoApio extends Fragment{
                 //Creamos un nuevo vistaitem que se almacenara en el tag de la vista
                 vistaitem = new VistaItem();
 
-                //Almacenamos en el objeto la referencia del TextView buscandolo por ID
+                //Almacenamos en el objeto la referencia del TextView que contiene el id de los ingredientes
+                vistaitem.id_ingrediente = (TextView) item.findViewById(R.id.idingrediente);
+
+                //Almacenamos en el objeto la referencia del TextView que contiene el nombre de los ingredientes
                 vistaitem.nombre = (TextView) item.findViewById(R.id.txtCompleto);
 
-                //tambien almacenamos en el objeto la referencia del CheckBox buscandolo por ID
+                //Tambien almacenamos en el objeto la referencia del CheckBox buscandolo por ID
                 vistaitem.chkEstado = (CheckBox) item.findViewById(R.id.chkEstado);
 
                 //Ahora si, guardamos en el tag de la vista el objeto vistaitem
@@ -161,6 +165,7 @@ public class AlergenicoApio extends Fragment{
             }
 
             //Se cargan los datos desde el ArrayList
+            vistaitem.id_ingrediente.setText(ingredientes.get(position).getid_ingrediente());
             vistaitem.nombre.setText(ingredientes.get(position).getingrediente());
             vistaitem.chkEstado.setChecked(ingredientes.get(position).isChekeado());
 
@@ -174,6 +179,7 @@ public class AlergenicoApio extends Fragment{
          */
         class VistaItem {
             TextView nombre;
+            TextView id_ingrediente;
             CheckBox chkEstado;
 
         }
@@ -237,8 +243,9 @@ public class AlergenicoApio extends Fragment{
                         //Recorremos el objeto anterior mostrando los ingredientes uno a uno
                         for(int i=0;i<pruebaJSON.length();i++)
                         {
-                            ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(i).getString("id_ingrediente") + " " +
-                                    pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),false));
+                            ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
+                                    pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
+                                    false));
                         }
                     }
                     //Si no existe ingredientes devolvemos un String comentado que no existe ingredientes

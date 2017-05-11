@@ -6,7 +6,7 @@ package com.example.juansevillano.testingproductos;
 
 public class Ingredientes {
 
-    private int id_ingrediente;
+    private String id_ingrediente;
     private String ingrediente;
     private String tipo_ingrediente;
     private boolean estado;
@@ -15,22 +15,31 @@ public class Ingredientes {
     {
     }
 
-    Ingredientes(int id_ingrediente, String ingrediente, String tipo_ingrediente)
+    Ingredientes(String id_ingrediente, String ingrediente, String tipo_ingrediente)
     {
         this.id_ingrediente=id_ingrediente;
         this.ingrediente=ingrediente;
         this.tipo_ingrediente=tipo_ingrediente;
     }
 
+    Ingredientes(String id_ingrediente,String ingrediente, boolean estado)
+    {
+        this.id_ingrediente=id_ingrediente;
+        this.ingrediente=ingrediente;
+        this.estado=estado;
+    }
+
+    //DE PRUEBA DESPUES ELIMINAR
     Ingredientes(String ingrediente, boolean estado)
     {
         this.ingrediente=ingrediente;
         this.estado=estado;
     }
+    //DE PRUEBA DESPUES ELIMINAR
 
-    public int getid_ingrediente(){return id_ingrediente;}
+    public String getid_ingrediente(){return id_ingrediente;}
 
-    public void setid_ingrediente(int id_ingrediente){this.id_ingrediente=id_ingrediente;}
+    public void setid_ingrediente(String id_ingrediente){this.id_ingrediente=id_ingrediente;}
 
     public String getingrediente()
     {

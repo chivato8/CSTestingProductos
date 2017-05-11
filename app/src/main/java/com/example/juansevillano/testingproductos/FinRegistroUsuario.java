@@ -26,7 +26,8 @@ import android.widget.Toast;
 public class FinRegistroUsuario extends Fragment {
 
     //Definimos una variable de tipo SQLiteDatabase
-    SQLiteDatabase db;
+    SQLiteDatabase dbUsuario;
+    SQLiteDatabase dbIngrediente;
 
     //Creamos un Objeto de Tipo Ingrediente
     Ingredientes ingrediente;
@@ -64,36 +65,70 @@ public class FinRegistroUsuario extends Fragment {
 
                 // Obtener el control de los EditText de los Fragment
                 System.out.println("PRUEBA - 1");
+                //Obtenemos el contenido del edittext del nombre del usuario
                 EditText nom = (EditText)activity.fragments.get(0).getView().findViewById(R.id.nombreU);
                 String nombre= nom.getText().toString();
+                //Obtenemos el contenido del edittext del apellidos del usuario
                 EditText apel = (EditText)activity.fragments.get(0).getView().findViewById(R.id.apellidos);
                 String apellidos = apel.getText().toString();
+                //Obtenemos el contenido del edittext del correo del usuario
                 EditText cor = (EditText)activity.fragments.get(0).getView().findViewById(R.id.correo);
                 String correo = cor.getText().toString();
+                //Obtenemos el contenido del edittext del telefono del usuario
                 EditText tel = (EditText)activity.fragments.get(0).getView().findViewById(R.id.telefono);
                 String telefono = tel.getText().toString();
 
+                //Comprobamos si el edittext nombre no es vacio y si el edittext apellidos no es vacio para poder introducir
+                // el usuario en la base de datos Usuario
                 if(!nombre.equals("")&&!apellidos.equals(""))
                 {
-                    System.out.println("PRUEBA - 2");
+                    //Insertamos los datos del Usuario en la Base de Datos llamada Usuario.
                     insertarUsuario(nombre,apellidos,telefono,correo);
-                    System.out.println("PRUEBA - 5");
-                    //Falta Insertar Lista de Transtornos Alimenticios en la Nueva Tabla
+
+                    //Toast.makeText(activity,nombre,Toast.LENGTH_SHORT).show();
+
+                    //Procedemos a introducir las tuplas con las que se relaciona el usuario con los ingredientes.
+                    //Por lo que recorredmos los 16 fragments de la Ventana Registro Usuario.
+                    for(int j=1; j<16;j++)
+                    {
+                        ListView lstLista = (ListView) activity.fragments.get(j).getView().findViewById(R.id.lstLista);
+
+                        int nItems = lstLista.getChildCount();
+                        CheckBox lMarcado;
+                        //Introducimos los id_ingredientes de los que esten marcados
+                        if(true){
+                            for (int i = 0; i < nItems; i++) {
+
+                                lMarcado = (CheckBox) lstLista.getChildAt(i).findViewById(R.id.chkEstado);
+                                if (lMarcado.isChecked())
+                                {
+                                    String id=((TextView)(lstLista.getChildAt(i).findViewById(R.id.idingrediente))).getText().toString();
+
+                                    insertar_idusuario_idingrediente(id.toString());
+
+                                    //Toast.makeText(activity, ((TextView)(lstLista.getChildAt(i).findViewById(R.id.idingrediente))).getText().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    }
+
 
                     Toast.makeText(getActivity().getBaseContext(), "!Usuarios Registrado Correctamente¡", Toast.LENGTH_LONG).show();
-
-                    //Cerramos la Base de Datos
-                    db.close();
 
                     //Esperamos 50 milisegundos
                     SystemClock.sleep(50);
 
                     getView().setId(R.id.restablecer);
 
+
                     Intent intent = new Intent (getActivity(),VentanaOpcionesEscaner.class);
                     startActivity(intent);
                     getActivity().finish();
+
+
                 }
+                //Si el edittext nombre y el edittex apellidos son vacios mostrarmos un mensaje u notificación advirtiendo
+                //que son campos obligatorios
                 else
                 {
                     LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -119,35 +154,6 @@ public class FinRegistroUsuario extends Fragment {
                     toast.setView(layout);
                     toast.show();
                 }
-
-
-
-
-
-                ///////////////////////////////////////////
-                ListView lstLista = (ListView) activity.fragments.get(1).getView().findViewById(R.id.lstLista);
-
-                int nItems = lstLista.getChildCount();
-                CheckBox lMarcado;
-                //TextView cCodigoMarcado;
-                String cMensaje = "Marcados\n\n";
-                if(true){
-                    for (int i = 0; i < nItems; i++) {
-
-                        lMarcado = (CheckBox) lstLista.getChildAt(i).findViewById(R.id.chkEstado);
-                        if (lMarcado.isChecked())
-                        {
-                            Toast.makeText(activity, ((TextView)(lstLista.getChildAt(i).findViewById(R.id.txtCompleto))).getText().toString(), Toast.LENGTH_SHORT).show();
-                            //cCodigoMarcado = ((TextView) lstLista.getChildAt(i).findViewById(R.id.txtDia)).getText().toString();
-
-                            //cMensaje = cMensaje + cCodigoMarcado + "\n";
-                        }
-                    }
-                }
-
-                //System.out.println(nombre.getText());
-
-                Toast.makeText(activity,nombre,Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -158,10 +164,7 @@ public class FinRegistroUsuario extends Fragment {
         BDUsuario bdUsuario = new BDUsuario(getView().getContext(), "BDUsuario", null, 1);
 
         //Ponemos la Base de datos en Modo Escritura.
-        db = bdUsuario.getWritableDatabase();
-        System.out.println("PRUEBA - 3");
-        //Definimos Usuario mediante un constructor
-        System.out.println("PRUEBA - 4");
+        dbUsuario = bdUsuario.getWritableDatabase();
 
         String Columna1="Nombre";
         String Columna2="Apellidos";
@@ -173,7 +176,39 @@ public class FinRegistroUsuario extends Fragment {
         contentValues.put(Columna2,apellidos);
         contentValues.put(Columna3,telefono);
         contentValues.put(Columna4,correo);
-        db.insert("Usuarios",null,contentValues);
-        db.close();
+        dbUsuario.insert("Usuarios",null,contentValues);
+        dbUsuario.close();
+    }
+
+    public void insertar_idusuario_idingrediente(String id_ingrediente)
+    {
+
+        //Abrimos la Base de datos "BDUsuario" en modo escritura.
+        BDUsuario Usuarios=new BDUsuario(getView().getContext(),"BDUsuario",null,1);
+
+        //Ponemos la Base de datos en Modo Escritura.
+        dbUsuario= Usuarios.getWritableDatabase();
+
+        //Comprobamos si la Base de datos con la que estamos trabajando esta VACIA
+        Cursor count=dbUsuario.rawQuery("SELECT Nombre FROM Usuarios",null);
+
+        //Obtenemos el id el ultimo usuario introducido en al base de datos Usuario
+        String id_usuario= String.valueOf(count.getCount());
+
+        //Abrimos la Base de datos "BDAlumnosIngrediente" en modo escritura.
+        BDUsuarioIngrediente bdUsuarioIngrediente = new BDUsuarioIngrediente(getView().getContext(), "BDUsuarioIngrediente", null, 1);
+
+        //Ponemos la Base de datos en Modo Escritura.
+        dbIngrediente = bdUsuarioIngrediente.getWritableDatabase();
+
+        String Columna1="id_usuario";
+        String Columna2="id_ingrediente";
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Columna1,id_usuario);
+        contentValues.put(Columna2,id_ingrediente);
+        dbIngrediente.insert("Usuario_Ingrediente",null,contentValues);
+        dbUsuario.close();
+        dbIngrediente.close();
     }
 }

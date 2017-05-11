@@ -56,7 +56,7 @@ public class BDUsuario extends SQLiteOpenHelper {
                 " Nombre TEXT," +
                 " Apellidos TEXT," +
                 " Telefono TEXT NULL," +
-                " Correo_electronico TEXT NULL);");
+                " Correo_electronico TEXT NULL)");
         db.close();
     }
 }
