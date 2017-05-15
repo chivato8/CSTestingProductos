@@ -104,6 +104,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
             case R.id.insertar_usuario:
                 Intent intentregistro = new Intent (this,VentanaRegistroUsuario.class);
                 startActivity(intentregistro);
+                finish();
                 return true;
             case R.id.editar_usuario:
                 //Pedimos al Usuario que elige un usuario de la lista.

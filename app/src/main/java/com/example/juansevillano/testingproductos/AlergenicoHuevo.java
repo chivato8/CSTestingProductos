@@ -1,9 +1,15 @@
 package com.example.juansevillano.testingproductos;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +32,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Juan Sevillano on 09/05/2017.
@@ -101,6 +110,50 @@ public class AlergenicoHuevo extends Fragment{
     }
 
     /**
+     * @name public boolean comprobarActivityALaVista(Context context, String nombreClase)
+     * @description Metodo para comprobar en que activity nos encontramos actualmente
+     * @return boolean
+     */
+    public boolean comprobarActivityALaVista(Context context, String nombreClase){
+
+        // Obtenemos nuestro manejador de activitys
+        ActivityManager am = (ActivityManager)
+                context.getSystemService(Context.ACTIVITY_SERVICE);
+        // obtenemos la informacion de la tarea que se esta ejecutando
+        // actualmente
+        List< ActivityManager.RunningTaskInfo > taskInfo = am.getRunningTasks(1);
+        // Creamos una variable donde vamos a almacenar
+        // la activity que se encuentra a la vista
+        String nombreClaseActual = null;
+
+        try{
+            // Creamos la variable donde vamos a guardar el objeto
+            // del que vamos a tomar el nombre
+            ComponentName componentName = null;
+            // si pudimos obtener la tarea actual, vamos a intentar cargar
+            // nuestro objeto
+            if(taskInfo != null && taskInfo.get(0) != null){
+                componentName = taskInfo.get(0).topActivity;
+            }
+            // Si pudimos cargar nuestro objeto, vamos a obtener
+            // el nombre con el que vamos a comparar
+            if(componentName != null){
+                nombreClaseActual = componentName.getClassName();
+                System.out.println(nombreClaseActual);
+            }
+
+        }catch (NullPointerException e){
+
+            Log.e(TAG, "Error al tomar el nombre de la clase actual " + e);
+            return false;
+        }
+
+        // devolvemos el resultado de la comparacion
+        return nombreClase.equals(nombreClaseActual);
+    }
+
+
+    /**
      * Esta clase extiende de ArrayAdapter para poder personalizarla a nuestro gusto
      */
     class Adaptador extends ArrayAdapter<Ingredientes> {
@@ -109,8 +162,10 @@ public class AlergenicoHuevo extends Fragment{
         ArrayList<Ingredientes> ingredientes;
 
         /**
-         * Constructor del AdaptadorDias donde se le pasaran por parametro el contexto de la aplicacion y
+         * @name public Adaptador(Activity context, ArrayList<Ingredientes> ingredientes)
+         * @description Constructor del AdaptadorDias donde se le pasaran por parametro el contexto de la aplicacion y
          * el ArrayList de los ingredientes
+         * @return void
          */
         public Adaptador(Activity context, ArrayList<Ingredientes> ingredientes) {
             //Llamada al constructor de la clase superior donde requiere el contexto, el layout y el arraylist
@@ -121,11 +176,12 @@ public class AlergenicoHuevo extends Fragment{
         }
 
         /**
-         * Este metodo es el que se encarga de dibujar cada Item de la lista
+         * @name public View getView(int position, View convertView, ViewGroup parent)
+         * @description Este metodo es el que se encarga de dibujar cada Item de la lista
          * y se invoca cada vez que se necesita mostrar un nuevo item.
          * En el se pasan parametros como la posicion del elemento mostrado, la vista (View) del elemento
          * mostrado y el conjunto de vistas
-         * @return void
+         * @return View
          */
         public View getView(int position, View convertView, ViewGroup parent) {
             View item = convertView;
@@ -239,13 +295,82 @@ public class AlergenicoHuevo extends Fragment{
                         //Obtenemos los ingrediente que vamos a mostrar en la aplicación
                         JSONArray pruebaJSON = objetoJSON.getJSONArray("Transtorno_Ingrediente");
 
-                        //Recorremos el objeto anterior mostrando los ingredientes uno a uno
-                        for(int i=0;i<pruebaJSON.length();i++)
+                        if(comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuario")==true)
                         {
-                            ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
-                                    pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
-                                    false));
+                            //Definimos una variable de tipo SQLiteDatabase
+                            SQLiteDatabase db;
+
+                            //Definimos una Variable de tipo Cursor
+                            Cursor res;
+
+                            //Abrimos la Base de datos "BDAlumnosIngrediente" en modo escritura.
+                            BDUsuarioIngrediente bdUsuarioIngrediente = new BDUsuarioIngrediente(getActivity(), "BDUsuarioIngrediente", null, 1);
+
+                            //Ponemos la Base de datos en Modo Escritura.
+                            db= bdUsuarioIngrediente.getWritableDatabase();
+
+                            // Obtener el control de la VentanaEditarUsuario
+                            final VentanaEditarUsuario activity = ((VentanaEditarUsuario) getActivity());
+
+                            //VentanaEditarUsuario activity = new VentanaEditarUsuario();
+
+                            //Obtenemos el id_usuario que hemos elegido
+                            String[] elusuario = new String[] {activity.getMyData()};
+
+                            System.out.println(elusuario[0]);
+
+                            //Realizamos una consulta, en la que buscamos el usaurio elegido.
+                            res=db.rawQuery("SELECT id_ingrediente FROM Usuario_Ingrediente WHERE id_usuario=?",elusuario);
+
+
+                            int total= res.getCount();
+
+                            boolean [] id=new boolean[pruebaJSON.length()];
+
+                            for(int x=0;x<id.length;x++)
+                            {
+                                id[x]=false;
+                            }
+
+                            for(int j=0;j<pruebaJSON.length();j++)
+                            {
+                                res.moveToFirst();
+                                //Recorremos el objeto anterior mostrando los ingredientes uno a uno
+                                for(int i=0; i<total;i++)
+                                {
+                                    if(res.getString(0).equals(pruebaJSON.getJSONObject(j).getString("id_ingrediente")))
+                                    {
+                                        id[j]=true;
+                                    }
+                                    res.moveToNext();
+                                }
+
+                                if(id[j]==true) {
+                                    ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                            pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
+                                            true));
+                                }
+                                else
+                                {
+                                    ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                            pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
+                                            false));
+                                }
+
+                            }
+                            db.close();
                         }
+                        else
+                        {
+                            //Recorremos el objeto anterior mostrando los ingredientes uno a uno
+                            for(int i=0;i<pruebaJSON.length();i++)
+                            {
+                                ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
+                                        pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
+                                        false));
+                            }
+                        }
+
                     }
                     //Si no existe ingredientes devolvemos un String comentado que no existe ingredientes
                     else if (resultJSON.equals("2")){

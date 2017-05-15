@@ -247,8 +247,6 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
                     alertDialog.show();
 
                 }
-
-                Log.i(this.getClass().toString(), "Datos Iniciales Alumnos INSERTADOS");
             }
 
             //Cerramos la Base de Datos
