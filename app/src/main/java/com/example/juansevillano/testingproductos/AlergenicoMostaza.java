@@ -108,7 +108,6 @@ public class AlergenicoMostaza extends Fragment{
             }
         });
     }
-
     /**
      * @name public boolean comprobarActivityALaVista(Context context, String nombreClase)
      * @description Metodo para comprobar en que activity nos encontramos actualmente

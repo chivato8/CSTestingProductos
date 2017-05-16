@@ -76,7 +76,6 @@ public class RegistroUsuario extends Fragment{
             db= Usuario.getWritableDatabase();
 
             // Obtener el control de la TabAFm
-            System.out.println("PRUEBA - 1");
 
             final VentanaEditarUsuario activity = ((VentanaEditarUsuario) getActivity());
 
@@ -85,16 +84,11 @@ public class RegistroUsuario extends Fragment{
             //Obtenemos el id_usuario que hemos elegido
             String[] elusuario = new String[] {activity.getMyData()};
 
-            System.out.println(elusuario[0]);
-
-            System.out.println("PRUEBA - 2");
-
             //Realizamos una consulta, en la que buscamos el usaurio elegido.
             res=db.rawQuery("SELECT Nombre, Apellidos, Telefono, Correo_Electronico FROM Usuarios WHERE ID=?",elusuario);
 
+            //Movemos el cursor al primer elemento
             res.moveToFirst();
-
-            System.out.println("PRUEBA - 3 ");
 
             // Se une FragmentActivity
             final VentanaEditarUsuario activity2 = ((VentanaEditarUsuario) getActivity());
@@ -115,7 +109,6 @@ public class RegistroUsuario extends Fragment{
             tel.setText(res.getString(2));
             cor.setText(res.getString(3));
 
-            System.out.println("PRUEBA - 4");
 
             db.close();
         }

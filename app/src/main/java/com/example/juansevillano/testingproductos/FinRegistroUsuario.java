@@ -1,5 +1,7 @@
 package com.example.juansevillano.testingproductos;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.app.Activity;
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +25,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
+
 
 public class FinRegistroUsuario extends Fragment {
+
+    //Obtenemos el contenido del edittext del nombre del usuario
+    EditText nom;
+    String nombre;
+    //Obtenemos el contenido del edittext del apellidos del usuario
+    EditText apel;
+    String apellidos;
+    //Obtenemos el contenido del edittext del correo del usuario
+    EditText cor;
+    String correo;
+    //Obtenemos el contenido del edittext del telefono del usuario
+    EditText tel;
+    String telefono;
 
     //Definimos una variable de tipo SQLiteDatabase
     SQLiteDatabase dbUsuario;
@@ -60,60 +80,133 @@ public class FinRegistroUsuario extends Fragment {
         this.getView().findViewById(R.id.crear).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Se une FragmentActivity
-                final VentanaRegistroUsuario activity = ((VentanaRegistroUsuario)getActivity());
 
-                // Obtener el control de los EditText de los Fragment
-                System.out.println("PRUEBA - 1");
-                //Obtenemos el contenido del edittext del nombre del usuario
-                EditText nom = (EditText)activity.fragments.get(0).getView().findViewById(R.id.nombreU);
-                String nombre= nom.getText().toString();
-                //Obtenemos el contenido del edittext del apellidos del usuario
-                EditText apel = (EditText)activity.fragments.get(0).getView().findViewById(R.id.apellidos);
-                String apellidos = apel.getText().toString();
-                //Obtenemos el contenido del edittext del correo del usuario
-                EditText cor = (EditText)activity.fragments.get(0).getView().findViewById(R.id.correo);
-                String correo = cor.getText().toString();
-                //Obtenemos el contenido del edittext del telefono del usuario
-                EditText tel = (EditText)activity.fragments.get(0).getView().findViewById(R.id.telefono);
-                String telefono = tel.getText().toString();
+
+                if(comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuario")==true)
+                {
+                    // Definimos un objeto del activity VentanaEditarUsuario
+                    final VentanaEditarUsuario activity2 = ((VentanaEditarUsuario) getActivity());
+
+                    //Obtenemos el contenido del edittext del nombre del usuario
+                    nom = (EditText) activity2.fragments.get(0).getView().findViewById(R.id.nombreU);
+                    nombre = nom.getText().toString();
+                    //Obtenemos el contenido del edittext del apellidos del usuario
+                    apel = (EditText) activity2.fragments.get(0).getView().findViewById(R.id.apellidos);
+                    apellidos = apel.getText().toString();
+                    //Obtenemos el contenido del edittext del correo del usuario
+                    cor = (EditText) activity2.fragments.get(0).getView().findViewById(R.id.correo);
+                    correo = cor.getText().toString();
+                    //Obtenemos el contenido del edittext del telefono del usuario
+                    tel = (EditText) activity2.fragments.get(0).getView().findViewById(R.id.telefono);
+                    telefono = tel.getText().toString();
+                }
+                else {
+
+                    // Definimos un objeto del activity VentanaRegistroUsuario
+                    final VentanaRegistroUsuario activity = ((VentanaRegistroUsuario) getActivity());
+
+                    //Obtenemos el contenido del edittext del nombre del usuario
+                    nom = (EditText)activity.fragments.get(0).getView().findViewById(R.id.nombreU);
+                    nombre= nom.getText().toString();
+                    //Obtenemos el contenido del edittext del apellidos del usuario
+                    apel = (EditText)activity.fragments.get(0).getView().findViewById(R.id.apellidos);
+                    apellidos = apel.getText().toString();
+                    //Obtenemos el contenido del edittext del correo del usuario
+                    cor = (EditText)activity.fragments.get(0).getView().findViewById(R.id.correo);
+                    correo = cor.getText().toString();
+                    //Obtenemos el contenido del edittext del telefono del usuario
+                    tel = (EditText)activity.fragments.get(0).getView().findViewById(R.id.telefono);
+                    telefono = tel.getText().toString();
+                }
 
                 //Comprobamos si el edittext nombre no es vacio y si el edittext apellidos no es vacio para poder introducir
                 // el usuario en la base de datos Usuario
                 if(!nombre.equals("")&&!apellidos.equals(""))
                 {
-                    //Insertamos los datos del Usuario en la Base de Datos llamada Usuario.
-                    insertarUsuario(nombre,apellidos,telefono,correo);
 
-                    //Toast.makeText(activity,nombre,Toast.LENGTH_SHORT).show();
-
-                    //Procedemos a introducir las tuplas con las que se relaciona el usuario con los ingredientes.
-                    //Por lo que recorredmos los 16 fragments de la Ventana Registro Usuario.
-                    for(int j=1; j<16;j++)
+                    if(comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuario")==true)
                     {
-                        ListView lstLista = (ListView) activity.fragments.get(j).getView().findViewById(R.id.lstLista);
+                        // Definimos un objeto del activity VentanaEditarUsuario
+                        final VentanaEditarUsuario activity2 = ((VentanaEditarUsuario) getActivity());
 
-                        int nItems = lstLista.getChildCount();
-                        CheckBox lMarcado;
-                        //Introducimos los id_ingredientes de los que esten marcados
-                        if(true){
+                        //Obtenemos el id_usuario que hemos elegido
+                        String[] elusuario = new String[] {activity2.getMyData()};
+
+                        //Llamamos a la funcion actualizar usuario.
+                        actualizarUsuario(elusuario[0],nombre,apellidos,correo,telefono);
+
+                        //Llamamos a la funcion eliminar todas las relaciones de usuario con ingrediente del usuario que estamos
+                        //editando.
+                        eliminar_idusuario_idingrediente(elusuario[0]);
+
+                        //Procedemos a introducir las tuplas con las que se relaciona el usuario con los ingredientes.
+                        //Por lo que recorredmos los 16 fragments de la Ventana Registro Usuario.
+                        for(int j=1; j<16;j++)
+                        {
+
+                            ListView lstLista = (ListView) activity2.fragments.get(j).getView().findViewById(R.id.lstLista);
+
+                            int nItems = lstLista.getChildCount();
+                            CheckBox lMarcado;
+
+                            System.out.println(j);
+
+                            System.out.println(nItems);
+
+                            //Introducimos los id_ingredientes de los que esten marcados
                             for (int i = 0; i < nItems; i++) {
 
                                 lMarcado = (CheckBox) lstLista.getChildAt(i).findViewById(R.id.chkEstado);
                                 if (lMarcado.isChecked())
                                 {
+
                                     String id=((TextView)(lstLista.getChildAt(i).findViewById(R.id.idingrediente))).getText().toString();
 
-                                    insertar_idusuario_idingrediente(id.toString());
+                                    insertar_idusuario_idingrediente(elusuario[0],id.toString());
 
                                     //Toast.makeText(activity, ((TextView)(lstLista.getChildAt(i).findViewById(R.id.idingrediente))).getText().toString(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
+
+                        Toast.makeText(getActivity().getBaseContext(), "!Usuarios Modificado Correctamente¡", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        // Definimos un objeto del activity VentanaRegistroUsuario
+                        final VentanaRegistroUsuario activity = ((VentanaRegistroUsuario) getActivity());
+
+                        //Insertamos los datos del Usuario en la Base de Datos llamada Usuario.
+                        insertarUsuario(nombre,apellidos,telefono,correo);
+
+                        //Procedemos a introducir las tuplas con las que se relaciona el usuario con los ingredientes.
+                        //Por lo que recorredmos los 16 fragments de la Ventana Registro Usuario.
+                        for(int j=1;j<16;j++)
+                        {
+                            ListView lstLista = (ListView) activity.fragments.get(j).getView().findViewById(R.id.lstLista);
+
+                            int nItems = lstLista.getChildCount();
+                            CheckBox lMarcado;
+                            //Introducimos los id_ingredientes de los que esten marcados
+                            if(true){
+                                for (int i = 0; i < nItems; i++) {
+
+                                    lMarcado = (CheckBox) lstLista.getChildAt(i).findViewById(R.id.chkEstado);
+                                    if (lMarcado.isChecked())
+                                    {
+                                        String id=((TextView)(lstLista.getChildAt(i).findViewById(R.id.idingrediente))).getText().toString();
+
+                                        insertar_idusuario_idingrediente(id.toString());
+
+                                        //Toast.makeText(activity, ((TextView)(lstLista.getChildAt(i).findViewById(R.id.idingrediente))).getText().toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        }
+                        Toast.makeText(getActivity().getBaseContext(), "!Usuarios Registrado Correctamente¡", Toast.LENGTH_LONG).show();
                     }
 
-
-                    Toast.makeText(getActivity().getBaseContext(), "!Usuarios Registrado Correctamente¡", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(activity,nombre,Toast.LENGTH_SHORT).show();
 
                     //Esperamos 50 milisegundos
                     SystemClock.sleep(50);
@@ -158,6 +251,11 @@ public class FinRegistroUsuario extends Fragment {
         });
     }
 
+    /**
+     * @name public void insertarUsuario(String nombre, String apellidos, String telefono, String correo)
+     * @description Metodo para insertar un Usuario nuevo en la base de datos
+     * @return void
+     */
     public void insertarUsuario(String nombre, String apellidos, String telefono, String correo)
     {
         //Abrimos la Base de datos "BDAlumnos" en modo escritura.
@@ -180,6 +278,31 @@ public class FinRegistroUsuario extends Fragment {
         dbUsuario.close();
     }
 
+    /**
+     * @name public void insertarUsuario(String nombre, String apellidos, String telefono, String correo)
+     * @description Metodo para insertar un Usuario nuevo en la base de datos
+     * @return void
+     */
+    public void actualizarUsuario(String ID, String nombre, String apellidos, String telefono, String correo)
+    {
+        //Abrimos la Base de datos "BDAlumnos" en modo escritura.
+        BDUsuario bdUsuario = new BDUsuario(getView().getContext(), "BDUsuario", null, 1);
+
+        //Ponemos la Base de datos en Modo Escritura.
+        dbUsuario = bdUsuario.getWritableDatabase();
+
+        //Realizamos la eliminación del usuario
+        dbUsuario.execSQL("UPDATE Usuarios SET Nombre='"+nombre+"', Apellidos='"+apellidos+"', Telefono='"+telefono+"', Correo_electronico='"+correo+"' WHERE ID="+ID);
+
+        //cerramos la conexión con la base de datos
+        dbUsuario.close();
+    }
+
+    /**
+     * @name public void insertar_idusuario_idingrediente(String id_ingrediente)
+     * @description Metodo para ingreser id_usuario y id_ingrediente en la relación que existe entre usuario y ingrediente
+     * @return void
+     */
     public void insertar_idusuario_idingrediente(String id_ingrediente)
     {
 
@@ -210,5 +333,89 @@ public class FinRegistroUsuario extends Fragment {
         dbIngrediente.insert("Usuario_Ingrediente",null,contentValues);
         dbUsuario.close();
         dbIngrediente.close();
+    }
+
+    /**
+     * @name public void insertar_idusuario_idingrediente(String id_ingrediente)
+     * @description Metodo para ingreser id_usuario y id_ingrediente en la relación que existe entre usuario y ingrediente
+     * @return void
+     */
+    public void insertar_idusuario_idingrediente(String id_usuario, String id_ingrediente)
+    {
+        //Abrimos la Base de datos "BDAlumnosIngrediente" en modo escritura.
+        BDUsuarioIngrediente bdUsuarioIngrediente = new BDUsuarioIngrediente(getView().getContext(), "BDUsuarioIngrediente", null, 1);
+
+        //Ponemos la Base de datos en Modo Escritura.
+        dbIngrediente = bdUsuarioIngrediente.getWritableDatabase();
+
+        String Columna1="id_usuario";
+        String Columna2="id_ingrediente";
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Columna1,id_usuario);
+        contentValues.put(Columna2,id_ingrediente);
+        dbIngrediente.insert("Usuario_Ingrediente",null,contentValues);
+        dbIngrediente.close();
+    }
+
+    /**
+     * @name public void eliminar_idusuario_idingrediente(String id_usuario)
+     * @description Metodo para eliminar id_ingrediente en la relación que existe entre usuario y ingrediente
+     * @return void
+     */
+    public void eliminar_idusuario_idingrediente(String id_usuario)
+    {
+        //Abrimos la Base de datos "BDAlumnosIngrediente" en modo escritura.
+        BDUsuarioIngrediente bdUsuarioIngrediente = new BDUsuarioIngrediente(getView().getContext(), "BDUsuarioIngrediente", null, 1);
+
+        //Ponemos la Base de datos en Modo Escritura.
+        dbIngrediente = bdUsuarioIngrediente.getWritableDatabase();
+
+        dbIngrediente.execSQL("DELETE FROM Usuario_Ingrediente WHERE id_usuario="+id_usuario);
+
+        dbIngrediente.close();
+    }
+
+    /**
+     * @name public boolean comprobarActivityALaVista(Context context, String nombreClase)
+     * @description Metodo para comprobar en que activity nos encontramos actualmente
+     * @return boolean
+     */
+    public boolean comprobarActivityALaVista(Context context, String nombreClase){
+
+        // Obtenemos nuestro manejador de activitys
+        ActivityManager am = (ActivityManager)
+                context.getSystemService(Context.ACTIVITY_SERVICE);
+        // obtenemos la informacion de la tarea que se esta ejecutando
+        // actualmente
+        List< ActivityManager.RunningTaskInfo > taskInfo = am.getRunningTasks(1);
+        // Creamos una variable donde vamos a almacenar
+        // la activity que se encuentra a la vista
+        String nombreClaseActual = null;
+
+        try{
+            // Creamos la variable donde vamos a guardar el objeto
+            // del que vamos a tomar el nombre
+            ComponentName componentName = null;
+            // si pudimos obtener la tarea actual, vamos a intentar cargar
+            // nuestro objeto
+            if(taskInfo != null && taskInfo.get(0) != null){
+                componentName = taskInfo.get(0).topActivity;
+            }
+            // Si pudimos cargar nuestro objeto, vamos a obtener
+            // el nombre con el que vamos a comparar
+            if(componentName != null){
+                nombreClaseActual = componentName.getClassName();
+                System.out.println(nombreClaseActual);
+            }
+
+        }catch (NullPointerException e){
+
+            Log.e(TAG, "Error al tomar el nombre de la clase actual " + e);
+            return false;
+        }
+
+        // devolvemos el resultado de la comparacion
+        return nombreClase.equals(nombreClaseActual);
     }
 }

@@ -40,7 +40,6 @@ import static android.content.ContentValues.TAG;
  * Created by Juan Sevillano on 09/05/2017.
  */
 public class AlergenicoOtros extends Fragment{
-
     //Se crea un ArrayList de tipo Dias//
     ArrayList<Ingredientes> ingredientes = new ArrayList<Ingredientes>();
     //Se crea una objeto tipo ListView
@@ -108,7 +107,6 @@ public class AlergenicoOtros extends Fragment{
             }
         });
     }
-
     /**
      * @name public boolean comprobarActivityALaVista(Context context, String nombreClase)
      * @description Metodo para comprobar en que activity nos encontramos actualmente
