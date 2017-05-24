@@ -110,6 +110,10 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 //Pedimos al Usuario que elige un usuario de la lista.
                 createRadioListDialogEditar();
                 return true;
+            case R.id.insertar_producto:
+                Intent insertarproducto = new Intent(this, VentanaRegistroProducto.class);
+                startActivity(insertarproducto);
+                finish();
             default:
                 return true;
         }

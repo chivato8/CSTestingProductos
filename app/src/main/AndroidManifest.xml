@@ -29,10 +29,17 @@
         <activity
             android:name=".VentanaRegistroUsuario"
             android:label="Ventana Registro Usuarios"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-    <activity
-        android:name=".VentanaEditarUsuario"
-        android:label="Ventana Editar Usuarios"
-        android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".VentanaEditarUsuario"
+            android:label="Ventana Editar Usuarios"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".VentanaRegistroProducto"
+            android:label="Ventana Registrar Productos"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
     </application>
 </manifest>
