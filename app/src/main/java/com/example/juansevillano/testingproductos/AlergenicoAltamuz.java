@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -43,18 +42,12 @@ import static android.content.ContentValues.TAG;
 
 public class AlergenicoAltamuz extends Fragment{
 
-    //Se crea un ArrayList de tipo Dias//
-    ArrayList<Ingredientes> ingredientes = new ArrayList<Ingredientes>();
     //Se crea una objeto tipo ListView
     ListView lstLista;
     //Se crea un objeto de tipo AdaptadorDias
     Adaptador adaptador;
     //Se crear un objetio de tipo ObtenerWebService
     ObtenerWebService hiloconexion;
-
-    //Se crea una Variable Vector de tipo int para almacenar el id_ingredientes
-    //int [] id_ingrediente;
-
 
     public AlergenicoAltamuz() {
         // Required empty public constructor
@@ -83,12 +76,28 @@ public class AlergenicoAltamuz extends Fragment{
         String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=1";
 
         lstLista = (ListView) getView().findViewById(R.id.lstLista);
+        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true)
+        {
+            ((VentanaEditarUsuario)getActivity()).list_ingredientes_altamuz = new ArrayList<Ingrediente>();
+        }
+        else
+        {
+            ((VentanaRegistroUsuario)getActivity()).list_ingredientes_altamuz = new ArrayList<Ingrediente>();
+        }
 
         hiloconexion = new ObtenerWebService();
         hiloconexion.execute(GET, "1");   // Parámetros que recibe doInBackground
 
-        //Se define un nuevo adaptador de tipo AdaptadorDias donde se le pasa como argumentos el contexto de la actividad y el arraylist de los ingredientes
-        adaptador = new Adaptador(this.getActivity(), ingredientes);
+        //Se define un nuevo adaptador de tipo Adaptador donde se le pasa como argumentos el contexto de la actividad y el arraylist de los ingredientes
+        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true)
+        {
+            adaptador = new Adaptador(this.getActivity(), ((VentanaEditarUsuario)getActivity()).list_ingredientes_altamuz);
+        }
+        else
+        {
+            adaptador = new Adaptador(this.getActivity(), ((VentanaRegistroUsuario)getActivity()).list_ingredientes_altamuz);
+        }
+
 
         //Se establece el adaptador en la Listview
         lstLista.setAdapter(adaptador);
@@ -101,13 +110,27 @@ public class AlergenicoAltamuz extends Fragment{
 
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
 
-                //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
-                if (ingredientes.get(arg2).isChekeado()) {
-                    ingredientes.get(arg2).setChekeado(false);
-                } else {
-                    //aqui al contrario que la anterior, que lo pase a true.
-                    ingredientes.get(arg2).setChekeado(true);
+                if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true)
+                {
+                    //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                    if (((VentanaEditarUsuario)getActivity()).list_ingredientes_altamuz.get(arg2).isChekeado()) {
+                        ((VentanaEditarUsuario)getActivity()).list_ingredientes_altamuz.get(arg2).setChekeado(false);
+                    } else {
+                        //aqui al contrario que la anterior, que lo pase a true.
+                        ((VentanaEditarUsuario)getActivity()).list_ingredientes_altamuz.get(arg2).setChekeado(true);
+                    }
                 }
+                else
+                {
+                    //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                    if (((VentanaRegistroUsuario)getActivity()).list_ingredientes_altamuz.get(arg2).isChekeado()) {
+                        ((VentanaRegistroUsuario)getActivity()).list_ingredientes_altamuz.get(arg2).setChekeado(false);
+                    } else {
+                        //aqui al contrario que la anterior, que lo pase a true.
+                        ((VentanaRegistroUsuario)getActivity()).list_ingredientes_altamuz.get(arg2).setChekeado(true);
+                    }
+                }
+
                 //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
                 adaptador.notifyDataSetChanged();
 
@@ -145,7 +168,7 @@ public class AlergenicoAltamuz extends Fragment{
             // el nombre con el que vamos a comparar
             if(componentName != null){
                 nombreClaseActual = componentName.getClassName();
-                System.out.println(nombreClaseActual);
+                //System.out.println(nombreClaseActual);
             }
 
         }catch (NullPointerException e){
@@ -162,24 +185,25 @@ public class AlergenicoAltamuz extends Fragment{
     /**
      * Esta clase extiende de ArrayAdapter para poder personalizarla a nuestro gusto
      */
-    class Adaptador extends ArrayAdapter<Ingredientes> {
+    class Adaptador extends ArrayAdapter<Ingrediente> {
 
         Activity contexto;
-        ArrayList<Ingredientes> ingredientes;
+        ArrayList<Ingrediente> ingredientes;
 
         /**
          * @name public Adaptador(Activity context, ArrayList<Ingredientes> ingredientes)
-         * @description Constructor del AdaptadorDias donde se le pasaran por parametro el contexto de la aplicacion y
+         * @description Constructor del Adaptador donde se le pasaran por parametro el contexto de la aplicacion y
          * el ArrayList de los ingredientes
          * @return void
          */
-        public Adaptador(Activity context, ArrayList<Ingredientes> ingredientes) {
+        public Adaptador(Activity context, ArrayList<Ingrediente> ingredientes) {
             //Llamada al constructor de la clase superior donde requiere el contexto, el layout y el arraylist
             super(context, R.layout.fila, ingredientes);
             this.contexto = context;
             this.ingredientes = ingredientes;
 
         }
+
 
         /**
          * @name public View getView(int position, View convertView, ViewGroup parent)
@@ -230,6 +254,8 @@ public class AlergenicoAltamuz extends Fragment{
             vistaitem.nombre.setText(ingredientes.get(position).getingrediente());
             vistaitem.chkEstado.setChecked(ingredientes.get(position).isChekeado());
 
+
+
             //Se devuelve ya la vista nueva o reutilizada que ha sido dibujada
             return (item);
         }
@@ -245,7 +271,6 @@ public class AlergenicoAltamuz extends Fragment{
 
         }
     }
-
     /**
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
@@ -323,7 +348,7 @@ public class AlergenicoAltamuz extends Fragment{
                             //Obtenemos el id_usuario que hemos elegido
                             String[] elusuario = new String[] {activity.getMyData()};
 
-                            System.out.println(elusuario[0]);
+                            //System.out.println(elusuario[0]);
 
                             //Realizamos una consulta, en la que buscamos el usaurio elegido.
                             res=db.rawQuery("SELECT id_ingrediente FROM Usuario_Ingrediente WHERE id_usuario=?",elusuario);
@@ -352,13 +377,14 @@ public class AlergenicoAltamuz extends Fragment{
                                 }
 
                                 if(id[j]==true) {
-                                    ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+
+                                    ((VentanaEditarUsuario)getActivity()).list_ingredientes_altamuz.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
                                             pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
                                             true));
                                 }
                                 else
                                 {
-                                    ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                    ((VentanaEditarUsuario)getActivity()).list_ingredientes_altamuz.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
                                             pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
                                             false));
                                 }
@@ -371,7 +397,7 @@ public class AlergenicoAltamuz extends Fragment{
                             //Recorremos el objeto anterior mostrando los ingredientes uno a uno
                             for(int i=0;i<pruebaJSON.length();i++)
                             {
-                                ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
+                                ((VentanaRegistroUsuario)getActivity()).list_ingredientes_altamuz.add(new Ingrediente(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
                                         pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
                                         false));
                             }
@@ -419,6 +445,5 @@ public class AlergenicoAltamuz extends Fragment{
             super.onProgressUpdate(values);
         }
     }
-
 
 }

@@ -57,7 +57,7 @@ public class EditarUsuario extends Fragment{
         db= Usuario.getWritableDatabase();
 
         // Obtener el control de la TabAFm
-        System.out.println("PRUEBA - 1");
+        //System.out.println("PRUEBA - 1");
 
         final VentanaEditarUsuario activity = ((VentanaEditarUsuario) getActivity());
 
@@ -66,16 +66,16 @@ public class EditarUsuario extends Fragment{
         //Obtenemos el id_usuario que hemos elegido
         String[] elusuario = new String[] {activity.getMyData()};
 
-        System.out.println(elusuario[0]);
+        //System.out.println(elusuario[0]);
 
-        System.out.println("PRUEBA - 2");
+        //System.out.println("PRUEBA - 2");
 
         //Realizamos una consulta, en la que buscamos el usaurio elegido.
         res=db.rawQuery("SELECT Nombre, Apellidos, Telefono, Correo_Electronico FROM Usuarios WHERE ID=?",elusuario);
 
         res.moveToFirst();
 
-        System.out.println("PRUEBA - 3 ");
+        //System.out.println("PRUEBA - 3 ");
 
         // Se une FragmentActivity
         final VentanaEditarUsuario activity2 = ((VentanaEditarUsuario) getActivity());
@@ -87,8 +87,8 @@ public class EditarUsuario extends Fragment{
         EditText tel = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.telefono);
 
         //Realizamos una Pruea que mostramos para comprobar el valor que obtenemos.
-        String nombre= res.getString(0);
-        System.out.println(nombre);
+        // String nombre= res.getString(0);
+        //System.out.println(nombre);
 
         //Modificamos el valor que tiene el EditText
         nom.setText(res.getString(0));
@@ -96,7 +96,7 @@ public class EditarUsuario extends Fragment{
         tel.setText(res.getString(2));
         cor.setText(res.getString(3));
 
-        System.out.println("PRUEBA - 4");
+        //System.out.println("PRUEBA - 4");
 
         db.close();
 

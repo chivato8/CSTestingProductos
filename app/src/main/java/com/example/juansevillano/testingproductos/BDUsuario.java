@@ -37,7 +37,7 @@ public class BDUsuario extends SQLiteOpenHelper {
                 " Correo_electronico TEXT NULL)");
 
         Log.i(this.getClass().toString(), "Tabla Usuarios creada");
-        db.close();
+
     }
 
     /**
@@ -57,6 +57,5 @@ public class BDUsuario extends SQLiteOpenHelper {
                 " Apellidos TEXT," +
                 " Telefono TEXT NULL," +
                 " Correo_electronico TEXT NULL)");
-        db.close();
     }
 }

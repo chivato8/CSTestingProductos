@@ -40,8 +40,7 @@ import static android.content.ContentValues.TAG;
  * Created by Juan Sevillano on 09/05/2017.
  */
 public class AlergenicoMolusco extends Fragment{
-    //Se crea un ArrayList de tipo Dias//
-    ArrayList<Ingredientes> ingredientes = new ArrayList<Ingredientes>();
+
     //Se crea una objeto tipo ListView
     ListView lstLista;
     //Se crea un objeto de tipo AdaptadorDias
@@ -77,11 +76,27 @@ public class AlergenicoMolusco extends Fragment{
 
         lstLista = (ListView) getView().findViewById(R.id.lstLista);
 
+        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true)
+        {
+            ((VentanaEditarUsuario)getActivity()).list_ingredientes_molusco = new ArrayList<Ingrediente>();
+        }
+        else
+        {
+            ((VentanaRegistroUsuario)getActivity()).list_ingredientes_molusco = new ArrayList<Ingrediente>();
+        }
+
         hiloconexion = new ObtenerWebService();
         hiloconexion.execute(GET, "1");   // Parámetros que recibe doInBackground
 
         //Se define un nuevo adaptador de tipo AdaptadorDias donde se le pasa como argumentos el contexto de la actividad y el arraylist de los dias
-        adaptador = new Adaptador(this.getActivity(), ingredientes);
+        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true)
+        {
+            adaptador = new Adaptador(this.getActivity(), ((VentanaEditarUsuario)getActivity()).list_ingredientes_molusco);
+        }
+        else
+        {
+            adaptador = new Adaptador(this.getActivity(), ((VentanaRegistroUsuario)getActivity()).list_ingredientes_molusco);
+        }
 
         //Se establece el adaptador en la Listview
         lstLista.setAdapter(adaptador);
@@ -94,12 +109,25 @@ public class AlergenicoMolusco extends Fragment{
 
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
 
-                //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
-                if (ingredientes.get(arg2).isChekeado()) {
-                    ingredientes.get(arg2).setChekeado(false);
-                } else {
-                    //aqui al contrario que la anterior, que lo pase a true.
-                    ingredientes.get(arg2).setChekeado(true);
+                if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true)
+                {
+                    //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                    if (((VentanaEditarUsuario)getActivity()).list_ingredientes_molusco.get(arg2).isChekeado()) {
+                        ((VentanaEditarUsuario)getActivity()).list_ingredientes_molusco.get(arg2).setChekeado(false);
+                    } else {
+                        //aqui al contrario que la anterior, que lo pase a true.
+                        ((VentanaEditarUsuario)getActivity()).list_ingredientes_molusco.get(arg2).setChekeado(true);
+                    }
+                }
+                else
+                {
+                    //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                    if (((VentanaRegistroUsuario)getActivity()).list_ingredientes_molusco.get(arg2).isChekeado()) {
+                        ((VentanaRegistroUsuario)getActivity()).list_ingredientes_molusco.get(arg2).setChekeado(false);
+                    } else {
+                        //aqui al contrario que la anterior, que lo pase a true.
+                        ((VentanaRegistroUsuario)getActivity()).list_ingredientes_molusco.get(arg2).setChekeado(true);
+                    }
                 }
                 //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
                 adaptador.notifyDataSetChanged();
@@ -154,10 +182,10 @@ public class AlergenicoMolusco extends Fragment{
     /**
      * Esta clase extiende de ArrayAdapter para poder personalizarla a nuestro gusto
      */
-    class Adaptador extends ArrayAdapter<Ingredientes> {
+    class Adaptador extends ArrayAdapter<Ingrediente> {
 
         Activity contexto;
-        ArrayList<Ingredientes> ingredientes;
+        ArrayList<Ingrediente> ingredientes;
 
         /**
          * @name public Adaptador(Activity context, ArrayList<Ingredientes> ingredientes)
@@ -165,7 +193,7 @@ public class AlergenicoMolusco extends Fragment{
          * el ArrayList de los ingredientes
          * @return void
          */
-        public Adaptador(Activity context, ArrayList<Ingredientes> ingredientes) {
+        public Adaptador(Activity context, ArrayList<Ingrediente> ingredientes) {
             //Llamada al constructor de la clase superior donde requiere el contexto, el layout y el arraylist
             super(context, R.layout.fila, ingredientes);
             this.contexto = context;
@@ -344,13 +372,13 @@ public class AlergenicoMolusco extends Fragment{
                                 }
 
                                 if(id[j]==true) {
-                                    ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                    ((VentanaEditarUsuario)getActivity()).list_ingredientes_molusco.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
                                             pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
                                             true));
                                 }
                                 else
                                 {
-                                    ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                    ((VentanaEditarUsuario)getActivity()).list_ingredientes_molusco.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
                                             pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
                                             false));
                                 }
@@ -363,7 +391,7 @@ public class AlergenicoMolusco extends Fragment{
                             //Recorremos el objeto anterior mostrando los ingredientes uno a uno
                             for(int i=0;i<pruebaJSON.length();i++)
                             {
-                                ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
+                                ((VentanaRegistroUsuario)getActivity()).list_ingredientes_molusco.add(new Ingrediente(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
                                         pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
                                         false));
                             }

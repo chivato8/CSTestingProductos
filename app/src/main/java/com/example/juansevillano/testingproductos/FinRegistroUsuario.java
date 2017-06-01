@@ -25,7 +25,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
@@ -45,12 +47,15 @@ public class FinRegistroUsuario extends Fragment {
     EditText tel;
     String telefono;
 
+    CheckBox lMarcado;
+    ListView lstLista;
+
     //Definimos una variable de tipo SQLiteDatabase
     SQLiteDatabase dbUsuario;
     SQLiteDatabase dbIngrediente;
 
     //Creamos un Objeto de Tipo Ingrediente
-    Ingredientes ingrediente;
+    Ingrediente ingrediente;
 
     RegistroUsuario registroUsuario= new RegistroUsuario();
 
@@ -65,8 +70,6 @@ public class FinRegistroUsuario extends Fragment {
 
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,179 +80,450 @@ public class FinRegistroUsuario extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getView().findViewById(R.id.crear).setOnClickListener(new View.OnClickListener() {
+        Button bt1 = (Button)getView().findViewById(R.id.crear);
+        bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.crear:
+                        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true) {
+                            // Definimos un objeto del activity VentanaEditarUsuario
+                            final VentanaEditarUsuario activity = ((VentanaEditarUsuario) getActivity());
 
+                            //Obtenemos el contenido del edittext del nombre del usuario
+                            nom = (EditText) activity.fragments.get(0).getView().findViewById(R.id.nombreU);
+                            nombre = nom.getText().toString();
+                            //Obtenemos el contenido del edittext del apellidos del usuario
+                            apel = (EditText) activity.fragments.get(0).getView().findViewById(R.id.apellidos);
+                            apellidos = apel.getText().toString();
+                            //Obtenemos el contenido del edittext del correo del usuario
+                            cor = (EditText) activity.fragments.get(0).getView().findViewById(R.id.correo);
+                            correo = cor.getText().toString();
+                            //Obtenemos el contenido del edittext del telefono del usuario
+                            tel = (EditText) activity.fragments.get(0).getView().findViewById(R.id.telefono);
+                            telefono = tel.getText().toString();
 
-                if(comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuario")==true)
-                {
-                    // Definimos un objeto del activity VentanaEditarUsuario
-                    final VentanaEditarUsuario activity2 = ((VentanaEditarUsuario) getActivity());
+                            //Comprobamos si el edittext nombre no es vacio y si el edittext apellidos no es vacio para poder introducir
+                            // el usuario en la base de datos Usuario
+                            if (!nombre.equals("") && !apellidos.equals("")) {
 
-                    //Obtenemos el contenido del edittext del nombre del usuario
-                    nom = (EditText) activity2.fragments.get(0).getView().findViewById(R.id.nombreU);
-                    nombre = nom.getText().toString();
-                    //Obtenemos el contenido del edittext del apellidos del usuario
-                    apel = (EditText) activity2.fragments.get(0).getView().findViewById(R.id.apellidos);
-                    apellidos = apel.getText().toString();
-                    //Obtenemos el contenido del edittext del correo del usuario
-                    cor = (EditText) activity2.fragments.get(0).getView().findViewById(R.id.correo);
-                    correo = cor.getText().toString();
-                    //Obtenemos el contenido del edittext del telefono del usuario
-                    tel = (EditText) activity2.fragments.get(0).getView().findViewById(R.id.telefono);
-                    telefono = tel.getText().toString();
-                }
-                else {
+                                //Obtenemos el id_usuario que hemos elegido
+                                String[] elusuario = new String[]{activity.getMyData()};
 
-                    // Definimos un objeto del activity VentanaRegistroUsuario
-                    final VentanaRegistroUsuario activity = ((VentanaRegistroUsuario) getActivity());
+                                //Llamamos a la funcion actualizar usuario.
+                                actualizarUsuario(elusuario[0], nombre, apellidos, correo, telefono);
 
-                    //Obtenemos el contenido del edittext del nombre del usuario
-                    nom = (EditText)activity.fragments.get(0).getView().findViewById(R.id.nombreU);
-                    nombre= nom.getText().toString();
-                    //Obtenemos el contenido del edittext del apellidos del usuario
-                    apel = (EditText)activity.fragments.get(0).getView().findViewById(R.id.apellidos);
-                    apellidos = apel.getText().toString();
-                    //Obtenemos el contenido del edittext del correo del usuario
-                    cor = (EditText)activity.fragments.get(0).getView().findViewById(R.id.correo);
-                    correo = cor.getText().toString();
-                    //Obtenemos el contenido del edittext del telefono del usuario
-                    tel = (EditText)activity.fragments.get(0).getView().findViewById(R.id.telefono);
-                    telefono = tel.getText().toString();
-                }
+                                //Llamamos a la funcion eliminar todas las relaciones de usuario con ingrediente del usuario que estamos
+                                //editando.
+                                eliminar_idusuario_idingrediente(elusuario[0]);
 
-                //Comprobamos si el edittext nombre no es vacio y si el edittext apellidos no es vacio para poder introducir
-                // el usuario en la base de datos Usuario
-                if(!nombre.equals("")&&!apellidos.equals(""))
-                {
-
-                    if(comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuario")==true)
-                    {
-                        // Definimos un objeto del activity VentanaEditarUsuario
-                        final VentanaEditarUsuario activity2 = ((VentanaEditarUsuario) getActivity());
-
-                        //Obtenemos el id_usuario que hemos elegido
-                        String[] elusuario = new String[] {activity2.getMyData()};
-
-                        //Llamamos a la funcion actualizar usuario.
-                        actualizarUsuario(elusuario[0],nombre,apellidos,correo,telefono);
-
-                        //Llamamos a la funcion eliminar todas las relaciones de usuario con ingrediente del usuario que estamos
-                        //editando.
-                        eliminar_idusuario_idingrediente(elusuario[0]);
-
-                        //Procedemos a introducir las tuplas con las que se relaciona el usuario con los ingredientes.
-                        //Por lo que recorredmos los 16 fragments de la Ventana Registro Usuario.
-                        for(int j=1; j<16;j++)
-                        {
-
-                            ListView lstLista = (ListView) activity2.fragments.get(j).getView().findViewById(R.id.lstLista);
-
-                            int nItems = lstLista.getChildCount();
-                            CheckBox lMarcado;
-
-                            System.out.println(j);
-
-                            System.out.println(nItems);
-
-                            //Introducimos los id_ingredientes de los que esten marcados
-                            for (int i = 0; i < nItems; i++) {
-
-                                lMarcado = (CheckBox) lstLista.getChildAt(i).findViewById(R.id.chkEstado);
-                                if (lMarcado.isChecked())
-                                {
-
-                                    String id=((TextView)(lstLista.getChildAt(i).findViewById(R.id.idingrediente))).getText().toString();
-
-                                    insertar_idusuario_idingrediente(elusuario[0],id.toString());
-
-                                    //Toast.makeText(activity, ((TextView)(lstLista.getChildAt(i).findViewById(R.id.idingrediente))).getText().toString(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-
-                        Toast.makeText(getActivity().getBaseContext(), "!Usuarios Modificado Correctamente¡", Toast.LENGTH_LONG).show();
-                    }
-                    else
-                    {
-                        // Definimos un objeto del activity VentanaRegistroUsuario
-                        final VentanaRegistroUsuario activity = ((VentanaRegistroUsuario) getActivity());
-
-                        //Insertamos los datos del Usuario en la Base de Datos llamada Usuario.
-                        insertarUsuario(nombre,apellidos,telefono,correo);
-
-                        //Procedemos a introducir las tuplas con las que se relaciona el usuario con los ingredientes.
-                        //Por lo que recorredmos los 16 fragments de la Ventana Registro Usuario.
-                        for(int j=1;j<16;j++)
-                        {
-                            ListView lstLista = (ListView) activity.fragments.get(j).getView().findViewById(R.id.lstLista);
-
-                            int nItems = lstLista.getChildCount();
-                            CheckBox lMarcado;
-                            //Introducimos los id_ingredientes de los que esten marcados
-                            if(true){
-                                for (int i = 0; i < nItems; i++) {
-
-                                    lMarcado = (CheckBox) lstLista.getChildAt(i).findViewById(R.id.chkEstado);
-                                    if (lMarcado.isChecked())
+                                //Recorremos el fragment asignado para el alergenico altamuz
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_altamuz){
+                                    /*System.out.println("Id: "+ingrediente.getid_ingrediente()+" - nombre: "+ingrediente.getingrediente()
+                                            +" - estado: "+ingrediente.isChekeado());*/
+                                    if (ingrediente.isChekeado())
                                     {
-                                        String id=((TextView)(lstLista.getChildAt(i).findViewById(R.id.idingrediente))).getText().toString();
+                                        String id = ingrediente.getid_ingrediente();
 
-                                        insertar_idusuario_idingrediente(id.toString());
-
-                                        //Toast.makeText(activity, ((TextView)(lstLista.getChildAt(i).findViewById(R.id.idingrediente))).getText().toString(), Toast.LENGTH_SHORT).show();
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
+
+                                //Recorremos el fragment asignado para el alergenico apio
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_apio){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico azufre y sulfitos
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_azufreysulfito){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico cacahuete
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_cacahuete){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico crustacios
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_crustaceo){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico frutos con cascara
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_frutoscascara){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico gluten
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_gluten){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico sesamo
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_sesamo){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico huevo
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_huevo){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico lacteos
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_lacteo){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico molusco
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_molusco){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico mostaza
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_mostaza){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico pescado
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_pescado){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico soja
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_soja){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
+                                    }
+                                }
+
+                                Toast.makeText(getActivity().getBaseContext(), "!Usuario Modificado Correctamente¡", Toast.LENGTH_LONG).show();
+
+                                //Toast.makeText(activity,nombre,Toast.LENGTH_SHORT).show();
+
+                                //Esperamos 50 milisegundos
+                                SystemClock.sleep(500);
+
+                                //getView().setId(R.id.restablecer);
+
+                                //Redireccionamos la aplicacion a la venana principal
+                                Intent intent = new Intent(getActivity(), VentanaOpcionesEscaner.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+                            //Si el edittext nombre y el edittex apellidos son vacios mostrarmos un mensaje u notificación advirtiendo
+                            //que son campos obligatorios
+                            else {
+                                LayoutInflater inflater = getActivity().getLayoutInflater();
+                                View layout = inflater.inflate(R.layout.contenidotoast, (ViewGroup) getView().findViewById(R.id.toast_layout_root));
+
+                                TextView txtMsg = (TextView) layout.findViewById(R.id.text_toast);
+                                txtMsg.setText("Campos Obligatorios:");
+
+                                if (nombre.equals("")) {
+                                    txtMsg.setText(txtMsg.getText().toString() + "\n- Nombre");
+                                }
+
+                                if (apellidos.equals("")) {
+                                    txtMsg.setText(txtMsg.getText().toString() + "\n- Apellido");
+                                }
+
+                                int duration = Toast.LENGTH_LONG;
+
+                                Toast toast = new Toast(getActivity().getApplicationContext());
+                                toast.setDuration(duration);
+                                toast.setView(layout);
+                                toast.show();
                             }
                         }
-                        Toast.makeText(getActivity().getBaseContext(), "!Usuarios Registrado Correctamente¡", Toast.LENGTH_LONG).show();
-                    }
+                        else
+                        {
 
-                    //Toast.makeText(activity,nombre,Toast.LENGTH_SHORT).show();
+                            // Definimos un objeto del activity VentanaRegistroUsuario
+                            final VentanaRegistroUsuario activity = ((VentanaRegistroUsuario) getActivity());
 
-                    //Esperamos 50 milisegundos
-                    SystemClock.sleep(50);
+                            //Obtenemos el contenido del edittext del nombre del usuario
+                            nom = (EditText) activity.fragments.get(0).getView().findViewById(R.id.nombreU);
+                            nombre = nom.getText().toString();
+                            //Obtenemos el contenido del edittext del apellidos del usuario
+                            apel = (EditText) activity.fragments.get(0).getView().findViewById(R.id.apellidos);
+                            apellidos = apel.getText().toString();
+                            //Obtenemos el contenido del edittext del correo del usuario
+                            cor = (EditText) activity.fragments.get(0).getView().findViewById(R.id.correo);
+                            correo = cor.getText().toString();
+                            //Obtenemos el contenido del edittext del telefono del usuario
+                            tel = (EditText) activity.fragments.get(0).getView().findViewById(R.id.telefono);
+                            telefono = tel.getText().toString();
 
-                    getView().setId(R.id.restablecer);
 
+                            if (!nombre.equals("") && !apellidos.equals("")) {
+                                //Insertamos los datos del Usuario en la Base de Datos llamada Usuario.
+                                insertarUsuario(nombre, apellidos, telefono, correo);
 
-                    Intent intent = new Intent (getActivity(),VentanaOpcionesEscaner.class);
-                    startActivity(intent);
-                    getActivity().finish();
+                                //Recorremos el fragment asignado para el alergenico altamuz
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_altamuz){
+                                    /*System.out.println("Id: "+ingrediente.getid_ingrediente()+" - nombre: "+ingrediente.getingrediente()
+                                            +" - estado: "+ingrediente.isChekeado());*/
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
 
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
 
+                                //Recorremos el fragment asignado para el alergenico apio
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_apio){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico azufre y sulfitos
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_azufreysulfito){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico cacahuete
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_cacahuete){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico crustacios
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_crustaceo){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico frutos con cascara
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_frutoscascara){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico gluten
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_gluten){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico sesamo
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_sesamo){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico huevo
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico lacteos
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_lacteo){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico molusco
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_molusco){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico mostaza
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_mostaza){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico pescado
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_pescado){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                //Recorremos el fragment asignado para el alergenico soja
+                                for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_soja){
+                                    if (ingrediente.isChekeado())
+                                    {
+                                        String id = ingrediente.getid_ingrediente();
+
+                                        System.out.println("Insertando: " + id);
+                                        insertar_idusuario_idingrediente(id.toString());
+                                    }
+                                }
+
+                                Toast.makeText(getActivity().getBaseContext(), "!Usuario Insertado Correctamente¡", Toast.LENGTH_LONG).show();
+
+                                //Toast.makeText(activity,nombre,Toast.LENGTH_SHORT).show();
+
+                                //Esperamos 50 milisegundos
+                                SystemClock.sleep(500);
+
+                                //getView().setId(R.id.restablecer);
+
+                                //Redireccionamos la aplicacion a la venana principal
+                                Intent intent = new Intent(getActivity(), VentanaOpcionesEscaner.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+                            //Si el edittext nombre y el edittex apellidos son vacios mostrarmos un mensaje u notificación advirtiendo
+                            //que son campos obligatorios
+                            else {
+                                LayoutInflater inflater = getActivity().getLayoutInflater();
+                                View layout = inflater.inflate(R.layout.contenidotoast, (ViewGroup) getView().findViewById(R.id.toast_layout_root));
+
+                                TextView txtMsg = (TextView) layout.findViewById(R.id.text_toast);
+                                txtMsg.setText("Campos Obligatorios:");
+
+                                if (nombre.equals("")) {
+                                    txtMsg.setText(txtMsg.getText().toString() + "\n- Nombre");
+                                }
+
+                                if (apellidos.equals("")) {
+                                    txtMsg.setText(txtMsg.getText().toString() + "\n- Apellido");
+                                }
+
+                                int duration = Toast.LENGTH_LONG;
+
+                                Toast toast = new Toast(getActivity().getApplicationContext());
+                                toast.setDuration(duration);
+                                toast.setView(layout);
+                                toast.show();
+                            }
+                        }
                 }
-                //Si el edittext nombre y el edittex apellidos son vacios mostrarmos un mensaje u notificación advirtiendo
-                //que son campos obligatorios
-                else
-                {
-                    LayoutInflater inflater = getActivity().getLayoutInflater();
-                    View layout = inflater.inflate(R.layout.contenidotoast, (ViewGroup)getView().findViewById(R.id.toast_layout_root));
 
-                    TextView txtMsg = (TextView) layout.findViewById(R.id.text_toast);
-                    txtMsg.setText("Campos Obligatorios:");
-
-                    if(nombre.equals(""))
-                    {
-                        txtMsg.setText(txtMsg.getText().toString()+"\n- Nombre");
-                    }
-
-                    if(apellidos.equals(""))
-                    {
-                        txtMsg.setText(txtMsg.getText().toString()+"\n- Apellido");
-                    }
-
-                    int duration = Toast.LENGTH_LONG;
-
-                    Toast toast=new Toast(getActivity().getApplicationContext());
-                    toast.setDuration(duration);
-                    toast.setView(layout);
-                    toast.show();
-                }
             }
         });
+
     }
+
 
     /**
      * @name public void insertarUsuario(String nombre, String apellidos, String telefono, String correo)
@@ -275,7 +549,8 @@ public class FinRegistroUsuario extends Fragment {
         contentValues.put(Columna3,telefono);
         contentValues.put(Columna4,correo);
         dbUsuario.insert("Usuarios",null,contentValues);
-        dbUsuario.close();
+        //Cerramos la conexión con la base de datos.
+        //dbUsuario.close();
     }
 
     /**
@@ -295,7 +570,7 @@ public class FinRegistroUsuario extends Fragment {
         dbUsuario.execSQL("UPDATE Usuarios SET Nombre='"+nombre+"', Apellidos='"+apellidos+"', Telefono='"+telefono+"', Correo_electronico='"+correo+"' WHERE ID="+ID);
 
         //cerramos la conexión con la base de datos
-        dbUsuario.close();
+        //dbUsuario.close();
     }
 
     /**
@@ -318,6 +593,9 @@ public class FinRegistroUsuario extends Fragment {
         //Obtenemos el id el ultimo usuario introducido en al base de datos Usuario
         String id_usuario= String.valueOf(count.getCount());
 
+        //Cerramos la conexión con la base de datos.
+        //dbUsuario.close();
+
         //Abrimos la Base de datos "BDAlumnosIngrediente" en modo escritura.
         BDUsuarioIngrediente bdUsuarioIngrediente = new BDUsuarioIngrediente(getView().getContext(), "BDUsuarioIngrediente", null, 1);
 
@@ -331,8 +609,9 @@ public class FinRegistroUsuario extends Fragment {
         contentValues.put(Columna1,id_usuario);
         contentValues.put(Columna2,id_ingrediente);
         dbIngrediente.insert("Usuario_Ingrediente",null,contentValues);
-        dbUsuario.close();
-        dbIngrediente.close();
+
+        //Cerramos la conexión con la base de datos.
+        //dbIngrediente.close();
     }
 
     /**
@@ -355,7 +634,9 @@ public class FinRegistroUsuario extends Fragment {
         contentValues.put(Columna1,id_usuario);
         contentValues.put(Columna2,id_ingrediente);
         dbIngrediente.insert("Usuario_Ingrediente",null,contentValues);
-        dbIngrediente.close();
+
+        //Cerramos la conexión con la base de datos.
+        //dbIngrediente.close();
     }
 
     /**
@@ -373,7 +654,8 @@ public class FinRegistroUsuario extends Fragment {
 
         dbIngrediente.execSQL("DELETE FROM Usuario_Ingrediente WHERE id_usuario="+id_usuario);
 
-        dbIngrediente.close();
+        //Cerramos la conexión con la base de datos.
+       // dbIngrediente.close();
     }
 
     /**

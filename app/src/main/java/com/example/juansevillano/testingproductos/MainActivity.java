@@ -153,9 +153,6 @@ public class MainActivity extends AppCompatActivity {
                 //Toast.makeText(getBaseContext(), "Usuarios Registrados: " + count.getCount(), Toast.LENGTH_LONG).show();
                 Toast.makeText(getBaseContext(), "Accediendo a la Aplicación.", Toast.LENGTH_SHORT).show();
 
-                //Cerramos la Base de Datos
-                //db.close();
-
                 //Accedemos a la Aplición para la Eleccion del Modo de Escaneo
                 Intent ListSong = new Intent(getApplicationContext(), VentanaOpcionesEscaner.class);
                 startActivity(ListSong);
@@ -183,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Cerramos la Base de Datos
-        db.close();
+        //db.close();
 
     }
 

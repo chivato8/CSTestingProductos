@@ -36,7 +36,6 @@ public class BDUsuarioIngrediente extends SQLiteOpenHelper {
                 " id_ingrediente TEXT)");
 
         Log.i(this.getClass().toString(), "Tabla UsuariosIngredientes creada");
-        //db.close();
     }
 
     /**
@@ -54,6 +53,5 @@ public class BDUsuarioIngrediente extends SQLiteOpenHelper {
                 " id_usuario_ingrediente INTEGER PRIMARY KEY AUTOINCREMENT," +
                 " id_usuario TEXT," +
                 " id_ingrediente TEXT)");
-        db.close();
     }
 }

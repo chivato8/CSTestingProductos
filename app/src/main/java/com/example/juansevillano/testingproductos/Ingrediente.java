@@ -4,25 +4,25 @@ package com.example.juansevillano.testingproductos;
  * Created by Juan Sevillano on 03/04/2017.
  */
 
-public class Ingredientes {
+public class Ingrediente {
 
     private String id_ingrediente;
     private String ingrediente;
     private String tipo_ingrediente;
     private boolean estado;
 
-    Ingredientes()
+    Ingrediente()
     {
     }
 
-    Ingredientes(String id_ingrediente, String ingrediente, String tipo_ingrediente)
+    Ingrediente(String id_ingrediente, String ingrediente, String tipo_ingrediente)
     {
         this.id_ingrediente=id_ingrediente;
         this.ingrediente=ingrediente;
         this.tipo_ingrediente=tipo_ingrediente;
     }
 
-    Ingredientes(String id_ingrediente,String ingrediente, boolean estado)
+    Ingrediente(String id_ingrediente,String ingrediente, boolean estado)
     {
         this.id_ingrediente=id_ingrediente;
         this.ingrediente=ingrediente;
@@ -30,7 +30,7 @@ public class Ingredientes {
     }
 
     //DE PRUEBA DESPUES ELIMINAR
-    Ingredientes(String ingrediente, boolean estado)
+    Ingrediente(String ingrediente, boolean estado)
     {
         this.ingrediente=ingrediente;
         this.estado=estado;

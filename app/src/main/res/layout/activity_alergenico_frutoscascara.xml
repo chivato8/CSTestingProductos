@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.juansevillano.testingproductos.AlergenicoCrustaceos">
+    tools:context="com.example.juansevillano.testingproductos.AlergenicoFrutosCascara">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Proceso 14/17"
+            android:text="Proceso 7/17"
             android:textSize="14dp"
             android:layout_gravity="right"/>
 
@@ -37,7 +37,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:lineSpacingExtra="10sp"
-            android:text="Todos los Ingrediente Alergenicos del tipo Pescado"
+            android:text="Todos los Ingrediente Alergenicos del tipo Frutos con Cascara"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="#000000"

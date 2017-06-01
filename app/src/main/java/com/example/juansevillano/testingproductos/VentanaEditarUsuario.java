@@ -29,6 +29,23 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
     private ViewPager viewPager;
     public List<Fragment> fragments = new ArrayList<Fragment>();
 
+    //Se crea un ArrayList de tipo Ingrediente para cada uno de los alergenicos.
+    public ArrayList<Ingrediente> list_ingredientes_altamuz;
+    public ArrayList<Ingrediente> list_ingredientes_apio;
+    public ArrayList<Ingrediente> list_ingredientes_azufreysulfito;
+    public ArrayList<Ingrediente> list_ingredientes_cacahuete;
+    public ArrayList<Ingrediente> list_ingredientes_crustaceo;
+    public ArrayList<Ingrediente> list_ingredientes_frutoscascara;
+    public ArrayList<Ingrediente> list_ingredientes_gluten;
+    public ArrayList<Ingrediente> list_ingredientes_sesamo;
+    public ArrayList<Ingrediente> list_ingredientes_huevo;
+    public ArrayList<Ingrediente> list_ingredientes_lacteo;
+    public ArrayList<Ingrediente> list_ingredientes_molusco;
+    public ArrayList<Ingrediente> list_ingredientes_mostaza;
+    public ArrayList<Ingrediente> list_ingredientes_pescado;
+    public ArrayList<Ingrediente> list_ingredientes_soja;
+    public ArrayList<Ingrediente> list_ingredientes_otros;
+
     //Definimos una variable de tipo SQLiteDatabase
     SQLiteDatabase db;
 

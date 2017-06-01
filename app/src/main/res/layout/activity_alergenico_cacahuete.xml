@@ -29,7 +29,7 @@
         <TextView
             android:id="@+id/textView6"
             android:layout_width="match_parent"
-            android:layout_height="78dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
@@ -37,11 +37,11 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:lineSpacingExtra="10sp"
-            android:text="Todos los Ingrediente Alergenicos del tipo Cacahuete"
+            android:text="Todos los Ingrediente Alergenicos del tipo Cacahuetes"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="#000000"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:typeface="serif" />
 

@@ -40,8 +40,7 @@ import static android.content.ContentValues.TAG;
  * Created by Juan Sevillano on 09/05/2017.
  */
 public class AlergenicoAzufreySulfitos extends Fragment{
-    //Se crea un ArrayList de tipo Dias//
-    ArrayList<Ingredientes> ingredientes = new ArrayList<Ingredientes>();
+
     //Se crea una objeto tipo ListView
     ListView lstLista;
     //Se crea un objeto de tipo AdaptadorDias
@@ -77,11 +76,27 @@ public class AlergenicoAzufreySulfitos extends Fragment{
 
         lstLista = (ListView) getView().findViewById(R.id.lstLista);
 
+        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true)
+        {
+            ((VentanaEditarUsuario)getActivity()).list_ingredientes_azufreysulfito = new ArrayList<Ingrediente>();
+        }
+        else
+        {
+            ((VentanaRegistroUsuario)getActivity()).list_ingredientes_azufreysulfito = new ArrayList<Ingrediente>();
+        }
+
         hiloconexion = new ObtenerWebService();
         hiloconexion.execute(GET, "1");   // Parámetros que recibe doInBackground
 
-        //Se define un nuevo adaptador de tipo AdaptadorDias donde se le pasa como argumentos el contexto de la actividad y el arraylist de los dias
-        adaptador = new Adaptador(this.getActivity(), ingredientes);
+        //Se define un nuevo adaptador de tipo Adaptador donde se le pasa como argumentos el contexto de la actividad y el arraylist de los dias
+        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true)
+        {
+            adaptador = new Adaptador(this.getActivity(), ((VentanaEditarUsuario)getActivity()).list_ingredientes_azufreysulfito);
+        }
+        else
+        {
+            adaptador = new Adaptador(this.getActivity(), ((VentanaRegistroUsuario)getActivity()).list_ingredientes_azufreysulfito);
+        }
 
         //Se establece el adaptador en la Listview
         lstLista.setAdapter(adaptador);
@@ -94,12 +109,25 @@ public class AlergenicoAzufreySulfitos extends Fragment{
 
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
 
-                //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
-                if (ingredientes.get(arg2).isChekeado()) {
-                    ingredientes.get(arg2).setChekeado(false);
-                } else {
-                    //aqui al contrario que la anterior, que lo pase a true.
-                    ingredientes.get(arg2).setChekeado(true);
+                if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true)
+                {
+                    //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                    if (((VentanaEditarUsuario)getActivity()).list_ingredientes_azufreysulfito.get(arg2).isChekeado()) {
+                        ((VentanaEditarUsuario)getActivity()).list_ingredientes_azufreysulfito.get(arg2).setChekeado(false);
+                    } else {
+                        //aqui al contrario que la anterior, que lo pase a true.
+                        ((VentanaEditarUsuario)getActivity()).list_ingredientes_azufreysulfito.get(arg2).setChekeado(true);
+                    }
+                }
+                else
+                {
+                    //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                    if (((VentanaRegistroUsuario)getActivity()).list_ingredientes_azufreysulfito.get(arg2).isChekeado()) {
+                        ((VentanaRegistroUsuario)getActivity()).list_ingredientes_azufreysulfito.get(arg2).setChekeado(false);
+                    } else {
+                        //aqui al contrario que la anterior, que lo pase a true.
+                        ((VentanaRegistroUsuario)getActivity()).list_ingredientes_azufreysulfito.get(arg2).setChekeado(true);
+                    }
                 }
                 //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
                 adaptador.notifyDataSetChanged();
@@ -154,10 +182,10 @@ public class AlergenicoAzufreySulfitos extends Fragment{
     /**
      * Esta clase extiende de ArrayAdapter para poder personalizarla a nuestro gusto
      */
-    class Adaptador extends ArrayAdapter<Ingredientes> {
+    class Adaptador extends ArrayAdapter<Ingrediente> {
 
         Activity contexto;
-        ArrayList<Ingredientes> ingredientes;
+        ArrayList<Ingrediente> ingredientes;
 
         /**
          * @name public Adaptador(Activity context, ArrayList<Ingredientes> ingredientes)
@@ -165,7 +193,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
          * el ArrayList de los ingredientes
          * @return void
          */
-        public Adaptador(Activity context, ArrayList<Ingredientes> ingredientes) {
+        public Adaptador(Activity context, ArrayList<Ingrediente> ingredientes) {
             //Llamada al constructor de la clase superior donde requiere el contexto, el layout y el arraylist
             super(context, R.layout.fila, ingredientes);
             this.contexto = context;
@@ -182,39 +210,40 @@ public class AlergenicoAzufreySulfitos extends Fragment{
          * @return View
          */
         public View getView(int position, View convertView, ViewGroup parent) {
-            View item = convertView;
+            //View item = convertView;
+            convertView=null;
 
             //Creamos esta variable para almacen posteriormente en el la vista que ha dibujado
             VistaItem vistaitem;
 
             //Si se decide que no existe una vista reutilizable para el proximo item entra en la condicion.
             //De este modo tambien ahorramos tener que volver a generar vistas
-            if (item == null) {
+            if (convertView == null) {
 
                 //Obtenemos una referencia de Inflater para poder inflar el diseño
                 LayoutInflater inflador = contexto.getLayoutInflater();
 
                 //Se le define a la vista (item) el tipo de diseño que tiene que tener
-                item = inflador.inflate(R.layout.fila, null);
+                convertView = inflador.inflate(R.layout.fila, null);
 
                 //Creamos un nuevo vistaitem que se almacenara en el tag de la vista
                 vistaitem = new VistaItem();
 
                 //Almacenamos en el objeto la referencia del TextView que contiene el id de los ingredientes
-                vistaitem.id_ingrediente = (TextView) item.findViewById(R.id.idingrediente);
+                vistaitem.id_ingrediente = (TextView) convertView.findViewById(R.id.idingrediente);
 
                 //Almacenamos en el objeto la referencia del TextView que contiene el nombre de los ingredientes
-                vistaitem.nombre = (TextView) item.findViewById(R.id.txtCompleto);
+                vistaitem.nombre = (TextView) convertView.findViewById(R.id.txtCompleto);
 
                 //Tambien almacenamos en el objeto la referencia del CheckBox buscandolo por ID
-                vistaitem.chkEstado = (CheckBox) item.findViewById(R.id.chkEstado);
+                vistaitem.chkEstado = (CheckBox) convertView.findViewById(R.id.chkEstado);
 
                 //Ahora si, guardamos en el tag de la vista el objeto vistaitem
-                item.setTag(vistaitem);
+                convertView.setTag(vistaitem);
 
             } else {
                 //En caso de que la vista sea ya reutilizable se recupera el objeto VistaItem almacenada en su tag
-                vistaitem = (VistaItem) item.getTag();
+                vistaitem = (VistaItem) convertView.getTag();
             }
 
             //Se cargan los datos desde el ArrayList
@@ -223,7 +252,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
             vistaitem.chkEstado.setChecked(ingredientes.get(position).isChekeado());
 
             //Se devuelve ya la vista nueva o reutilizada que ha sido dibujada
-            return (item);
+            return convertView;
         }
 
         /**
@@ -320,9 +349,10 @@ public class AlergenicoAzufreySulfitos extends Fragment{
                             //Realizamos una consulta, en la que buscamos el usaurio elegido.
                             res=db.rawQuery("SELECT id_ingrediente FROM Usuario_Ingrediente WHERE id_usuario=?",elusuario);
 
-
+                            //Numero de Ingredientes con el que esta relacionado el usuario
                             int total= res.getCount();
 
+                            //Creamos una matriz de boolean para almacenar con los que se relaciona el usaurio.
                             boolean [] id=new boolean[pruebaJSON.length()];
 
                             for(int x=0;x<id.length;x++)
@@ -344,13 +374,14 @@ public class AlergenicoAzufreySulfitos extends Fragment{
                                 }
 
                                 if(id[j]==true) {
-                                    ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+
+                                    ((VentanaEditarUsuario)getActivity()).list_ingredientes_azufreysulfito.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
                                             pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
                                             true));
                                 }
                                 else
                                 {
-                                    ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                    ((VentanaEditarUsuario)getActivity()).list_ingredientes_azufreysulfito.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
                                             pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
                                             false));
                                 }
@@ -363,7 +394,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
                             //Recorremos el objeto anterior mostrando los ingredientes uno a uno
                             for(int i=0;i<pruebaJSON.length();i++)
                             {
-                                ingredientes.add(new Ingredientes(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
+                                ((VentanaRegistroUsuario)getActivity()).list_ingredientes_azufreysulfito.add(new Ingrediente(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
                                         pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
                                         false));
                             }
