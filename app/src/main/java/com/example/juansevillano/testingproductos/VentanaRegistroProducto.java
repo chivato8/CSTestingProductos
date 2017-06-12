@@ -32,8 +32,28 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
     private ViewPager viewPager;
     public List<Fragment> fragments = new ArrayList<Fragment>();
 
+    //Se crea un ArrayList de tipo Ingrediente para cada uno de los alergenicos.
+    public ArrayList<Ingrediente> list_ingredientes_altamuz;
+    public ArrayList<Ingrediente> list_ingredientes_apio;
+    public ArrayList<Ingrediente> list_ingredientes_azufreysulfito;
+    public ArrayList<Ingrediente> list_ingredientes_cacahuete;
+    public ArrayList<Ingrediente> list_ingredientes_crustaceo;
+    public ArrayList<Ingrediente> list_ingredientes_frutoscascara;
+    public ArrayList<Ingrediente> list_ingredientes_gluten;
+    public ArrayList<Ingrediente> list_ingredientes_sesamo;
+    public ArrayList<Ingrediente> list_ingredientes_huevo;
+    public ArrayList<Ingrediente> list_ingredientes_lacteo;
+    public ArrayList<Ingrediente> list_ingredientes_molusco;
+    public ArrayList<Ingrediente> list_ingredientes_mostaza;
+    public ArrayList<Ingrediente> list_ingredientes_pescado;
+    public ArrayList<Ingrediente> list_ingredientes_soja;
+    public ArrayList<Ingrediente> list_ingredientes_otros;
+
     //Definimos una variable de tipo SQLiteDatabase
     SQLiteDatabase db;
+
+    public ArrayList<TipoProducto> list_tipo_producto;
+    public ArrayList<Empresa> list_empresa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +88,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         fragments.add(new AlergenicoPescado());
         fragments.add(new AlergenicoSoja());
         fragments.add(new AlergenicoOtros());
-        fragments.add(new FinRegistroUsuario());
+        //fragments.add(new FinRegistroUsuario());
 
         //fragments.add(new FourFragment());
 
@@ -131,7 +151,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         tabLayout.getTabAt(13).setIcon(R.mipmap.pescadomini);
         tabLayout.getTabAt(14).setIcon(R.mipmap.sojamini);
         tabLayout.getTabAt(15).setIcon(R.mipmap.otrosmini);
-        tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);
+        //tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);
     }
 
     /**
@@ -140,7 +160,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
      */
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new RegistroUsuario(), "Registro");
+        adapter.addFrag(new RegistroProducto(), "Registro");
         adapter.addFrag(new AlergenicoAltamuz(), "Altamuz");
         adapter.addFrag(new AlergenicoApio(), "Apio");
         adapter.addFrag(new AlergenicoAzufreySulfitos(), "Azufre y Sulfitos");
@@ -156,7 +176,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         adapter.addFrag(new AlergenicoPescado(), "Pescado");
         adapter.addFrag(new AlergenicoSoja(), "Soja");
         adapter.addFrag(new AlergenicoOtros(), "Otros");
-        adapter.addFrag(new FinRegistroUsuario(), "Fin Registro");
+        //adapter.addFrag(new FinRegistroUsuario(), "Fin Registro");
         viewPager.setAdapter(adapter);
     }
 

@@ -1,134 +1,68 @@
 package com.example.juansevillano.testingproductos;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.os.AsyncTask;
-import android.os.Handler;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
-
-    private int proceso=0;
-    private Handler handler = new Handler();
-    private TextView textView;
-
-    final Handler mHandler=new Handler();
+public class EntrarCon extends AppCompatActivity implements View.OnClickListener {
 
     //Definimos una variable de tipo SQLiteDatabase
-    //SQLiteDatabase db;
+    SQLiteDatabase db;
+
+    //defining view objects
+    private ImageView imageViewInvitado;
+    private ImageView imageViewGmail;
+    private ImageView imageViewFacebook;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_entrar_con);
 
-       //new MiTareaAsincrona().execute();
+        imageViewInvitado = (ImageView) findViewById(R.id.imageViewInvitado);
+        imageViewGmail = (ImageView) findViewById(R.id.imageViewGmail);
+        imageViewFacebook = (ImageView) findViewById(R.id.imageViewFacebook);
 
-        //Transicción de la Imagen.
-        efectoimagen();
-
-        //Esperamos 200 milisegundos
-        SystemClock.sleep(200);
-
-        //Llamamos a la Funcion de creacion de la barra cargadora
-        setProgressValue();
-
-        //Esperamos 1900 milisegundos hasta que termine.
-        SystemClock.sleep(0);
+        //attaching listener to button
+        imageViewInvitado.setOnClickListener(this);
+        imageViewGmail.setOnClickListener(this);
+        imageViewFacebook.setOnClickListener(this);
     }
 
 
-    /**
-     * @name private void efectoimagen()
-     * @description Funcion para aplicar efecto a la imagen
-     * @return void
-     */
-    private void efectoimagen()
-    {
-        ImageView imagen = (ImageView)findViewById(R.id.ImagenPortada);
+    @Override
+    public void onClick(View view) {
+        //calling register method on click
+        if(view == imageViewInvitado){
+            //Llamamos a la Funcion de creacion de la barra cargadora
+            funcionBD();
 
-        Animation animacionImagen = AnimationUtils.loadAnimation(this,R.anim.trans);
-        animacionImagen.reset();
-        imagen.startAnimation(animacionImagen);
-
-    }
-
-    /**
-     * @name private void setProgressValue()
-     * @description Funcion para la creación de la barra cargadora
-     * @return void
-     */
-    private void setProgressValue()
-    {
-        final ProgressBar barracargadora=(ProgressBar)findViewById(R.id.progressBar);
-        barracargadora.getIndeterminateDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
-        barracargadora.setProgress(proceso);
-
-        textView=(TextView) findViewById(R.id.textView);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(proceso<barracargadora.getMax())
-                {
-                    proceso+=2;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            barracargadora.setProgress(proceso);
-                            textView.setText(proceso+"/"+barracargadora.getMax());
-                        }
-                    });
-                    try
-                    {
-                        //Sleep for 40 milliseconds
-                        Thread.sleep(40);
-                    }
-                    catch (InterruptedException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                SystemClock.sleep(100);
-                System.out.println("PPP");
-                mHandler.post(ejecutarAccion);
-            }
-        }).start();
-    }
-
-    /**
-     * @name ejecutarAccion
-     * @description Creación de un Hilo de Tipo Runnable para ejecutar la funcionBD despues
-     * de que termine el hilo de la barra cargadora procesbar
-     * @return void
-     */
-    final Runnable ejecutarAccion = new Runnable() {
-        @Override
-        public void run() {
-            Redireccionar();
+            //Esperamos 1900 milisegundos hasta que termine.
+            SystemClock.sleep(0);
         }
-    };
 
+        if(view == imageViewGmail){
+            //open login activity IniciarSesionGmail
+            startActivity(new Intent(this, IniciarSesionGmail.class));
+            finish();
+        }
 
-    private void Redireccionar()
-    {
-        //Accedemos a la Pantalla del Registro del Usuario
-        Intent ListSong = new Intent(getApplicationContext(), EntrarCon.class);
-        startActivity(ListSong);
-        finish();
+        if(view == imageViewFacebook){
+            //open login activity IniciarSesionFacebook
+            //startActivity(new Intent(this, IniciarSesionFacebook.class));
+            //finish();
+        }
     }
 
     /**
@@ -136,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
      * @description Funcion gestion de la base de datos
      * @return void
      */
-    /*private void  funcionBD()
+    private void  funcionBD()
     {
 
         //Abrimos la Base de datos "BDUsuario" en modo escritura.
@@ -192,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         //Cerramos la Base de Datos
         //db.close();
 
-    }*/
+    }
 
     /**
      * @name public void onBackPressed ()

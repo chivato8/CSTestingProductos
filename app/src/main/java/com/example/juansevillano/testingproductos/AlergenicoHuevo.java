@@ -82,7 +82,14 @@ public class AlergenicoHuevo extends Fragment{
         }
         else
         {
-            ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo = new ArrayList<Ingrediente>();
+            if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaRegistroUsuario") == true)
+            {
+                ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo = new ArrayList<Ingrediente>();
+            }
+            else
+            {
+                ((VentanaRegistroProducto)getActivity()).list_ingredientes_huevo = new ArrayList<Ingrediente>();
+            }
         }
 
         hiloconexion = new ObtenerWebService();
@@ -95,7 +102,14 @@ public class AlergenicoHuevo extends Fragment{
         }
         else
         {
-            adaptador = new Adaptador(this.getActivity(), ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo);
+            if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaRegistroUsuario") == true)
+            {
+                adaptador = new Adaptador(this.getActivity(), ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo);
+            }
+            else
+            {
+                adaptador = new Adaptador(this.getActivity(), ((VentanaRegistroProducto)getActivity()).list_ingredientes_huevo);
+            }
         }
 
         //Se establece el adaptador en la Listview
@@ -121,12 +135,24 @@ public class AlergenicoHuevo extends Fragment{
                 }
                 else
                 {
-                    //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
-                    if (((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo.get(arg2).isChekeado()) {
-                        ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo.get(arg2).setChekeado(false);
-                    } else {
-                        //aqui al contrario que la anterior, que lo pase a true.
-                        ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo.get(arg2).setChekeado(true);
+                    if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaRegistroUsuario") == true)
+                    {
+                        //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                        if (((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo.get(arg2).isChekeado()) {
+                            ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo.get(arg2).setChekeado(false);
+                        } else {
+                            //aqui al contrario que la anterior, que lo pase a true.
+                            ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo.get(arg2).setChekeado(true);
+                        }                    }
+                    else
+                    {
+                        //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                        if (((VentanaRegistroProducto)getActivity()).list_ingredientes_huevo.get(arg2).isChekeado()) {
+                            ((VentanaRegistroProducto)getActivity()).list_ingredientes_huevo.get(arg2).setChekeado(false);
+                        } else {
+                            //aqui al contrario que la anterior, que lo pase a true.
+                            ((VentanaRegistroProducto)getActivity()).list_ingredientes_huevo.get(arg2).setChekeado(true);
+                        }
                     }
                 }
                 //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
@@ -388,12 +414,25 @@ public class AlergenicoHuevo extends Fragment{
                         }
                         else
                         {
-                            //Recorremos el objeto anterior mostrando los ingredientes uno a uno
-                            for(int i=0;i<pruebaJSON.length();i++)
+                            if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaRegistroUsuario") == true)
                             {
-                                ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo.add(new Ingrediente(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
-                                        pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
-                                        false));
+                                //Recorremos el objeto anterior mostrando los ingredientes uno a uno
+                                for(int i=0;i<pruebaJSON.length();i++)
+                                {
+                                    ((VentanaRegistroUsuario)getActivity()).list_ingredientes_huevo.add(new Ingrediente(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
+                                            pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
+                                            false));
+                                }
+                            }
+                            else
+                            {
+                                //Recorremos el objeto anterior mostrando los ingredientes uno a uno
+                                for(int i=0;i<pruebaJSON.length();i++)
+                                {
+                                    ((VentanaRegistroProducto)getActivity()).list_ingredientes_huevo.add(new Ingrediente(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
+                                            pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
+                                            false));
+                                }
                             }
                         }
 
