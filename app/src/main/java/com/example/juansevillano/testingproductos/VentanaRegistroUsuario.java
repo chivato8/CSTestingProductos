@@ -40,21 +40,21 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
     public List<Fragment> fragments = new ArrayList<Fragment>();
 
     //Se crea un ArrayList de tipo Ingrediente para cada uno de los alergenicos.
-    public ArrayList<Ingrediente> list_ingredientes_altamuz;
-    public ArrayList<Ingrediente> list_ingredientes_apio;
-    public ArrayList<Ingrediente> list_ingredientes_azufreysulfito;
-    public ArrayList<Ingrediente> list_ingredientes_cacahuete;
-    public ArrayList<Ingrediente> list_ingredientes_crustaceo;
-    public ArrayList<Ingrediente> list_ingredientes_frutoscascara;
-    public ArrayList<Ingrediente> list_ingredientes_gluten;
-    public ArrayList<Ingrediente> list_ingredientes_sesamo;
-    public ArrayList<Ingrediente> list_ingredientes_huevo;
-    public ArrayList<Ingrediente> list_ingredientes_lacteo;
-    public ArrayList<Ingrediente> list_ingredientes_molusco;
-    public ArrayList<Ingrediente> list_ingredientes_mostaza;
-    public ArrayList<Ingrediente> list_ingredientes_pescado;
-    public ArrayList<Ingrediente> list_ingredientes_soja;
-    public ArrayList<Ingrediente> list_ingredientes_otros;
+    public ArrayList<Ingrediente> list_ingredientes_altamuz = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_apio = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_azufreysulfito = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_cacahuete = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_crustaceo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_frutoscascara = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_gluten = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_sesamo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_huevo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_lacteo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_molusco = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_mostaza = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_pescado = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_soja = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_otros = new ArrayList<Ingrediente>();
 
     //Definimos una variable de tipo SQLiteDatabase
     SQLiteDatabase db;

@@ -2,6 +2,7 @@ package com.example.juansevillano.testingproductos;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -52,6 +53,8 @@ public class IniciarSesionGmail extends AppCompatActivity implements View.OnClic
 
         textViewRegistrarse = (TextView) findViewById(R.id.textViewRegistrarse);
 
+        textViewRegistrarse.setPaintFlags(textViewRegistrarse.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+
         progressDialog = new ProgressDialog(this);
 
         //attaching listener to button
@@ -59,7 +62,7 @@ public class IniciarSesionGmail extends AppCompatActivity implements View.OnClic
         textViewRegistrarse.setOnClickListener(this);
     }
 
-    private void registerUser(){
+    private void userLogin(){
 
         //getting email and password from edit texts
         String email = editTextEmail.getText().toString().trim();
@@ -82,8 +85,28 @@ public class IniciarSesionGmail extends AppCompatActivity implements View.OnClic
         progressDialog.setMessage("Iniciando Sesión por favor espere...");
         progressDialog.show();
 
+
+        //logging in the user
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressDialog.dismiss();
+                        //if the task is successfull
+                        if(task.isSuccessful()){
+                            //start the profile activity
+                            finish();
+                            startActivity(new Intent(getApplicationContext(), VentanaOpcionesEscaner.class));
+                        }
+                        else
+                        {
+                            Toast.makeText(IniciarSesionGmail.this,"Error de Inicio de Sesión. Email o Contraseña Incorrectos.¿Usted esta registrado?",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
         //creating a new user
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+        /*firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -102,7 +125,7 @@ public class IniciarSesionGmail extends AppCompatActivity implements View.OnClic
                         }
                         progressDialog.dismiss();
                     }
-                });
+                });*/
 
     }
 
@@ -110,7 +133,7 @@ public class IniciarSesionGmail extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         //calling register method on click
         if(view == buttonSignup){
-            registerUser();
+            userLogin();
         }
 
         if(view == textViewRegistrarse){

@@ -20,7 +20,7 @@
         android:adjustViewBounds="false"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.955"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -65,32 +65,50 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="40dp"
-        android:adjustViewBounds="false"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.016"
-        app:srcCompat="@mipmap/icontest"
-        app:layout_constraintHorizontal_bias="0.04" />
+        app:srcCompat="@mipmap/icontest" />
 
     <EditText
-        android:id="@+id/editTextNombreApellido"
+        android:id="@+id/editTextNombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:ems="12"
+        android:ems="5"
         android:gravity="center"
-        android:hint="Nombre y Apellidos"
+        android:hint="Nombre"
         android:inputType="textPersonName"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.513" />
+        app:layout_constraintHorizontal_bias="0.102"
+        app:layout_constraintVertical_bias="0.52" />
+
+    <EditText
+        android:id="@+id/editTextApellidos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="8"
+        android:gravity="center"
+        android:hint="Apellidos"
+        android:inputType="textPersonName"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.833"
+        app:layout_constraintVertical_bias="0.52" />
 
     <EditText
         android:id="@+id/editTextEmail"
@@ -143,7 +161,7 @@
         app:layout_constraintVertical_bias="0.984" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/checkBoxAceptarPrivacidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Acepto las Políticas de Privacidad"
@@ -171,7 +189,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.864"
+        app:layout_constraintHorizontal_bias="0.972"
         app:layout_constraintVertical_bias="0.843"
         android:autoLink="web"
         android:linksClickable="true"

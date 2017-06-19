@@ -33,21 +33,21 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
     public List<Fragment> fragments = new ArrayList<Fragment>();
 
     //Se crea un ArrayList de tipo Ingrediente para cada uno de los alergenicos.
-    public ArrayList<Ingrediente> list_ingredientes_altamuz;
-    public ArrayList<Ingrediente> list_ingredientes_apio;
-    public ArrayList<Ingrediente> list_ingredientes_azufreysulfito;
-    public ArrayList<Ingrediente> list_ingredientes_cacahuete;
-    public ArrayList<Ingrediente> list_ingredientes_crustaceo;
-    public ArrayList<Ingrediente> list_ingredientes_frutoscascara;
-    public ArrayList<Ingrediente> list_ingredientes_gluten;
-    public ArrayList<Ingrediente> list_ingredientes_sesamo;
-    public ArrayList<Ingrediente> list_ingredientes_huevo;
-    public ArrayList<Ingrediente> list_ingredientes_lacteo;
-    public ArrayList<Ingrediente> list_ingredientes_molusco;
-    public ArrayList<Ingrediente> list_ingredientes_mostaza;
-    public ArrayList<Ingrediente> list_ingredientes_pescado;
-    public ArrayList<Ingrediente> list_ingredientes_soja;
-    public ArrayList<Ingrediente> list_ingredientes_otros;
+    public ArrayList<Ingrediente> list_ingredientes_altamuz = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_apio= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_azufreysulfito = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_cacahuete = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_crustaceo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_frutoscascara = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_gluten = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_sesamo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_huevo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_lacteo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_molusco = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_mostaza = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_pescado = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_soja = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_otros = new ArrayList<Ingrediente>();
 
     //Definimos una variable de tipo SQLiteDatabase
     SQLiteDatabase db;
@@ -58,7 +58,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ventana_registro_usuario);
+        setContentView(R.layout.activity_ventana_registro_producto);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -88,7 +88,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         fragments.add(new AlergenicoPescado());
         fragments.add(new AlergenicoSoja());
         fragments.add(new AlergenicoOtros());
-        //fragments.add(new FinRegistroUsuario());
+        fragments.add(new FinRegistroProducto());
 
         //fragments.add(new FourFragment());
 
@@ -151,7 +151,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         tabLayout.getTabAt(13).setIcon(R.mipmap.pescadomini);
         tabLayout.getTabAt(14).setIcon(R.mipmap.sojamini);
         tabLayout.getTabAt(15).setIcon(R.mipmap.otrosmini);
-        //tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);
+        tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);
     }
 
     /**
@@ -176,7 +176,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         adapter.addFrag(new AlergenicoPescado(), "Pescado");
         adapter.addFrag(new AlergenicoSoja(), "Soja");
         adapter.addFrag(new AlergenicoOtros(), "Otros");
-        //adapter.addFrag(new FinRegistroUsuario(), "Fin Registro");
+        adapter.addFrag(new FinRegistroProducto(), "Fin Registro");
         viewPager.setAdapter(adapter);
     }
 

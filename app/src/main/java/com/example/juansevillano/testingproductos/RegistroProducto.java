@@ -91,8 +91,9 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
         ((VentanaRegistroProducto)getActivity()).list_tipo_producto = new ArrayList<TipoProducto>();
         ((VentanaRegistroProducto)getActivity()).list_empresa = new ArrayList<Empresa>();
 
-        // seleccionar las frutas del spinner
+        // seleccionar el tipo de empresa del spinner
         spinnertipo.setOnItemSelectedListener(this);
+        // seleccionar el nombre de la empresa del spinner
         spinnerempresa.setOnItemSelectedListener(this);
         return v;
     }
@@ -159,17 +160,21 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
             //Quiere decir que se obtuvo resultado pro lo tanto:
             //Desplegamos en pantalla el contenido del código de barra scaneado
             System.out.println(scanningResult.getContents());
-            String scanContent = scanningResult.getContents();
-            System.out.println(scanContent.toString());
-            //Se Instancia el Campo de Texto para el contenido  del código de barra
-            codbarra = (EditText)getActivity().findViewById(R.id.cbarra);
-            codbarra.setText(scanContent.toString());
-            System.out.println(codbarra.getText().toString());
-            System.out.println("Prueba 12");
+            if(scanningResult.getContents()!=null)
+            {
+                String scanContent = scanningResult.getContents();
+                System.out.println(scanContent.toString());
+                //Se Instancia el Campo de Texto para el contenido  del código de barra
+                codbarra = (EditText)getActivity().findViewById(R.id.cbarra);
+                codbarra.setText(scanContent.toString());
+                System.out.println(codbarra.getText().toString());
+                System.out.println("Prueba 12");
+            }
+
         }else{
             //Quiere decir que NO se obtuvo resultado
             Toast toast = Toast.makeText(this.getActivity().getApplicationContext(),
-                    "!No se ha recibido datos del scaneo¡", Toast.LENGTH_SHORT);
+                    "!No se ha recibido datos del escaneo¡", Toast.LENGTH_SHORT);
             toast.show();
         }
 
@@ -283,7 +288,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogempresa = new ProgressDialog(getActivity());
-            pDialogempresa.setMessage("Obtencion de los Tipos de Empresas..");
+            pDialogempresa.setMessage("Obtencion de los Tipos de Empresas...");
             pDialogempresa.setCancelable(false);
             pDialogempresa.show();
 

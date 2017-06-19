@@ -1,24 +1,20 @@
 package com.example.juansevillano.testingproductos;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.content.DialogInterface;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-
-import java.util.zip.Inflater;
 
 public class VentanaOpcionesEscaner extends AppCompatActivity implements View.OnClickListener {
 

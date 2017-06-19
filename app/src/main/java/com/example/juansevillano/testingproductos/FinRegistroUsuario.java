@@ -124,7 +124,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -134,7 +134,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -144,7 +144,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -154,7 +154,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -164,7 +164,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -174,7 +174,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -184,7 +184,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -194,7 +194,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -204,7 +204,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -214,7 +214,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -224,7 +224,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -234,7 +234,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -244,7 +244,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
@@ -254,7 +254,7 @@ public class FinRegistroUsuario extends Fragment {
                                     if (ingrediente.isChekeado())
                                     {
                                         String id = ingrediente.getid_ingrediente();
-
+                                        System.out.println(id);
                                         insertar_idusuario_idingrediente(elusuario[0].toString(), id.toString());
                                     }
                                 }
