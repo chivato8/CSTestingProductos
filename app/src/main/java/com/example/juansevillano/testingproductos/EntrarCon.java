@@ -219,6 +219,9 @@ public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnCo
                 //Toast.makeText(getBaseContext(), "Usuarios Registrados: " + count.getCount(), Toast.LENGTH_LONG).show();
                 Toast.makeText(getBaseContext(), "Accediendo a la Aplicación.", Toast.LENGTH_SHORT).show();
 
+                //Cerramos la Base de Datos
+                db.close();
+
                 //Accedemos a la Aplición para la Eleccion del Modo de Escaneo
                 Intent ListSong = new Intent(getApplicationContext(), VentanaOpcionesEscaner.class);
                 startActivity(ListSong);
@@ -233,7 +236,7 @@ public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnCo
                 SystemClock.sleep(50);
 
                 //Cerramos la Base de Datos
-                //db.close();
+                db.close();
 
                 //Accedemos a la Pantalla del Registro del Usuario
                 Intent ListSong = new Intent(getApplicationContext(), VentanaRegistroUsuario.class);

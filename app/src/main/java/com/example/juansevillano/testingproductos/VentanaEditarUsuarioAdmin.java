@@ -19,7 +19,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VentanaRegistroUsuario extends AppCompatActivity  {
+public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
 
     private android.app.FragmentManager manager;
 
@@ -29,29 +29,36 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
     public List<Fragment> fragments = new ArrayList<Fragment>();
 
     //Se crea un ArrayList de tipo Ingrediente para cada uno de los alergenicos.
-    public ArrayList<Ingrediente> list_ingredientes_altamuz = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_apio = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_azufreysulfito = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_cacahuete = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_crustaceo = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_frutoscascara = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_gluten = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_sesamo = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_huevo = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_lacteo = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_molusco = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_mostaza = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_pescado = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_soja = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_otros = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_altamuz= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_apio= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_azufreysulfito= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_cacahuete= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_crustaceo= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_frutoscascara= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_gluten= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_sesamo= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_huevo= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_lacteo= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_molusco= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_mostaza= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_pescado= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_soja= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_otros= new ArrayList<Ingrediente>();
 
     //Definimos una variable de tipo SQLiteDatabase
     SQLiteDatabase db;
 
+    //Definimos una Variable de tipo Cursor
+    public Cursor res;
+    //ID Usuario Elegido.
+    String elegido="0";
+
+    String id_asociado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ventana_registro_usuario);
+        setContentView(R.layout.activity_ventana_editar_usuario);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,8 +72,8 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
 
         manager = getFragmentManager();
 
-        fragments.add(new RegistroUsuario());
-        fragments.add(new AlergenicoAltamuz());
+        fragments.add(new EditarUsuario());
+        /*fragments.add(new AlergenicoAltamuz());
         fragments.add(new AlergenicoApio());
         fragments.add(new AlergenicoAzufreySulfitos());
         fragments.add(new AlergenicoCacahuete());
@@ -81,7 +88,7 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
         fragments.add(new AlergenicoPescado());
         fragments.add(new AlergenicoSoja());
         fragments.add(new AlergenicoOtros());
-        fragments.add(new FinRegistroUsuario());
+        fragments.add(new FinRegistroUsuario());*/
 
         //fragments.add(new FourFragment());
 
@@ -91,6 +98,9 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //ID Usuario Elegido.
+        id_asociado=getIntent().getStringExtra("id_asociado");
+
 
         FragmentViewPagerAdapter2 adapter = new FragmentViewPagerAdapter2(this.getSupportFragmentManager(), viewPager,fragments);
 
@@ -98,12 +108,17 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
 
         setupTabIcons();
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+    }
+
+    public String getMyData() {
+        return elegido;
     }
 
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setIcon(R.mipmap.registrousuario);
-        tabLayout.getTabAt(1).setIcon(R.mipmap.altamucesmini);
+        /*tabLayout.getTabAt(1).setIcon(R.mipmap.altamucesmini);
         tabLayout.getTabAt(2).setIcon(R.mipmap.apiomini);
         tabLayout.getTabAt(3).setIcon(R.mipmap.azucarmini);
         tabLayout.getTabAt(4).setIcon(R.mipmap.cacahuetesmini);
@@ -118,7 +133,7 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
         tabLayout.getTabAt(13).setIcon(R.mipmap.pescadomini);
         tabLayout.getTabAt(14).setIcon(R.mipmap.sojamini);
         tabLayout.getTabAt(15).setIcon(R.mipmap.otrosmini);
-        tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);
+        tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);*/
     }
 
     /**
@@ -127,8 +142,8 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
      */
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new RegistroUsuario(), "Registro");
-        adapter.addFrag(new AlergenicoAltamuz(), "Altamuz");
+        adapter.addFrag(new RegistroUsuario(), "Editar");
+        /*adapter.addFrag(new AlergenicoAltamuz(), "Altamuz");
         adapter.addFrag(new AlergenicoApio(), "Apio");
         adapter.addFrag(new AlergenicoAzufreySulfitos(), "Azufre y Sulfitos");
         adapter.addFrag(new AlergenicoCacahuete(), "Cacahuete");
@@ -143,7 +158,7 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
         adapter.addFrag(new AlergenicoPescado(), "Pescado");
         adapter.addFrag(new AlergenicoSoja(), "Soja");
         adapter.addFrag(new AlergenicoOtros(), "Otros");
-        adapter.addFrag(new FinRegistroUsuario(), "Fin Registro");
+        adapter.addFrag(new FinRegistroUsuario(), "Fin Registro");*/
         viewPager.setAdapter(adapter);
     }
 
@@ -187,72 +202,32 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
         if (true) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-            //Abrimos la Base de datos "BDUsuario" en modo escritura.
-            BDUsuario Usuarios=new BDUsuario(this,"BDUsuario",null,1);
-
-            //Ponemos la Base de datos en Modo Escritura.
-            db= Usuarios.getWritableDatabase();
-
-            //Comprobamos que la base de datos existe
-            if(db!=null)
+            alertDialog.setMessage("¿Desea Salir de la Edicción del Usuario? \nSi Sales de la Aplicación no se Procedera a la Modificación del Usuario.");
+            alertDialog.setTitle("Importante");
+            alertDialog.setIcon(R.mipmap.atencion_opt);
+            alertDialog.setCancelable(false);
+            alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener()
             {
-                //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan','Santander')");
-                //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan2','Santander2')");
-
-                //Comprobamos si la Base de datos con la que estamos trabajando esta VACIA
-                Cursor count=db.rawQuery("SELECT Nombre FROM Usuarios",null);
-
-                if(count.getCount()>0) //La Base de Datos SI tiene Usuario Registrado
+                public void onClick(DialogInterface dialog, int id)
                 {
-                    //count.moveToFirst();
-                    //Toast.makeText(getBaseContext(), "Usuarios Registrados: " + count.getCount(), Toast.LENGTH_LONG).show();
-
-                    Toast.makeText(getBaseContext(), "Accediendo a la Venta Principal.", Toast.LENGTH_SHORT).show();
-
-                    //Accedemos a la Aplición para la Eleccion del Modo de Escaneo
-                    Intent ListSong = new Intent(getApplicationContext(), VentanaOpcionesEscaner.class);
-                    startActivity(ListSong);
-                    finish();
-
-                }//La Base de Datos NO tiene Ningun Usuario Registrado
-                else
-                {
-                    //Cerramos la Base de Datos
-                    db.close();
-
-                    alertDialog.setMessage("¿Desea Salir del Registro del Usuario Nuevo? \nSi Sales de la Aplicación no se Procedera al Registro del Usuario.");
-                    alertDialog.setTitle("Importante");
-                    alertDialog.setIcon(R.mipmap.atencion_opt);
-                    alertDialog.setCancelable(false);
-                    alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            //No Realizamos ninguna Acceion
-
-                        }
-                    });
-                    alertDialog.setNegativeButton("Confirmar", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            Toast.makeText(getBaseContext(), "Saliendo del Registro del Usuario Nuevo....", Toast.LENGTH_SHORT).show();
-
-                            db.close();
-
-                            //Esperamos 50 milisegundos
-                            SystemClock.sleep(500);
-                            Salir();
-                        }
-                    });
-
-                    alertDialog.show();
+                    //No Realizamos ninguna Acceion
 
                 }
-            }
+            });
+            alertDialog.setNegativeButton("Confirmar", new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int id)
+                {
+                    Toast.makeText(getBaseContext(), "Saliendo de la Edicción de Usuario.....", Toast.LENGTH_SHORT).show();
 
-            //Cerramos la Base de Datos
-            db.close();
+                    //Esperamos 50 milisegundos
+                    SystemClock.sleep(500);
+                    Salir();
+                }
+            });
+
+            alertDialog.show();
+
         } else {
             super.onBackPressed();
         }
@@ -267,9 +242,8 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
     {
 
         finish();
-        Intent intent = new Intent(this, VentanaOpcionesEscaner.class);
+        Intent intent = new Intent(this, VentanaPrincipal.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-
     }
 }

@@ -11,10 +11,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.juansevillano.testingproductos.ComprobarSesion">
 
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tienes Sesión Iniciada con el Usuario:"
+        android:textAlignment="center"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.33"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -38,19 +47,12 @@
             android:text="@string/app_name"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/idTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textSize="14sp" />
-
     </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="log_out"
+        android:text="Cerrar Sesión"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:onClick="logOut"
         />
@@ -58,7 +60,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="revoke"
+        android:text="Continuar con la Sesión"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:onClick="revoke"
         />

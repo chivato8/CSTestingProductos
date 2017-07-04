@@ -1,32 +1,43 @@
 package com.example.juansevillano.testingproductos;
 
-import android.app.ActivityManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import static android.content.ContentValues.TAG;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class EditarUsuario extends Fragment{
 
-    //Definimos una variable de tipo SQLiteDatabase
-    SQLiteDatabase db;
+    String nombre;
+    String correo;
+    String telefono;
 
-    //ID Usuario Elegido.
-    String elegido;
+    EditText nomyapel;
+    EditText cor;
+    EditText tel;
 
-    //Definimos una Variable de tipo Cursor
-    public Cursor res;
+    // IP de mi Url
+    String IP = "http://tfgalimentos.16mb.com";
+
+    //Se crear un objetio de tipo ObtenerWebService
+    ObtenerWebService hiloconexion;
+
+
 
     public EditarUsuario() {
         // Required empty public constructor
@@ -50,97 +61,143 @@ public class EditarUsuario extends Fragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //Abrimos la Base de datos "BDUsuario" en modo escritura.
-        BDUsuario Usuario=new BDUsuario(getActivity(),"BDUsuario",null,1);
-
-        //Ponemos la Base de datos en Modo Escritura.
-        db= Usuario.getWritableDatabase();
-
-        // Obtener el control de la TabAFm
-        //System.out.println("PRUEBA - 1");
-
-        final VentanaEditarUsuario activity = ((VentanaEditarUsuario) getActivity());
-
-        //VentanaEditarUsuario activity = new VentanaEditarUsuario();
-
-        //Obtenemos el id_usuario que hemos elegido
-        String[] elusuario = new String[] {activity.getMyData()};
-
-        //System.out.println(elusuario[0]);
-
-        //System.out.println("PRUEBA - 2");
-
-        //Realizamos una consulta, en la que buscamos el usaurio elegido.
-        res=db.rawQuery("SELECT Nombre, Apellidos, Telefono, Correo_Electronico FROM Usuarios WHERE ID=?",elusuario);
-
-        res.moveToFirst();
-
-        //System.out.println("PRUEBA - 3 ");
-
         // Se une FragmentActivity
-        final VentanaEditarUsuario activity2 = ((VentanaEditarUsuario) getActivity());
+        final VentanaEditarUsuarioAdmin activity2 = ((VentanaEditarUsuarioAdmin) getActivity());
 
         // Obtener el control de los EditText de los Fragment
-        EditText nom = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.nombreU);
-        EditText apel = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.apellidos);
-        EditText cor = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.correo);
-        EditText tel = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.telefono);
+        nomyapel= (EditText)activity2.fragments.get(0).getView().findViewById(R.id.editnombre);
+        cor = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.editcorreo);
+        tel = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.edittelefono);
 
-        //Realizamos una Pruea que mostramos para comprobar el valor que obtenemos.
-        // String nombre= res.getString(0);
-        //System.out.println(nombre);
 
-        //Modificamos el valor que tiene el EditText
-        nom.setText(res.getString(0));
-        apel.setText(res.getString(1));
-        tel.setText(res.getString(2));
-        cor.setText(res.getString(3));
+        //final VentanaPrincipal ventanaPrincipal = ((VentanaPrincipal) getActivity());
+        //String id_asociado=ventanaPrincipal.id_asociado;
+        String id_asociado=activity2.id_asociado;
 
-        //System.out.println("PRUEBA - 4");
-
-        db.close();
-
-        System.out.println(comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuario"));
-
+        // Rutas de los Web Services
+        String GET_BY_ID = IP + "/obtener_usuarios_existentes.php?id_asociado="+id_asociado.toString();
+        hiloconexion = new ObtenerWebService();
+        hiloconexion.execute(GET_BY_ID,"1");
     }
 
+    /**
+     * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
+     * mediente archivos php.
+     */
+    public class ObtenerWebService extends AsyncTask<String,Void,String> {
 
-    public boolean comprobarActivityALaVista(Context context, String nombreClase){
+        @Override
+        protected String doInBackground(String... params) {
 
-            // Obtenemos nuestro manejador de activitys
-            ActivityManager am = (ActivityManager)
-                    context.getSystemService(Context.ACTIVITY_SERVICE);
-            // obtenemos la informacion de la tarea que se esta ejecutando
-            // actualmente
-            List< ActivityManager.RunningTaskInfo > taskInfo = am.getRunningTasks(1);
-            // Creamos una variable donde vamos a almacenar
-            // la activity que se encuentra a la vista
-            String nombreClaseActual = null;
+            String cadena = params[0];
+            URL url = null; // Url de donde queremos obtener información
+            String devuelve ="";
 
-            try{
-                // Creamos la variable donde vamos a guardar el objeto
-                // del que vamos a tomar el nombre
-                ComponentName componentName = null;
-                // si pudimos obtener la tarea actual, vamos a intentar cargar
-                // nuestro objeto
-                if(taskInfo != null && taskInfo.get(0) != null){
-                    componentName = taskInfo.get(0).topActivity;
+            if(params[1]=="1") {    // consulta por id
+
+                try {
+                    url = new URL(cadena);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //Abrir la conexión
+                    //connection.setRequestProperty("User-Agent", "Mozilla/5.0" +
+                    //        " (Linux; Android 1.5; es-ES) Ejemplo HTTP");
+                    //connection.setHeader("content-type", "application/json");
+
+                    int respuesta = connection.getResponseCode();
+                    StringBuilder result = new StringBuilder();
+
+                    if (respuesta == HttpURLConnection.HTTP_OK) {
+
+
+                        InputStream in = new BufferedInputStream(connection.getInputStream());  // preparo la cadena de entrada
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));  // la introduzco en un BufferedReader
+
+                        // El siguiente proceso lo hago porque el JSONOBject necesita un String y tengo
+                        // que tranformar el BufferedReader a String. Esto lo hago a traves de un
+                        // StringBuilder.
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);        // Paso toda la entrada al StringBuilder
+                        }
+
+                        //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
+                        JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+                        //Accedemos al vector de resultados
+                        JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
+
+                        //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
+                        String resultJSON = objetoJSON.getString("estado");
+
+                        if (resultJSON.equals("1")) {      // hay un alumno que mostrar
+
+                            //Obtenemos los ingrediente que vamos a mostrar en la aplicación
+                            JSONArray pruebaJSON = objetoJSON.getJSONArray("Usuario");
+
+                            nombre=pruebaJSON.getJSONObject(0).getString("nombre_apellidos");
+                            correo=pruebaJSON.getJSONObject(0).getString("correo_electronico");
+
+                            if(pruebaJSON.getJSONObject(0).getString("telefono")!="null")
+                            {
+                                telefono=pruebaJSON.getJSONObject(0).getString("telefono");
+                            }
+                            else
+                            {
+                                telefono="";
+                            }
+
+
+                        } else if (resultJSON == "2") {
+                            devuelve = "No hay alumnos";
+                        }
+
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                // Si pudimos cargar nuestro objeto, vamos a obtener
-                // el nombre con el que vamos a comparar
-                if(componentName != null){
-                    nombreClaseActual = componentName.getClassName();
-                    System.out.println(nombreClaseActual);
-                }
 
-            }catch (NullPointerException e){
-
-                Log.e(TAG, "Error al tomar el nombre de la clase actual " + e);
-                return false;
+                return devuelve;
             }
+            return null;
+        }
 
-            // devolvemos el resultado de la comparacion
-            return nombreClase.equals(nombreClaseActual);
+        @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //resultado.setText(s);
+            Asignar_valores();
+            super.onPostExecute(s);
+            //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
+            //adaptador.notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    public void Asignar_valores()
+    {
+        nomyapel.setText(nombre);
+        System.out.println("N "+nomyapel.toString());
+        cor.setText(correo);
+        System.out.println("C "+cor.toString());
+        tel.setText(telefono);
+        System.out.println("T "+tel.toString());
     }
 
 }

@@ -3,33 +3,25 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/edit_usuario"
+            android:icon="@drawable/ic_edit_border_color"
+            android:title="Editar Usuario" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/registrar_producto"
+            android:icon="@drawable/ic_add_border_color"
+            android:title="Registrar Producto" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/info_alergenico"
+                android:icon="@drawable/ic_info_border_color"
+                android:title="Inf. 14 Alergenicos" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/cerrar_sesion"
+                android:icon="@drawable/ic_cerrar_border_color"
+                android:title="Cerrar Sesión" />
         </menu>
     </item>
 

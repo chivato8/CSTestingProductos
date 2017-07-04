@@ -3,7 +3,6 @@ package com.example.juansevillano.testingproductos;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -14,11 +13,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -220,6 +215,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         if (true) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
+            /*
             //Abrimos la Base de datos "BDUsuario" en modo escritura.
             BDUsuario Usuarios=new BDUsuario(this,"BDUsuario",null,1);
 
@@ -252,8 +248,8 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
                 {
                     //Cerramos la Base de Datos
                     db.close();
-
-                    alertDialog.setMessage("¿Desea Salir de la Aplicación? \nSi Sales de la Aplicación no se Procedera al Registro del Usuario.");
+*/
+                    alertDialog.setMessage("¿Desea Salir de la Inserción del Producto Nuevo? \nSi Sales de la Aplicación no se Procedera al Registro del Producto.");
                     alertDialog.setTitle("Importante");
                     alertDialog.setIcon(R.mipmap.atencion_opt);
                     alertDialog.setCancelable(false);
@@ -269,27 +265,23 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
                     {
                         public void onClick(DialogInterface dialog, int id)
                         {
-                            Toast.makeText(getBaseContext(), "Saliendo de la Aplicación....", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), "Saliendo de la Inserción del Producto Nuevo....", Toast.LENGTH_SHORT).show();
 
-                            db.close();
+                            //db.close();
 
                             //Esperamos 50 milisegundos
                             SystemClock.sleep(500);
-                            finish();
-                            Intent intent = new Intent(Intent.ACTION_MAIN);
-                            intent.addCategory(Intent.CATEGORY_HOME);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            Salir();
                         }
                     });
 
                     alertDialog.show();
 
-                }
-            }
+                //}
+            //}
 
             //Cerramos la Base de Datos
-            db.close();
+            //db.close();
         } else {
             super.onBackPressed();
         }
@@ -304,9 +296,8 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
     {
 
         finish();
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(this, VentanaPrincipal.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
     }

@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -234,7 +233,7 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
                     //Cerramos la Base de Datos
                     db.close();
 
-                    alertDialog.setMessage("¿Desea Salir de la Aplicación? \nSi Sales de la Aplicación no se Procedera al Registro del Usuario.");
+                    alertDialog.setMessage("¿Desea Salir de la Edicción del Usuario? \nSi Sales de la Aplicación no se Procedera a la Modificación  del Usuario.");
                     alertDialog.setTitle("Importante");
                     alertDialog.setIcon(R.mipmap.atencion_opt);
                     alertDialog.setCancelable(false);
@@ -250,17 +249,13 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
                     {
                         public void onClick(DialogInterface dialog, int id)
                         {
-                            Toast.makeText(getBaseContext(), "Saliendo de la Aplicación....", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), "Saliendo de la Edicción del Usuario....", Toast.LENGTH_SHORT).show();
 
                             db.close();
 
                             //Esperamos 50 milisegundos
                             SystemClock.sleep(500);
-                            finish();
-                            Intent intent = new Intent(Intent.ACTION_MAIN);
-                            intent.addCategory(Intent.CATEGORY_HOME);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            Salir();
                         }
                     });
 
@@ -284,12 +279,9 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
      */
     public void Salir()
     {
-
         finish();
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(this, VentanaOpcionesEscaner.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-
     }
 }

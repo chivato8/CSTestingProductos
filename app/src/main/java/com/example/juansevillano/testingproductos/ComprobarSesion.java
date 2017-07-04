@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -22,10 +25,18 @@ public class ComprobarSesion extends AppCompatActivity implements GoogleApiClien
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
+    private ImageView photoImageView;
+    private TextView nameTextView;
+    private TextView emailTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_comprobar_sesion);
+
+        photoImageView = (ImageView) findViewById(R.id.photoImageView);
+        nameTextView = (TextView) findViewById(R.id.nameTextView);
+        emailTextView = (TextView) findViewById(R.id.emailTextView);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -42,14 +53,21 @@ public class ComprobarSesion extends AppCompatActivity implements GoogleApiClien
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    firebaseAuth.signOut();
+                    setUserData(user);
+                    //firebaseAuth.signOut();
 
-                    goLogInScreen();
+                    //goLogInScreen();
                 } else {
                     goLogInScreen();
                 }
             }
         };
+    }
+
+    private void setUserData(FirebaseUser user) {
+        nameTextView.setText(user.getDisplayName());
+        emailTextView.setText(user.getEmail());
+        Glide.with(this).load(user.getPhotoUrl()).into(photoImageView);
     }
 
     @Override
@@ -65,7 +83,7 @@ public class ComprobarSesion extends AppCompatActivity implements GoogleApiClien
         startActivity(intent);
     }
 
-    public void logOut() {
+    public void logOut(View view) {
         firebaseAuth.signOut();
 
         Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
@@ -81,18 +99,9 @@ public class ComprobarSesion extends AppCompatActivity implements GoogleApiClien
     }
 
     public void revoke(View view) {
-        firebaseAuth.signOut();
-
-        Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                if (status.isSuccess()) {
-                    goLogInScreen();
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.not_revoke, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        Intent intent = new Intent(this, VentanaPrincipal.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
