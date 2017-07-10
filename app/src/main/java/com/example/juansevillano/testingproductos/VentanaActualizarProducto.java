@@ -3,8 +3,6 @@ package com.example.juansevillano.testingproductos;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
@@ -19,7 +17,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VentanaEditarUsuario extends AppCompatActivity  {
+public class VentanaActualizarProducto extends AppCompatActivity  {
 
     private android.app.FragmentManager manager;
 
@@ -29,34 +27,34 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
     public List<Fragment> fragments = new ArrayList<Fragment>();
 
     //Se crea un ArrayList de tipo Ingrediente para cada uno de los alergenicos.
-    public ArrayList<Ingrediente> list_ingredientes_altamuz= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_altamuz = new ArrayList<Ingrediente>();
     public ArrayList<Ingrediente> list_ingredientes_apio= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_azufreysulfito= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_cacahuete= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_crustaceo= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_frutoscascara= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_gluten= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_sesamo= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_huevo= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_lacteo= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_molusco= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_mostaza= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_pescado= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_soja= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_otros= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_azufreysulfito = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_cacahuete = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_crustaceo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_frutoscascara = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_gluten = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_sesamo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_huevo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_lacteo = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_molusco = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_mostaza = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_pescado = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_soja = new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_otros = new ArrayList<Ingrediente>();
 
-    //Definimos una variable de tipo SQLiteDatabase
-    SQLiteDatabase db;
 
-    //Definimos una Variable de tipo Cursor
-    public Cursor res;
-    //ID Usuario Elegido.
-    String elegido="0";
+    public ArrayList<TipoProducto> list_tipo_producto;
+    public ArrayList<Empresa> list_empresa;
+
+    //Variable que almacena el codigo_barra
+    String codigo_barra;
+    String id_producto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ventana_editar_usuario);
+        setContentView(R.layout.activity_ventana_actualizar_producto);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -70,7 +68,7 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
 
         manager = getFragmentManager();
 
-        fragments.add(new RegistroUsuario());
+        fragments.add(new ActualizarProducto());
         fragments.add(new AlergenicoAltamuz());
         fragments.add(new AlergenicoApio());
         fragments.add(new AlergenicoAzufreySulfitos());
@@ -86,7 +84,7 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
         fragments.add(new AlergenicoPescado());
         fragments.add(new AlergenicoSoja());
         fragments.add(new AlergenicoOtros());
-        fragments.add(new FinRegistroUsuario());
+        fragments.add(new FinActualizarProducto());
 
         //fragments.add(new FourFragment());
 
@@ -97,8 +95,8 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //ID Usuario Elegido.
-        elegido=getIntent().getStringExtra("elegido");
-
+        codigo_barra=getIntent().getStringExtra("codigo_barra");
+        id_producto=getIntent().getStringExtra("id_producto");
 
         FragmentViewPagerAdapter2 adapter = new FragmentViewPagerAdapter2(this.getSupportFragmentManager(), viewPager,fragments);
 
@@ -106,16 +104,37 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
 
         setupTabIcons();
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-
     }
 
-    public String getMyData() {
-        return elegido;
+    //////////////////////////////////////////
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("Prueba 10");
+        super.onActivityResult(requestCode, resultCode, data);
+        ActivityResultBus.getInstance().postQueue(
+                new ActivityResultEvent(requestCode, resultCode, data));
+        System.out.println("Prueba 11");
     }
+
+
+    ////////////////////////////////////////
+
+
+    // In your activity
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("Prueba 10");
+        if (fragments.get(0) != null) {
+            System.out.println("Prueba 11");
+            fragments.get(0).onActivityResult(requestCode, resultCode, data);
+        }
+    }*/
 
     private void setupTabIcons() {
 
-        tabLayout.getTabAt(0).setIcon(R.mipmap.registrousuario);
+        tabLayout.getTabAt(0).setIcon(R.mipmap.registroproducto);
         tabLayout.getTabAt(1).setIcon(R.mipmap.altamucesmini);
         tabLayout.getTabAt(2).setIcon(R.mipmap.apiomini);
         tabLayout.getTabAt(3).setIcon(R.mipmap.azucarmini);
@@ -140,7 +159,7 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
      */
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new RegistroUsuario(), "Editar");
+        adapter.addFrag(new RegistroProducto(), "Actualizar");
         adapter.addFrag(new AlergenicoAltamuz(), "Altamuz");
         adapter.addFrag(new AlergenicoApio(), "Apio");
         adapter.addFrag(new AlergenicoAzufreySulfitos(), "Azufre y Sulfitos");
@@ -156,7 +175,7 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
         adapter.addFrag(new AlergenicoPescado(), "Pescado");
         adapter.addFrag(new AlergenicoSoja(), "Soja");
         adapter.addFrag(new AlergenicoOtros(), "Otros");
-        adapter.addFrag(new FinRegistroUsuario(), "Fin Registro");
+        adapter.addFrag(new FinRegistroProducto(), "Fin Actualizar");
         viewPager.setAdapter(adapter);
     }
 
@@ -211,24 +230,7 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
         if (true) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-            //Abrimos la Base de datos "BDUsuario" en modo escritura.
-            BDUsuario Usuarios=new BDUsuario(this,"BDUsuario",null,1);
-
-            //Ponemos la Base de datos en Modo Escritura.
-            db= Usuarios.getWritableDatabase();
-
-            //Comprobamos que la base de datos existe
-            if(db!=null)
-            {
-                //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan','Santander')");
-                //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan2','Santander2')");
-
-                //Comprobamos si la Base de datos con la que estamos trabajando esta VACIA
-                Cursor count=db.rawQuery("SELECT Nombre FROM Usuarios",null);
-
-                if(count.getCount()>0) //La Base de Datos SI tiene Usuario Registrado
-                {
-                    alertDialog.setMessage("¿Desea Salir de la Edicción del Usuario? \nSi Sales de la Aplicación no se Procedera a la Modificación  del Usuario.");
+                    alertDialog.setMessage("¿Desea Salir de la Actualización del Producto? \nSi Sales de la Aplicación no se Procedera a la Modificación del Producto.");
                     alertDialog.setTitle("Importante");
                     alertDialog.setIcon(R.mipmap.atencion_opt);
                     alertDialog.setCancelable(false);
@@ -244,43 +246,9 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
                     {
                         public void onClick(DialogInterface dialog, int id)
                         {
-                            Toast.makeText(getBaseContext(), "Saliendo de la Edicción del Usuario....", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), "Saliendo de la Actualización del Producto....", Toast.LENGTH_SHORT).show();
 
-                            db.close();
-
-                            //Esperamos 50 milisegundos
-                            SystemClock.sleep(500);
-                            Salir();
-                        }
-                    });
-
-                    alertDialog.show();
-
-                }//La Base de Datos NO tiene Ningun Usuario Registrado
-                else
-                {
-                    //Cerramos la Base de Datos
-                    db.close();
-
-                    alertDialog.setMessage("¿Desea Salir de la Edicción del Usuario? \nSi Sales de la Aplicación no se Procedera a la Modificación  del Usuario.");
-                    alertDialog.setTitle("Importante");
-                    alertDialog.setIcon(R.mipmap.atencion_opt);
-                    alertDialog.setCancelable(false);
-                    alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            //No Realizamos ninguna Acceion
-
-                        }
-                    });
-                    alertDialog.setNegativeButton("Confirmar", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            Toast.makeText(getBaseContext(), "Saliendo de la Edicción del Usuario....", Toast.LENGTH_SHORT).show();
-
-                            db.close();
+                            //db.close();
 
                             //Esperamos 50 milisegundos
                             SystemClock.sleep(500);
@@ -290,12 +258,11 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
 
                     alertDialog.show();
 
-                }
-
-            }
+                //}
+            //}
 
             //Cerramos la Base de Datos
-            db.close();
+            //db.close();
         } else {
             super.onBackPressed();
         }
@@ -308,9 +275,12 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
      */
     public void Salir()
     {
+
         finish();
-        Intent intent = new Intent(this, VentanaOpcionesEscaner.class);
+        Intent intent = new Intent(this, VentanaPrincipal.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+
     }
+
 }

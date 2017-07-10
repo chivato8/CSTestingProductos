@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
@@ -45,8 +44,6 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
     public ArrayList<Ingrediente> list_ingredientes_soja= new ArrayList<Ingrediente>();
     public ArrayList<Ingrediente> list_ingredientes_otros= new ArrayList<Ingrediente>();
 
-    //Definimos una variable de tipo SQLiteDatabase
-    SQLiteDatabase db;
 
     //Definimos una Variable de tipo Cursor
     public Cursor res;
@@ -73,7 +70,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         manager = getFragmentManager();
 
         fragments.add(new EditarUsuario());
-        /*fragments.add(new AlergenicoAltamuz());
+        fragments.add(new AlergenicoAltamuz());
         fragments.add(new AlergenicoApio());
         fragments.add(new AlergenicoAzufreySulfitos());
         fragments.add(new AlergenicoCacahuete());
@@ -88,7 +85,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         fragments.add(new AlergenicoPescado());
         fragments.add(new AlergenicoSoja());
         fragments.add(new AlergenicoOtros());
-        fragments.add(new FinRegistroUsuario());*/
+        fragments.add(new FinEditarUsuarioAdmin());
 
         //fragments.add(new FourFragment());
 
@@ -118,7 +115,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setIcon(R.mipmap.registrousuario);
-        /*tabLayout.getTabAt(1).setIcon(R.mipmap.altamucesmini);
+        tabLayout.getTabAt(1).setIcon(R.mipmap.altamucesmini);
         tabLayout.getTabAt(2).setIcon(R.mipmap.apiomini);
         tabLayout.getTabAt(3).setIcon(R.mipmap.azucarmini);
         tabLayout.getTabAt(4).setIcon(R.mipmap.cacahuetesmini);
@@ -133,7 +130,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         tabLayout.getTabAt(13).setIcon(R.mipmap.pescadomini);
         tabLayout.getTabAt(14).setIcon(R.mipmap.sojamini);
         tabLayout.getTabAt(15).setIcon(R.mipmap.otrosmini);
-        tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);*/
+        tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);
     }
 
     /**
@@ -143,7 +140,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new RegistroUsuario(), "Editar");
-        /*adapter.addFrag(new AlergenicoAltamuz(), "Altamuz");
+        adapter.addFrag(new AlergenicoAltamuz(), "Altamuz");
         adapter.addFrag(new AlergenicoApio(), "Apio");
         adapter.addFrag(new AlergenicoAzufreySulfitos(), "Azufre y Sulfitos");
         adapter.addFrag(new AlergenicoCacahuete(), "Cacahuete");
@@ -158,7 +155,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         adapter.addFrag(new AlergenicoPescado(), "Pescado");
         adapter.addFrag(new AlergenicoSoja(), "Soja");
         adapter.addFrag(new AlergenicoOtros(), "Otros");
-        adapter.addFrag(new FinRegistroUsuario(), "Fin Registro");*/
+        adapter.addFrag(new FinRegistroUsuario(), "Fin Registro");
         viewPager.setAdapter(adapter);
     }
 
@@ -202,7 +199,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         if (true) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-            alertDialog.setMessage("¿Desea Salir de la Edicción del Usuario? \nSi Sales de la Aplicación no se Procedera a la Modificación del Usuario.");
+            alertDialog.setMessage("¿Desea Salir de la Actualización del Usuario? \nSi Sales de la Aplicación no se Procedera a la Modificación del Usuario.");
             alertDialog.setTitle("Importante");
             alertDialog.setIcon(R.mipmap.atencion_opt);
             alertDialog.setCancelable(false);
@@ -218,7 +215,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
             {
                 public void onClick(DialogInterface dialog, int id)
                 {
-                    Toast.makeText(getBaseContext(), "Saliendo de la Edicción de Usuario.....", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Saliendo de la Actualización del Usuario.....", Toast.LENGTH_SHORT).show();
 
                     //Esperamos 50 milisegundos
                     SystemClock.sleep(500);

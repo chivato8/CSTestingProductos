@@ -47,6 +47,18 @@ public class AlergenicoFrutosCascara extends Fragment{
     Adaptador adaptador;
     //Se crear un objetio de tipo ObtenerWebService
     ObtenerWebService hiloconexion;
+    //Se crear un objetio de tipo ObtenerWebService
+    ObtenerWebService2 hiloconexion2;
+    //Se crear un objetio de tipo ObtenerWebService
+    ObtenerWebService21 hiloconexion21;
+    //Se crear un objetio de tipo ObtenerWebService
+    ObtenerWebService3 hiloconexion3;
+    //Se crear un objetio de tipo ObtenerWebService
+    ObtenerWebService4 hiloconexion4;
+    //Vector para almacenar los id_ingredientes que existen en la consulta que hemos realizado en la Base de datos.
+    String[]id_ingrediente;
+
+    Boolean vacio=false;
 
     public AlergenicoFrutosCascara() {
         // Required empty public constructor
@@ -69,10 +81,7 @@ public class AlergenicoFrutosCascara extends Fragment{
 
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
-        // IP de mi Url
-        String IP = "http://tfgalimentos.16mb.com";
-        // Rutas de los Web Services
-        String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=6";
+
 
         lstLista = (ListView) getView().findViewById(R.id.lstLista);
 
@@ -88,12 +97,61 @@ public class AlergenicoFrutosCascara extends Fragment{
             }
             else
             {
-                ((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara = new ArrayList<Ingrediente>();
+                if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaRegistroProducto") == true)
+                {
+                    ((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara = new ArrayList<Ingrediente>();
+                }
+                else
+                {
+                    if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin"))
+                    {
+                        ((VentanaEditarUsuarioAdmin) getActivity()).list_ingredientes_frutoscascara = new ArrayList<Ingrediente>();
+                    }
+                    else
+                    {
+                        ((VentanaActualizarProducto) getActivity()).list_ingredientes_frutoscascara = new ArrayList<Ingrediente>();
+                    }
+                }
             }
         }
 
-        hiloconexion = new ObtenerWebService();
-        hiloconexion.execute(GET, "1");   // Parámetros que recibe doInBackground
+        if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin"))
+        {
+            final VentanaEditarUsuarioAdmin activity = ((VentanaEditarUsuarioAdmin) getActivity());
+            String idasociadoAdmin = activity.id_asociado;
+            System.out.println("ID_USUARIO----: "+idasociadoAdmin.toString());
+            // IP de mi Url
+            String IP = "http://tfgalimentos.16mb.com";
+            // Rutas de los Web Services
+            String GET = IP + "/ObtenerIngredientes_Usuario_Ingrediente.php?id_asociado="+idasociadoAdmin.toString();
+            hiloconexion2 = new ObtenerWebService2();
+            hiloconexion2.execute(GET, "1");   // Parámetros que recibe doInBackground
+        }
+        else
+        {
+            if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaActualizarProducto"))
+            {
+                final VentanaActualizarProducto activity = ((VentanaActualizarProducto) getActivity());
+                String idproducto = activity.id_producto;
+                System.out.println("ID_PRODUCTO ----: "+idproducto.toString());
+                // IP de mi Url
+                String IP = "http://tfgalimentos.16mb.com";
+                // Rutas de los Web Services
+                String GET = IP + "/ObtenerIngredientes_Producto_Ingrediente.php?id_producto="+idproducto.toString();
+                hiloconexion21 = new ObtenerWebService21();
+                hiloconexion21.execute(GET, "1");   // Parámetros que recibe doInBackground
+            }
+            else
+            {
+                // IP de mi Url
+                String IP = "http://tfgalimentos.16mb.com";
+                // Rutas de los Web Services
+                String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=6";
+                hiloconexion = new ObtenerWebService();
+                hiloconexion.execute(GET, "1");   // Parámetros que recibe doInBackground
+            }
+
+        }
 
         //Se define un nuevo adaptador de tipo Adaptador donde se le pasa como argumentos el contexto de la actividad y el arraylist de los dias
         if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true)
@@ -108,7 +166,21 @@ public class AlergenicoFrutosCascara extends Fragment{
             }
             else
             {
-                adaptador = new Adaptador(this.getActivity(), ((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara);
+                if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaRegistroProducto") == true)
+                {
+                    adaptador = new Adaptador(this.getActivity(), ((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara);
+                }
+                else
+                {
+                    if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin"))
+                    {
+                        adaptador = new Adaptador(this.getActivity(), ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_frutoscascara);
+                    }
+                    else
+                    {
+                        adaptador = new Adaptador(this.getActivity(), ((VentanaActualizarProducto)getActivity()).list_ingredientes_frutoscascara);
+                    }
+                }
             }
         }
 
@@ -146,12 +218,38 @@ public class AlergenicoFrutosCascara extends Fragment{
                         }                    }
                     else
                     {
-                        //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
-                        if (((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara.get(arg2).isChekeado()) {
-                            ((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara.get(arg2).setChekeado(false);
-                        } else {
-                            //aqui al contrario que la anterior, que lo pase a true.
-                            ((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara.get(arg2).setChekeado(true);
+                        if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaRegistroProducto") == true)
+                        {
+                            //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                            if (((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara.get(arg2).isChekeado()) {
+                                ((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara.get(arg2).setChekeado(false);
+                            } else {
+                                //aqui al contrario que la anterior, que lo pase a true.
+                                ((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara.get(arg2).setChekeado(true);
+                            }
+                        }
+                        else
+                        {
+                            if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin"))
+                            {
+                                //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                                if (((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_frutoscascara.get(arg2).isChekeado()) {
+                                    ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_frutoscascara.get(arg2).setChekeado(false);
+                                } else {
+                                    //aqui al contrario que la anterior, que lo pase a true.
+                                    ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_frutoscascara.get(arg2).setChekeado(true);
+                                }
+                            }
+                            else
+                            {
+                                //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
+                                if (((VentanaActualizarProducto)getActivity()).list_ingredientes_frutoscascara.get(arg2).isChekeado()) {
+                                    ((VentanaActualizarProducto)getActivity()).list_ingredientes_frutoscascara.get(arg2).setChekeado(false);
+                                } else {
+                                    //aqui al contrario que la anterior, que lo pase a true.
+                                    ((VentanaActualizarProducto)getActivity()).list_ingredientes_frutoscascara.get(arg2).setChekeado(true);
+                                }
+                            }
                         }
                     }
                 }
@@ -479,5 +577,507 @@ public class AlergenicoFrutosCascara extends Fragment{
         }
     }
 
+    /**
+     * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
+     * mediente archivos php.
+     */
+    public class ObtenerWebService2 extends AsyncTask<String,Void,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String cadena = params[0];
+            URL url = null; // Url de donde queremos obtener información
+            String devuelve ="";
+
+
+            if(params[1]=="1") //GET
+            {
+                try {
+                    url = new URL(cadena);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();  //Abrir la conexión
+                    /*connection.setRequestProperty("User-Agent", "Mozilla/5.0" +
+                            " (Linux; Android 1.5; es-ES) Ejemplo HTTP");*/
+                    //connection.setHeader("content-type", "application/json");
+
+                    int respuesta = connection.getResponseCode();
+                    StringBuilder result = new StringBuilder();
+
+                    if (respuesta == HttpURLConnection.HTTP_OK){
+
+
+                        InputStream in = new BufferedInputStream(connection.getInputStream());  // preparo la cadena de entrada
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));  // la introduzco en un BufferedReader
+
+                        // El siguiente proceso lo hago porque el JSONOBject necesita un String y tengo
+                        // que tranformar el BufferedReader a String. Esto lo hago a traves de un
+                        // StringBuilder.
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);        // Paso toda la entrada al StringBuilder
+                        }
+
+                        //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
+                        JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+
+                        //Accedemos al vector de resultados
+                        JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
+
+                        //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
+                        String resultJSON = objetoJSON.getString("estado");
+                        System.out.println("Prueba 1 " + resultJSON);
+
+                        if (resultJSON.equals("1")){      // hay alumnos a mostrar
+                            JSONArray pruebaJSON = objetoJSON.getJSONArray("UsuarioIngrediente");   // estado es el nombre del campo en el JSON
+
+                            id_ingrediente=new String[Integer.valueOf(pruebaJSON.length())];
+
+                            //Almacenamos todos los id_ingrediente en el vector.
+                            for(int i=0;i<pruebaJSON.length();i++){
+                                System.out.println(pruebaJSON.getJSONObject(i).getString("id_ingrediente"));
+                                id_ingrediente[i]=pruebaJSON.getJSONObject(i).getString("id_ingrediente");
+                            }
+
+
+                        }
+                        else {
+                            devuelve = "No hay alumnos";
+                            vacio=true;
+                        }
+
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return devuelve;
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //resultado.setText(s);
+            super.onPostExecute(s);
+            RegistrarIngredientes();
+            //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
+            //adaptador.notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    /**
+     * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
+     * mediente archivos php.
+     */
+    public class ObtenerWebService21 extends AsyncTask<String,Void,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String cadena = params[0];
+            URL url = null; // Url de donde queremos obtener información
+            String devuelve ="";
+
+
+            if(params[1]=="1") //GET
+            {
+                try {
+                    url = new URL(cadena);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();  //Abrir la conexión
+                    /*connection.setRequestProperty("User-Agent", "Mozilla/5.0" +
+                            " (Linux; Android 1.5; es-ES) Ejemplo HTTP");*/
+                    //connection.setHeader("content-type", "application/json");
+
+                    int respuesta = connection.getResponseCode();
+                    StringBuilder result = new StringBuilder();
+
+                    if (respuesta == HttpURLConnection.HTTP_OK){
+
+
+                        InputStream in = new BufferedInputStream(connection.getInputStream());  // preparo la cadena de entrada
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));  // la introduzco en un BufferedReader
+
+                        // El siguiente proceso lo hago porque el JSONOBject necesita un String y tengo
+                        // que tranformar el BufferedReader a String. Esto lo hago a traves de un
+                        // StringBuilder.
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);        // Paso toda la entrada al StringBuilder
+                        }
+
+                        //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
+                        JSONArray respuestaJSON = new JSONArray("["+result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+
+                        //Accedemos al vector de resultados
+                        JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
+
+                        //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
+                        String resultJSON = objetoJSON.getString("estado");
+                        System.out.println("Prueba 1 ----" + resultJSON);
+
+                        if (resultJSON.equals("1")){      // hay alumnos a mostrar
+                            JSONArray pruebaJSON;
+
+                            pruebaJSON = objetoJSON.getJSONArray("ProductoIngrediente");   // estado es el nombre del campo en el JSON
+
+                            id_ingrediente=new String[Integer.valueOf(pruebaJSON.length())];
+
+                            //Almacenamos todos los id_ingrediente en el vector.
+                            for(int i=0;i<pruebaJSON.length();i++){
+                                System.out.println(pruebaJSON.getJSONObject(i).getString("id_ingrediente"));
+                                id_ingrediente[i]=pruebaJSON.getJSONObject(i).getString("id_ingrediente");
+                            }
+
+
+                        }
+                        else {
+                            devuelve = "No hay Usuario";
+                            vacio=true;
+                        }
+
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return devuelve;
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //resultado.setText(s);
+            super.onPostExecute(s);
+            RegistrarIngredientes();
+            //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
+            //adaptador.notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    private void RegistrarIngredientes()
+    {
+        if(vacio==false)
+        {
+            // IP de mi Url
+            String IP = "http://tfgalimentos.16mb.com";
+            // Rutas de los Web Services
+            String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=6";
+            hiloconexion3 = new ObtenerWebService3();
+            hiloconexion3.execute(GET, "1");   // Parámetros que recibe doInBackground
+        }
+        else
+        {
+            // IP de mi Url
+            String IP = "http://tfgalimentos.16mb.com";
+            // Rutas de los Web Services
+            String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=6";
+            hiloconexion4 = new ObtenerWebService4();
+            hiloconexion4.execute(GET, "1");   // Parámetros que recibe doInBackground
+        }
+
+    }
+
+    /**
+     * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
+     * mediente archivos php.
+     */
+    public class ObtenerWebService3 extends AsyncTask<String,Void,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String cadena = params[0];
+            URL url = null; // Url de donde queremos obtener información
+            String devuelve = "";
+
+
+            if (params[1] == "1") //GET
+            {
+                try {
+                    url = new URL(cadena);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();  //Abrir la conexión
+                    /*connection.setRequestProperty("User-Agent", "Mozilla/5.0" +
+                            " (Linux; Android 1.5; es-ES) Ejemplo HTTP");*/
+                    //connection.setHeader("content-type", "application/json");
+
+                    int respuesta = connection.getResponseCode();
+                    StringBuilder result = new StringBuilder();
+
+                    if (respuesta == HttpURLConnection.HTTP_OK) {
+
+
+                        InputStream in = new BufferedInputStream(connection.getInputStream());  // preparo la cadena de entrada
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));  // la introduzco en un BufferedReader
+
+                        // El siguiente proceso lo hago porque el JSONOBject necesita un String y tengo
+                        // que tranformar el BufferedReader a String. Esto lo hago a traves de un
+                        // StringBuilder.
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);        // Paso toda la entrada al StringBuilder
+                        }
+
+                        //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
+                        JSONArray respuestaJSON = new JSONArray("["+result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+                        //Accedemos al vector de resultados
+                        JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
+
+                        //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
+                        String resultJSON = objetoJSON.getString("estado");
+
+                        // Comprobamos si hay ingredientes para mostrar
+                        if (resultJSON.equals("1")) {
+                            //Obtenemos los ingrediente que vamos a mostrar en la aplicación
+                            JSONArray pruebaJSON = objetoJSON.getJSONArray("Transtorno_Ingrediente");
+
+                            if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin") == true) {
+
+                                Boolean marcador=false;
+
+                                for (int j = 0; j < pruebaJSON.length(); j++) {
+                                    for (int i = 0; i < id_ingrediente.length; i++) {
+                                        if (id_ingrediente[i].equals(pruebaJSON.getJSONObject(j).getString("id_ingrediente"))) {
+                                            ((VentanaEditarUsuarioAdmin) getActivity()).list_ingredientes_frutoscascara.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                                    pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
+                                                    true));
+                                            marcador = true;
+                                        }
+                                    }
+                                    if (marcador == false) {
+                                        ((VentanaEditarUsuarioAdmin) getActivity()).list_ingredientes_frutoscascara.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                                pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
+                                                false));
+                                    }
+                                    marcador = false;
+                                }
+                            } else {
+                                Boolean marcador=false;
+
+                                for (int j = 0; j < pruebaJSON.length(); j++) {
+                                    for (int i = 0; i < id_ingrediente.length; i++) {
+                                        if (id_ingrediente[i].equals(pruebaJSON.getJSONObject(j).getString("id_ingrediente"))) {
+                                            ((VentanaActualizarProducto) getActivity()).list_ingredientes_frutoscascara.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                                    pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
+                                                    true));
+                                            marcador = true;
+                                        }
+                                    }
+                                    if (marcador == false) {
+                                        ((VentanaActualizarProducto) getActivity()).list_ingredientes_frutoscascara.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                                pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
+                                                false));
+                                    }
+                                    marcador = false;
+                                }
+                            }
+
+                        }
+                        //Si no existe ingredientes devolvemos un String comentado que no existe ingredientes
+                        else if (resultJSON.equals("2")) {
+                            devuelve = "No hay Ingredientes Pertenecientes a esté Alergenico.";
+                        }
+
+                    }
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return devuelve;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //resultado.setText(s);
+            //super.onPostExecute(s);
+            //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
+            adaptador.notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    /**
+     * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
+     * mediente archivos php.
+     */
+    public class ObtenerWebService4 extends AsyncTask<String,Void,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String cadena = params[0];
+            URL url = null; // Url de donde queremos obtener información
+            String devuelve ="";
+
+            try {
+                url = new URL(cadena);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //Abrir la conexión
+                //connection.setRequestProperty("User-Agent", "Mozilla/5.0" +
+                //       " (Linux; Android 1.5; es-ES) Ejemplo HTTP");
+                //connection.setHeader("content-type", "application/json");
+
+                int respuesta = connection.getResponseCode();
+                StringBuilder result = new StringBuilder();
+
+                if (respuesta == HttpURLConnection.HTTP_OK)
+                {
+
+                    // preparo la cadena de entrada
+                    InputStream in = new BufferedInputStream(connection.getInputStream());
+                    // la introduzco en un BufferedReader
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                    // El siguiente proceso lo hago porque el JSONOBject necesita un String y tengo
+                    // que tranformar el BufferedReader a String. Esto lo hago a traves de un
+                    // StringBuilder.
+                    String line;
+                    while ((line = reader.readLine()) != null)
+                    {
+                        // Paso toda la entrada al StringBuilder
+                        result.append(line);
+                    }
+
+                    //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
+                    JSONArray respuestaJSON = new JSONArray("["+result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+                    //Accedemos al vector de resultados
+                    JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
+
+                    //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
+                    String resultJSON = objetoJSON.getString("estado");
+
+                    // Comprobamos si hay ingredientes para mostrar
+                    if (resultJSON.equals("1")) {
+                        //Obtenemos los ingrediente que vamos a mostrar en la aplicación
+                        JSONArray pruebaJSON = objetoJSON.getJSONArray("Transtorno_Ingrediente");
+                        if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin") == true)
+                        {
+                            //Recorremos el objeto anterior mostrando los ingredientes uno a uno
+                            for(int i=0;i<pruebaJSON.length();i++)
+                            {
+                                ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_frutoscascara.add(new Ingrediente(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
+                                        pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
+                                        false));
+                            }
+                        }
+                        else
+                        {
+                            //Recorremos el objeto anterior mostrando los ingredientes uno a uno
+                            for(int i=0;i<pruebaJSON.length();i++)
+                            {
+                                ((VentanaActualizarProducto)getActivity()).list_ingredientes_frutoscascara.add(new Ingrediente(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
+                                        pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
+                                        false));
+                            }
+                        }
+
+                    }
+                    //Si no existe ingredientes devolvemos un String comentado que no existe ingredientes
+                    else if (resultJSON.equals("2")){
+                        devuelve = "No hay Ingredientes Pertenecientes a esté Alergenico.";
+                    }
+
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return devuelve;
+        }
+
+        @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //resultado.setText(s);
+            //super.onPostExecute(s);
+            //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
+            adaptador.notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
 
 }

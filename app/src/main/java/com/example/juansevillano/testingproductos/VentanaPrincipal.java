@@ -491,7 +491,6 @@ public class VentanaPrincipal extends AppCompatActivity
                         if (resultJSON == "1") {      // Se ha insertado el usuario correctamente
                             devuelve = "Usuario insertado correctamente";
 
-
                         } else if (resultJSON == "2") {
                             devuelve = "El Usuario no pudo insertarse";
                         }

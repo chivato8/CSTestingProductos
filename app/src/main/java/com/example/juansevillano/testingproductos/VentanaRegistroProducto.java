@@ -3,7 +3,6 @@ package com.example.juansevillano.testingproductos;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
@@ -44,8 +43,6 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
     public ArrayList<Ingrediente> list_ingredientes_soja = new ArrayList<Ingrediente>();
     public ArrayList<Ingrediente> list_ingredientes_otros = new ArrayList<Ingrediente>();
 
-    //Definimos una variable de tipo SQLiteDatabase
-    SQLiteDatabase db;
 
     public ArrayList<TipoProducto> list_tipo_producto;
     public ArrayList<Empresa> list_empresa;
@@ -215,40 +212,6 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         if (true) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-            /*
-            //Abrimos la Base de datos "BDUsuario" en modo escritura.
-            BDUsuario Usuarios=new BDUsuario(this,"BDUsuario",null,1);
-
-            //Ponemos la Base de datos en Modo Escritura.
-            db= Usuarios.getWritableDatabase();
-
-            //Comprobamos que la base de datos existe
-            if(db!=null)
-            {
-                //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan','Santander')");
-                //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan2','Santander2')");
-
-                //Comprobamos si la Base de datos con la que estamos trabajando esta VACIA
-                Cursor count=db.rawQuery("SELECT Nombre FROM Usuarios",null);
-
-                if(count.getCount()>0) //La Base de Datos SI tiene Usuario Registrado
-                {
-                    //count.moveToFirst();
-                    //Toast.makeText(getBaseContext(), "Usuarios Registrados: " + count.getCount(), Toast.LENGTH_LONG).show();
-
-                    Toast.makeText(getBaseContext(), "Accediendo a la Venta Principal.", Toast.LENGTH_SHORT).show();
-
-                    //Accedemos a la Aplición para la Eleccion del Modo de Escaneo
-                    Intent ListSong = new Intent(getApplicationContext(), VentanaOpcionesEscaner.class);
-                    startActivity(ListSong);
-                    finish();
-
-                }//La Base de Datos NO tiene Ningun Usuario Registrado
-                else
-                {
-                    //Cerramos la Base de Datos
-                    db.close();
-*/
                     alertDialog.setMessage("¿Desea Salir de la Inserción del Producto Nuevo? \nSi Sales de la Aplicación no se Procedera al Registro del Producto.");
                     alertDialog.setTitle("Importante");
                     alertDialog.setIcon(R.mipmap.atencion_opt);
@@ -300,6 +263,34 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
+    }
+
+    public void ProductoYaRegistrado(final String codigo_barra, final String id_producto)
+    {
+        System.out.println("EXISTEEEEE 22222");
+        android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(VentanaRegistroProducto.this);
+
+        alertDialog.setMessage("!Ya Existe un Producto con el Codigo de Barra que as insertado¡. ¿Desea Actualizar dicho Producto?");
+        alertDialog.setTitle("Importante");
+        alertDialog.setIcon(R.mipmap.atencion_opt);
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //No Realizamos ninguna Acceion
+
+            }
+        });
+        alertDialog.setNegativeButton("Confirmar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                System.out.println("CODIGOOOO---"+codigo_barra);
+                Intent intent = new Intent(VentanaRegistroProducto.this, VentanaActualizarProducto.class);
+                intent.putExtra("codigo_barra",codigo_barra.toString());
+                intent.putExtra("id_producto",id_producto.toString());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+        alertDialog.show();
     }
 
 }

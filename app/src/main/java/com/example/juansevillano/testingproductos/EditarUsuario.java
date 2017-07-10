@@ -26,10 +26,12 @@ public class EditarUsuario extends Fragment{
     String nombre;
     String correo;
     String telefono;
+    String id_asociado;
 
     EditText nomyapel;
     EditText cor;
     EditText tel;
+    EditText idasociado;
 
     // IP de mi Url
     String IP = "http://tfgalimentos.16mb.com";
@@ -69,10 +71,9 @@ public class EditarUsuario extends Fragment{
         cor = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.editcorreo);
         tel = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.edittelefono);
 
-
         //final VentanaPrincipal ventanaPrincipal = ((VentanaPrincipal) getActivity());
         //String id_asociado=ventanaPrincipal.id_asociado;
-        String id_asociado=activity2.id_asociado;
+        id_asociado=activity2.id_asociado;
 
         // Rutas de los Web Services
         String GET_BY_ID = IP + "/obtener_usuarios_existentes.php?id_asociado="+id_asociado.toString();
@@ -173,8 +174,8 @@ public class EditarUsuario extends Fragment{
         @Override
         protected void onPostExecute(String s) {
             //resultado.setText(s);
-            Asignar_valores();
             super.onPostExecute(s);
+            Asignar_valores();
             //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
             //adaptador.notifyDataSetChanged();
         }

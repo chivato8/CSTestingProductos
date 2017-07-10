@@ -23,10 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ComprobarSesion" />
-        <activity android:name=".EntrarCon" />
-        <activity android:name=".IniciarSesionGmail" />
-        <activity android:name=".RegistrarUsuarioGmail" />
+        <activity android:name=".ComprobarSesion"
+            android:screenOrientation="portrait" />
+        <activity android:name=".EntrarCon"
+            android:screenOrientation="portrait" />
+        <activity android:name=".IniciarSesionGmail"
+            android:screenOrientation="portrait" />
+        <activity android:name=".RegistrarUsuarioGmail"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".VentanaOpcionesEscaner"
             android:screenOrientation="portrait" />
@@ -35,25 +39,36 @@
             android:name=".VentanaRegistroUsuario"
             android:label="Ventana Registro Usuarios"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".VentanaEditarUsuario"
             android:label="Ventana Editar Usuarios"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".VentanaEditarUsuarioAdmin"
             android:label="Ventana Editar Usuarios"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".VentanaRegistroProducto"
             android:label="Ventana Registrar Productos"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".VentanaActualizarProducto"
+            android:label="Ventana Actualizar Productos"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".VentanaPrincipal"
             android:label="@string/title_activity_ventana_principal"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

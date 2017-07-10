@@ -1,7 +1,10 @@
 package com.example.juansevillano.testingproductos;
 
 
+import android.app.ActivityManager;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,6 +22,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
+
 public class VentanaOpcionesEscaner extends AppCompatActivity implements View.OnClickListener {
 
     //Usamos la Clase BDUsuario para acceder a los datos de la Base de Datos.
@@ -29,6 +36,9 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
 
     //Definimos una Variable de tipo Cursor
     Cursor res;
+
+    //Definimos una variable de tipo SQLiteDatabase
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,10 +116,11 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 finish();
                 return true;
             case R.id.editar_usuario:
-                //Pedimos al Usuario que elige un usuario de la lista.
+                //Pedimos al Usuario que elige un usuario de la lista para Actualizar.
                 createRadioListDialogEditar();
                 return true;
             case R.id.borrar_usuario:
+                //Pedimos al Usuario que eliga un usuario de la Lista para Eliminar.
                 createRadioListDialogBorrar();
                 return true;
             case R.id.irventanausuarios:
@@ -271,6 +282,8 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
 
                             Toast toast = Toast.makeText(getApplicationContext(), "!Usuario Borrado Correctamente¡", Toast.LENGTH_SHORT);
                             toast.show();
+
+                            ComporbarSIExisteUsuario();
                         }
                     });
 
@@ -284,6 +297,66 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public void ComporbarSIExisteUsuario()
+    {
+        //COMPROBAMOS SI EXISTE ALGUN USUARIO EN LA BASE DE DATOS.
+
+        //Abrimos la Base de datos "BDUsuario" en modo escritura.
+        BDUsuario Usuarios=new BDUsuario(this,"BDUsuario",null,1);
+
+        //Ponemos la Base de datos en Modo Escritura.
+        db= Usuarios.getWritableDatabase();
+
+        //Comprobamos que la base de datos existe
+        if(db!=null)
+        {
+            android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(this);
+            //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan','Santander')");
+            //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan2','Santander2')");
+
+            //Comprobamos si la Base de datos con la que estamos trabajando esta VACIA
+            Cursor count=db.rawQuery("SELECT Nombre FROM Usuarios",null);
+
+            if(count.getCount()<=0) //La Base de Datos SI tiene Usuario Registrado
+            {
+                //Cerramos la Base de Datos
+                db.close();
+
+                alertDialog.setMessage("No Existe ningún Usuario Registrado en la Aplicación como Invitado. Para poder usar la Aplicación debe de tener un Usuario Registrado. Pulsa Cancelar para Salir de la Aplicación. ¿Deseas Proceder al Registro de un Usuario?.");
+                alertDialog.setTitle("Importante");
+                alertDialog.setIcon(R.mipmap.atencion_opt);
+                alertDialog.setCancelable(false);
+                alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        //No Realizamos ninguna Acceion
+                        Toast.makeText(getBaseContext(), "Saliendo de la Aplicación....", Toast.LENGTH_SHORT).show();
+
+                        db.close();
+
+                        //Esperamos 50 milisegundos
+                        SystemClock.sleep(500);
+                        Salir();
+
+                    }
+                });
+                alertDialog.setNegativeButton("Confirmar", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Intent intent = new Intent(VentanaOpcionesEscaner.this, VentanaRegistroUsuario.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+
+                alertDialog.show();
+
+            }
+        }
     }
 
     /**
@@ -413,6 +486,49 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
         Intent intent = new Intent(this, EntrarCon.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    /**
+     * @name public boolean comprobarActivityALaVista(Context context, String nombreClase)
+     * @description Metodo para comprobar en que activity nos encontramos actualmente
+     * @return boolean
+     */
+    public boolean comprobarActivityALaVista(Context context, String nombreClase){
+
+        // Obtenemos nuestro manejador de activitys
+        ActivityManager am = (ActivityManager)
+                context.getSystemService(Context.ACTIVITY_SERVICE);
+        // obtenemos la informacion de la tarea que se esta ejecutando
+        // actualmente
+        List< ActivityManager.RunningTaskInfo > taskInfo = am.getRunningTasks(1);
+        // Creamos una variable donde vamos a almacenar
+        // la activity que se encuentra a la vista
+        String nombreClaseActual = null;
+
+        try{
+            // Creamos la variable donde vamos a guardar el objeto
+            // del que vamos a tomar el nombre
+            ComponentName componentName = null;
+            // si pudimos obtener la tarea actual, vamos a intentar cargar
+            // nuestro objeto
+            if(taskInfo != null && taskInfo.get(0) != null){
+                componentName = taskInfo.get(0).topActivity;
+            }
+            // Si pudimos cargar nuestro objeto, vamos a obtener
+            // el nombre con el que vamos a comparar
+            if(componentName != null){
+                nombreClaseActual = componentName.getClassName();
+                System.out.println(nombreClaseActual);
+            }
+
+        }catch (NullPointerException e){
+
+            Log.e(TAG, "Error al tomar el nombre de la clase actual " + e);
+            return false;
+        }
+
+        // devolvemos el resultado de la comparacion
+        return nombreClase.equals(nombreClaseActual);
     }
 }
 

@@ -177,6 +177,17 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
     }
 
     /**
+     * @name public void onSupportNavigateUp ()
+     * @description Si hacemos clic en el boton hacia atras saldremos de la aplicacion
+     * @return void
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return false;
+    }
+
+    /**
      * @name public void onBackPressed ()
      * @description Si hacemos clic en el boton hacia atras saldremos de la aplicacion
      * @return void
@@ -204,22 +215,6 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
 
                 if(count.getCount()>0) //La Base de Datos SI tiene Usuario Registrado
                 {
-                    //count.moveToFirst();
-                    //Toast.makeText(getBaseContext(), "Usuarios Registrados: " + count.getCount(), Toast.LENGTH_LONG).show();
-
-                    Toast.makeText(getBaseContext(), "Accediendo a la Venta Principal.", Toast.LENGTH_SHORT).show();
-
-                    //Accedemos a la Aplición para la Eleccion del Modo de Escaneo
-                    Intent ListSong = new Intent(getApplicationContext(), VentanaOpcionesEscaner.class);
-                    startActivity(ListSong);
-                    finish();
-
-                }//La Base de Datos NO tiene Ningun Usuario Registrado
-                else
-                {
-                    //Cerramos la Base de Datos
-                    db.close();
-
                     alertDialog.setMessage("¿Desea Salir del Registro del Usuario Nuevo? \nSi Sales de la Aplicación no se Procedera al Registro del Usuario.");
                     alertDialog.setTitle("Importante");
                     alertDialog.setIcon(R.mipmap.atencion_opt);
@@ -243,6 +238,44 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
                             //Esperamos 50 milisegundos
                             SystemClock.sleep(500);
                             Salir();
+                        }
+                    });
+
+                    alertDialog.show();
+
+                }//La Base de Datos NO tiene Ningun Usuario Registrado
+                else
+                {
+                    //Cerramos la Base de Datos
+                    db.close();
+
+                    alertDialog.setMessage("No Existe ningún Usuario Registrado en la Aplicación como Invitado. Para poder usar la Aplicación debe de tener un Usuario Registrado. Pulsa Cancelar para Salir de la Aplicación. ¿Deseas Proceder al Registro de un Usuario?.");
+                    alertDialog.setTitle("Importante");
+                    alertDialog.setIcon(R.mipmap.atencion_opt);
+                    alertDialog.setCancelable(false);
+                    alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            //No Realizamos ninguna Acceion
+                            Toast.makeText(getBaseContext(), "Saliendo de la Aplicación....", Toast.LENGTH_SHORT).show();
+
+                            db.close();
+
+                            //Esperamos 50 milisegundos
+                            SystemClock.sleep(500);
+                            finish();
+                            Intent intent = new Intent(VentanaRegistroUsuario.this, EntrarCon.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+
+                        }
+                    });
+                    alertDialog.setNegativeButton("Confirmar", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            
                         }
                     });
 

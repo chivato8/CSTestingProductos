@@ -1,14 +1,10 @@
 package com.example.juansevillano.testingproductos;
 
-import android.app.ActivityManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +12,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,29 +32,25 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 
-public class FinRegistroProducto extends Fragment {
+public class FinEditarUsuarioAdmin extends Fragment {
 
-    //Obtenemos el contenido del edittext del codigo de barra
-    private EditText codbarra;
-    private String codigobarra;
-    //Obtenemos el contenido del edittext del nombre del producto
-    private EditText nomproducto;
-    private String nombreproducto;
-    //Obtenemos el contenido del spinner seleccionado tipo producto
-    //Spinner para el tipo de productos
-    private Spinner spinnertip;
-    private String tipoproducto;
-    //Obtenemos el contenido del spinner seleccionado empresa que lo fabrica
-    //Spinner para la empresa que fabrico el producto
-    private Spinner spinneremp;
-    private String empresafabrica;
+    //Obtenemos el contenido del edittext del nombre y apellidos del usuario
+    private EditText nombreAd;
+    private String nombreAdmin;
+    //Obtenemos el contenido del edittext del correo del usuario
+    private EditText correoAd;
+    private String correoAdmin;
+    //Obtenemos el contenido del edittext del telefono del usuario
+    private EditText telefonoAd;
+    private String telefonoAdmin;
+    //Obtenemos el contenido del edittext del id asociado a dicha cuenta gmail
+    private EditText idasociadoAd;
+    private String idasociadoAdmin;
 
-    private String id_producto;
+
+    private String id_usuario;
 
     private Boolean Bandera=false;
 
@@ -73,8 +64,6 @@ public class FinRegistroProducto extends Fragment {
     //Creamos un Objeto de Tipo Ingrediente
     Ingrediente ingrediente;
 
-    RegistroUsuario registroUsuario= new RegistroUsuario();
-
     //Se crear un objetio de tipo ObtenerWebService
     ObtenerWebService hiloconexion1;
 
@@ -84,13 +73,13 @@ public class FinRegistroProducto extends Fragment {
     //Se crear un objetio de tipo ObtenerWebService
     ObtenerWebService3 hiloconexion3;
 
+    //Se crear un objetio de tipo ObtenerWebService
+    ObtenerWebService4 hiloconexion4;
+
     // IP de mi Url
     String IP = "http://tfgalimentos.16mb.com";
-    // Rutas de los Web Services
-    final String INSERT = IP + "/Insertar_Producto.php";
 
-
-    public FinRegistroProducto() {
+    public FinEditarUsuarioAdmin() {
         // Required empty public constructor
     }
 
@@ -105,7 +94,7 @@ public class FinRegistroProducto extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_fin_registro_producto, container, false);
+        return inflater.inflate(R.layout.activity_fin_editar_usuario_admin, container, false);
     }
 
     @Override
@@ -119,24 +108,55 @@ public class FinRegistroProducto extends Fragment {
                 switch (view.getId()) {
                     case R.id.crear:
                         // Definimos un objeto del activity VentanaEditarUsuario
-                        final VentanaRegistroProducto activity = ((VentanaRegistroProducto) getActivity());
+                        final VentanaEditarUsuarioAdmin activity = ((VentanaEditarUsuarioAdmin) getActivity());
 
-                        //Obtenemos el contenido del edittext del codigo de barra
-                        codbarra = (EditText) activity.fragments.get(0).getView().findViewById(R.id.cbarra);
-                        codigobarra = codbarra.getText().toString();
-                        //Obtenemos el contenido del edittext del nombre del producto
-                        nomproducto = (EditText) activity.fragments.get(0).getView().findViewById(R.id.nomproducto);
-                        nombreproducto = nomproducto.getText().toString();
-                        //Obtenemos el contenido del spinner del tipo de producto
-                        spinnertip = (Spinner) activity.fragments.get(0).getView().findViewById(R.id.spinnertipoproducto);
-                        //Obtenemos el contenido del spinner del nombre de la empresa
-                        spinneremp = (Spinner) activity.fragments.get(0).getView().findViewById(R.id.spinnerempresa);
+                        //Obtenemos el contenido del edittext del nombre del usuario
+                        nombreAd = (EditText) activity.fragments.get(0).getView().findViewById(R.id.editnombre);
+                        nombreAdmin = nombreAd.getText().toString();
+                        //Obtenemos el contenido del edittext del apellidos del usuario
+                        correoAd = (EditText) activity.fragments.get(0).getView().findViewById(R.id.editcorreo);
+                        correoAdmin = correoAd.getText().toString();
+                        //Obtenemos el contenido del edittext del teléfono del usuario
+                        telefonoAd = (EditText) activity.fragments.get(0).getView().findViewById(R.id.edittelefono);
+                        telefonoAdmin = telefonoAd.getText().toString();
+                        //Obtenemos el contenido del edittext del id asociado del usuario
+                        idasociadoAdmin = activity.id_asociado;
+
+                        //Comprobamos si el nombre del usuairo y el correo no son vacios
+                        if (!nombreAdmin.equals("") && !correoAdmin.equals(""))
+                        {
+                            // Rutas de los Web Services
+                            final String DELETE = IP + "/Borrar_Usuario_Ingrediente.php";
+                            hiloconexion1 = new ObtenerWebService();
+                            hiloconexion1.execute(DELETE, "1", idasociadoAdmin.toString());
+                        }
+                        //Si el edittext nombre y el edittex correo son vacios mostrarmos un mensaje u notificación advirtiendo
+                        //que son campos obligatorios
+                        else {
+                            LayoutInflater inflater = getActivity().getLayoutInflater();
+                            View layout = inflater.inflate(R.layout.contenidotoast, (ViewGroup) getView().findViewById(R.id.toast_layout_root));
+
+                            TextView txtMsg = (TextView) layout.findViewById(R.id.text_toast);
+                            txtMsg.setText("Campos Obligatorios:");
+
+                            if (nombreAdmin.equals("")) {
+                                txtMsg.setText(txtMsg.getText().toString() + "\n- Nombre y Apellidos");
+                            }
+
+                            if (correoAdmin.equals("")) {
+                                txtMsg.setText(txtMsg.getText().toString() + "\n- Correo Electrónico");
+                            }
+
+                            int duration = Toast.LENGTH_LONG;
+
+                            Toast toast = new Toast(getActivity().getApplicationContext());
+                            toast.setDuration(duration);
+                            toast.setView(layout);
+                            toast.show();
+
+                        }
 
 
-                        // Rutas de los Web Services
-                        final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codigobarra.toString();
-                        hiloconexion1 = new ObtenerWebService();
-                        hiloconexion1.execute(GET,"1");
                 }
 
             }
@@ -144,55 +164,255 @@ public class FinRegistroProducto extends Fragment {
 
     }
 
-
     /**
-     * @name public boolean comprobarActivityALaVista(Context context, String nombreClase)
-     * @description Metodo para comprobar en que activity nos encontramos actualmente
-     * @return boolean
+     * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
+     * mediente archivos php.
      */
-    public boolean comprobarActivityALaVista(Context context, String nombreClase){
+    public class ObtenerWebService extends AsyncTask<String,Void,String> {
 
-        // Obtenemos nuestro manejador de activitys
-        ActivityManager am = (ActivityManager)
-                context.getSystemService(Context.ACTIVITY_SERVICE);
-        // obtenemos la informacion de la tarea que se esta ejecutando
-        // actualmente
-        List< ActivityManager.RunningTaskInfo > taskInfo = am.getRunningTasks(1);
-        // Creamos una variable donde vamos a almacenar
-        // la activity que se encuentra a la vista
-        String nombreClaseActual = null;
+        @Override
+        protected String doInBackground(String... params) {
 
-        try{
-            // Creamos la variable donde vamos a guardar el objeto
-            // del que vamos a tomar el nombre
-            ComponentName componentName = null;
-            // si pudimos obtener la tarea actual, vamos a intentar cargar
-            // nuestro objeto
-            if(taskInfo != null && taskInfo.get(0) != null){
-                componentName = taskInfo.get(0).topActivity;
+            String cadena = params[0];
+            URL url = null; // Url de donde queremos obtener información
+            String devuelve ="";
+
+
+            if(params[1]=="1") //GET
+            {
+                try {
+                    HttpURLConnection urlConn;
+
+                    DataOutputStream printout;
+                    DataInputStream input;
+                    url = new URL(cadena);
+                    urlConn = (HttpURLConnection) url.openConnection();
+                    urlConn.setDoInput(true);
+                    urlConn.setDoOutput(true);
+                    urlConn.setUseCaches(false);
+                    urlConn.setRequestProperty("Content-Type", "application/json");
+                    urlConn.setRequestProperty("Accept", "application/json");
+                    urlConn.connect();
+                    //Creo el Objeto JSON
+                    JSONObject jsonParam = new JSONObject();
+                    jsonParam.put("id_asociado", params[2]);
+                    // Envio los parámetros post.
+                    OutputStream os = urlConn.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(
+                            new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(jsonParam.toString());
+                    writer.flush();
+                    writer.close();
+
+                    int respuesta = urlConn.getResponseCode();
+
+
+                    StringBuilder result = new StringBuilder();
+
+                    if (respuesta == HttpURLConnection.HTTP_OK) {
+
+                        String line;
+                        BufferedReader br=new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+                        while ((line=br.readLine()) != null) {
+                            result.append(line);
+                            //response+=line;
+                        }
+
+                        //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
+                        JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+                        //Accedemos al vector de resultados
+                        JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
+
+                        String resultJSON = objetoJSON.getString("estado");   // estado es el nombre del campo en el JSON
+
+                        if (resultJSON == "1") {      // hay un Usuario que mostrar
+                            devuelve = "Usuario borrado correctamente";
+
+                        } else if (resultJSON == "2") {
+                            devuelve = "No hay Usuario";
+                        }
+
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return devuelve;
+
             }
-            // Si pudimos cargar nuestro objeto, vamos a obtener
-            // el nombre con el que vamos a comparar
-            if(componentName != null){
-                nombreClaseActual = componentName.getClassName();
-                System.out.println(nombreClaseActual);
-            }
-
-        }catch (NullPointerException e){
-
-            Log.e(TAG, "Error al tomar el nombre de la clase actual " + e);
-            return false;
+            return null;
         }
 
-        // devolvemos el resultado de la comparacion
-        return nombreClase.equals(nombreClaseActual);
+        @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //resultado.setText(s);
+            super.onPostExecute(s);
+            ActualizarUsuario();
+            //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
+            //adaptador.notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    private void ActualizarUsuario()
+    {
+        // Rutas de los Web Services
+        final String UPDATE = IP + "/Actualizar_Usuario.php";
+        hiloconexion2 = new ObtenerWebService2();
+        if(telefonoAdmin==null)
+        {
+            hiloconexion2.execute(UPDATE,"1",idasociadoAdmin.toString(),nombreAdmin.toString(),correoAdmin.toString(),null);
+        }
+        else
+        {
+            hiloconexion2.execute(UPDATE,"1",idasociadoAdmin.toString(),nombreAdmin.toString(),correoAdmin.toString(),telefonoAdmin.toString());
+        }
+
     }
 
     /**
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService extends AsyncTask<String,Void,String> {
+    public class ObtenerWebService2 extends AsyncTask<String,Void,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String cadena = params[0];
+            URL url = null; // Url de donde queremos obtener información
+            String devuelve ="";
+
+
+            if(params[1]=="1") //UPDATE
+            {
+                try {
+                    HttpURLConnection urlConn;
+
+                    DataOutputStream printout;
+                    DataInputStream input;
+                    url = new URL(cadena);
+                    urlConn = (HttpURLConnection) url.openConnection();
+                    urlConn.setDoInput(true);
+                    urlConn.setDoOutput(true);
+                    urlConn.setUseCaches(false);
+                    urlConn.setRequestProperty("Content-Type", "application/json");
+                    urlConn.setRequestProperty("Accept", "application/json");
+                    urlConn.connect();
+                    //Creo el Objeto JSON
+                    JSONObject jsonParam = new JSONObject();
+                    jsonParam.put("id_asociado",params[2]);
+                    jsonParam.put("nombre_apellidos", params[3]);
+                    jsonParam.put("correo_electronico", params[4]);
+                    jsonParam.put("telefono", params[5]);
+                    // Envio los parámetros post.
+                    OutputStream os = urlConn.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(
+                            new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(jsonParam.toString());
+                    writer.flush();
+                    writer.close();
+
+                    int respuesta = urlConn.getResponseCode();
+
+
+                    StringBuilder result = new StringBuilder();
+
+                    if (respuesta == HttpURLConnection.HTTP_OK) {
+
+                        String line;
+                        BufferedReader br=new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+                        while ((line=br.readLine()) != null) {
+                            result.append(line);
+                            //response+=line;
+                        }
+
+                        //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
+                        JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+                        //Accedemos al vector de resultados
+                        JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
+
+                        String resultJSON = objetoJSON.getString("estado");   // estado es el nombre del campo en el JSON
+
+                        if (resultJSON.equals("1")) {      // hay un Usuario que mostrar
+                            devuelve = "Usuario actualizado correctamente";
+
+
+                        } else if (resultJSON.equals("2")) {
+                            devuelve = "El Usuario no pudo actualizarse";
+                        }
+
+                    }
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return devuelve;
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //resultado.setText(s);
+            super.onPostExecute(s);
+            Obtener_ID_Usuario();
+            //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
+            //adaptador.notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    private void Obtener_ID_Usuario()
+    {
+        String GET = IP + "/obtener_usuarios_existentes.php?id_asociado="+idasociadoAdmin.toString();
+        hiloconexion4 = new ObtenerWebService4();
+        hiloconexion4.execute(GET,"1");
+    }
+
+    /**
+     * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
+     * mediente archivos php.
+     */
+    public class ObtenerWebService4 extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -232,32 +452,25 @@ public class FinRegistroProducto extends Fragment {
 
                         //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
                         JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
-
                         //Accedemos al vector de resultados
                         JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
 
                         //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
                         String resultJSON = objetoJSON.getString("estado");
-                        System.out.println("Prueba 1 " + resultJSON);
+                        System.out.println("Prueba 1 " + resultJSON.toString());
 
-                        System.out.println("Bandera: "+Bandera.toString());
+                        if (resultJSON.equals("1")){      // Ya existe el usuario por lo que no lo volvemos a crear.
+                            devuelve = "Si hay Usuario";
+                            System.out.println("Prueba 2");
+                            //Obtenemos los ingrediente que vamos a mostrar en la aplicación
+                            JSONArray pruebaJSON = objetoJSON.getJSONArray("Usuario");
+                            id_usuario= pruebaJSON.getJSONObject(0).getString("id_usuario");
+                        }
+                        else
+                        {
+                            devuelve = "No hay Usuarios";
+                        }
 
-                        if (resultJSON.equals("1") && Bandera==false){      // hay un producto anteriormente creado
-                            devuelve = "Si hay Producto Registrado";
-                            ProductoYARegistrado();
-                        }
-                        else {
-                            if (resultJSON.equals("1") && Bandera==true) {      // hay un producto que acabamos de insertar
-                                devuelve = "Si hay Producto Registrado";
-                                //Obtenemos el id del producto que acabamos de insertar
-                                id_producto = objetoJSON.getJSONObject("Producto").getString("id_producto");
-                                Insertar_Alergenicos();
-                            } else {
-                                devuelve = "No hay Producto Registrado";
-                                //Bandera =true;
-                                Insertar();
-                            }
-                        }
                     }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -282,6 +495,7 @@ public class FinRegistroProducto extends Fragment {
         protected void onPostExecute(String s) {
             //resultado.setText(s);
             super.onPostExecute(s);
+            Insertar_Alergenicos();
             //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
             //adaptador.notifyDataSetChanged();
         }
@@ -297,324 +511,185 @@ public class FinRegistroProducto extends Fragment {
         }
     }
 
-    /**
-     * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
-     * mediente archivos php.
-     */
-    public class ObtenerWebService2 extends AsyncTask<String,Void,String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String cadena = params[0];
-            URL url = null; // Url de donde queremos obtener información
-            String devuelve ="";
-
-            if(params[1]=="4") { //INSERT
-                try {
-                    HttpURLConnection urlConn;
-
-                    DataOutputStream printout;
-                    DataInputStream input;
-                    url = new URL(cadena);
-                    urlConn = (HttpURLConnection) url.openConnection();
-                    urlConn.setDoInput(true);
-                    urlConn.setDoOutput(true);
-                    urlConn.setUseCaches(false);
-                    urlConn.setRequestProperty("Content-Type", "application/json");
-                    urlConn.setRequestProperty("Accept", "application/json");
-                    urlConn.connect();
-                    //Creo el Objeto JSON
-                    JSONObject jsonParam = new JSONObject();
-                    jsonParam.put("codigo_barra", params[2]);
-                    jsonParam.put("nombre_producto", params[3]);
-                    jsonParam.put("id_tipo_producto", Integer.valueOf(params[4]));
-                    jsonParam.put("id_empresa",Integer.valueOf(params[5]));
-                    // Envio los parámetros post.
-                    OutputStream os = urlConn.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(jsonParam.toString());
-                    writer.flush();
-                    writer.close();
-
-                    int respuesta = urlConn.getResponseCode();
-
-
-                    StringBuilder result = new StringBuilder();
-
-                    if (respuesta == HttpURLConnection.HTTP_OK) {
-
-                        String line;
-                        BufferedReader br = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-                        while ((line = br.readLine()) != null) {
-                            result.append(line);
-                            //response+=line;
-                        }
-
-                        //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
-                        JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
-                        //Accedemos al vector de resultados
-                        JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
-
-                        //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
-                        String resultJSON = objetoJSON.getString("estado");
-
-
-                        if (resultJSON.equals("1")) {      // Si se ha insertado correctamente el producto
-                            devuelve = "Producto insertado correctamente";
-                            Obtner_Id_Producto();
-
-                        } else if (resultJSON.equals("2")) {
-                            devuelve = "El Producto no pudo insertarse";
-                        }
-
-                    }
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                return devuelve;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onCancelled(String s) {
-            super.onCancelled(s);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            //resultado.setText(s);
-            super.onPostExecute(s);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-    }
-
-    private void ProductoYARegistrado()
-    {
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(getActivity(), "!Ya Existe un Producto con el Codigo de Barra que as insertado¡", Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
-
-    private void Insertar()
-    {
-        //Obtenemos el contenido del spinner del tipo de producto
-        tipoproducto= String.valueOf(spinnertip.getSelectedItemPosition()+1);
-        //Obtenemos el contenido del spinner del nombre de la empresa
-        empresafabrica = String.valueOf(spinneremp.getSelectedItemPosition()+1);
-
-        hiloconexion2 = new ObtenerWebService2();
-        hiloconexion2.execute(INSERT, "4", codigobarra.toString(), nombreproducto.toString(), tipoproducto.toString(), empresafabrica.toString());
-    }
-
-    private void Obtner_Id_Producto()
-    {
-        Bandera=true;
-        //System.out.println("CODIGO DE BARRA: "+codigobarra.toString());
-        // Rutas de los Web Services
-        final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codigobarra.toString();
-        hiloconexion1 = new ObtenerWebService();
-        hiloconexion1.execute(GET,"1");
-    }
-
     private void Insertar_Alergenicos()
     {
 
-        if (!codbarra.equals("") && !nombreproducto.equals(""))
+        if (!nombreAdmin.equals("") && !correoAdmin.equals(""))
         {
 
             //Recorremos el fragment asignado para el alergenico altamuz
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_altamuz){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_altamuz){
 
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    System.out.println(id_usuario.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico apio
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_apio){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_apio){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico azufre y sulfitos
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_azufreysulfito){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_azufreysulfito){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico cacahuete
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_cacahuete){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_cacahuete){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico crustacios
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_crustaceo){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_crustaceo){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico frutos con cascara
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_frutoscascara){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_frutoscascara){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico gluten
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_gluten){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_gluten){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico sesamo
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_sesamo){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_sesamo){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico huevo
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_huevo){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_huevo){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico lacteos
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_lacteo){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_lacteo){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico molusco
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_molusco){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_molusco){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico mostaza
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_mostaza){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_mostaza){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico pescado
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_pescado){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_pescado){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             //Recorremos el fragment asignado para el alergenico soja
-            for(Ingrediente ingrediente : ((VentanaRegistroProducto)getActivity()).list_ingredientes_soja){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_soja){
                 if (ingrediente.isChekeado())
                 {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
-                    String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
+                    String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new ObtenerWebService3();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
                 }
             }
 
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(getActivity(), "!Producto Insertado Correctamente¡", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "!Usuario Modificado Correctamente¡", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -638,15 +713,13 @@ public class FinRegistroProducto extends Fragment {
             TextView txtMsg = (TextView) layout.findViewById(R.id.text_toast);
             txtMsg.setText("Campos Obligatorios:");
 
-            if (codigobarra.equals("")) {
-                txtMsg.setText(txtMsg.getText().toString() + "\n- Codigo de Barra");
+            if (nombreAdmin.equals("")) {
+                txtMsg.setText(txtMsg.getText().toString() + "\n- Nombre y Apellidos");
             }
 
-            if (nombreproducto.equals("")) {
-                txtMsg.setText(txtMsg.getText().toString() + "\n- Nombre del Producto");
+            if (correoAdmin.equals("")) {
+                txtMsg.setText(txtMsg.getText().toString() + "\n- Correo Electrónico");
             }
-            txtMsg.setText(txtMsg.getText().toString() + "\n- Tipo Producto: "+tipoproducto);
-            txtMsg.setText(txtMsg.getText().toString() + "\n- Empresa Fabrica: "+empresafabrica);
 
             int duration = Toast.LENGTH_LONG;
 
@@ -688,7 +761,7 @@ public class FinRegistroProducto extends Fragment {
                     urlConn.connect();
                     //Creo el Objeto JSON
                     JSONObject jsonParam = new JSONObject();
-                    jsonParam.put("id_producto", Integer.valueOf(params[2]));
+                    jsonParam.put("id_usuario", Integer.valueOf(params[2]));
                     jsonParam.put("id_ingrediente",Integer.valueOf(params[3]));
                     // Envio los parámetros post.
                     OutputStream os = urlConn.getOutputStream();
@@ -718,11 +791,11 @@ public class FinRegistroProducto extends Fragment {
 
                         String resultJSON = respuestaJSON.getString("estado");   // estado es el nombre del campo en el JSON
 
-                        if (resultJSON == "1") {      // hay un alumno que mostrar
-                            devuelve = "Producto insertado correctamente";
+                        if (resultJSON.equals("1")) {      // hay un alumno que mostrar
+                            devuelve = "Usuario_Ingrediente insertado correctamente";
 
-                        } else if (resultJSON == "2") {
-                            devuelve = "El Producto no pudo insertarse";
+                        } else if (resultJSON.equals("2")) {
+                            devuelve = "El Usuario_Ingrediente no pudo insertarse";
                         }
 
                     }

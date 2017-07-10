@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,16 +30,25 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegistroProducto extends Fragment implements AdapterView.OnItemSelectedListener {
+public class ActualizarProducto extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //EditText para almacenar el codigo de barra que leemos.
     public EditText codbarra;
+    String codigobarra;
+
+    //EditText para almacenar el nombre del producto.
+    public EditText nombreproducto;
+    String nombreprod;
 
     //Spinner para el tipo de productos
     private Spinner spinnertipo;
+    int idtipoproducto;
 
     //Spinner para la empresa que fabrico el producto
     private Spinner spinnerempresa;
+    int idempresa;
+
+    String idproducto;
 
     //Se crear un objetio de tipo ObtenerWebService
     ObtenerWebService hiloconexion1;
@@ -63,13 +69,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     //URL para el listado de las empresas
     public String URL_LISTA_EMPRESAS = "http://tfgalimentos.16mb.com/Todos_Empresa.php";
 
-    //Variable booleana para saber si existe o no un producto
-    Boolean Existe=false;
-
-    //Variable para almacenar el ID del Producto
-    String idproducto;
-
-    public RegistroProducto() {
+    public ActualizarProducto() {
         // Required empty public constructor
     }
 
@@ -83,17 +83,27 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.activity_registro_producto, container, false);
-        spinnertipo = (Spinner) v.findViewById(R.id.spinnertipoproducto);
-        spinnerempresa = (Spinner) v.findViewById(R.id.spinnerempresa);
+        View v = inflater.inflate(R.layout.activity_actualizar_producto, container, false);
 
-        ((VentanaRegistroProducto)getActivity()).list_tipo_producto = new ArrayList<TipoProducto>();
-        ((VentanaRegistroProducto)getActivity()).list_empresa = new ArrayList<Empresa>();
+        /*spinnertipo = (Spinner) v.findViewById(R.id.spinnertipoproductoactualizar);
+        spinnerempresa = (Spinner) v.findViewById(R.id.spinnerempresaactualizar);
+
+        ((VentanaActualizarProducto)getActivity()).list_tipo_producto = new ArrayList<TipoProducto>();
+        ((VentanaActualizarProducto)getActivity()).list_empresa = new ArrayList<Empresa>();*/
 
         // seleccionar el tipo de empresa del spinner
-        spinnertipo.setOnItemSelectedListener(this);
+        //spinnertipo.setOnItemSelectedListener(this);
         // seleccionar el nombre de la empresa del spinner
-        spinnerempresa.setOnItemSelectedListener(this);
+        //spinnerempresa.setOnItemSelectedListener(this);
+
+        // Definimos un objeto del activity VentanaEditarUsuario
+        final VentanaActualizarProducto activity = ((VentanaActualizarProducto) getActivity());
+
+        // Rutas de los Web Services
+        final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+activity.codigo_barra.toString();
+        hiloconexion1 = new ObtenerWebService();
+        hiloconexion1.execute(GET,"1");
+
         return v;
     }
 
@@ -102,27 +112,13 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.getView().findViewById(R.id.scaner).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                System.out.println("Prueba 1");
-                //Se instancia un objeto de la clase IntentIntegrator
-                IntentIntegrator scanIntegrator = new IntentIntegrator(getActivity());
-                //Se procede con el proceso de scaneo
-                scanIntegrator.initiateScan();
-                System.out.println("Prueba 2");
-            }
-        });
-
         new ObtenerListaProducto().execute();
 
         new ObtenerListaEmpresa().execute();
 
     }
 
-
-    @Override
+    /*@Override
     public void onStart() {
         super.onStart();
         ActivityResultBus.getInstance().register(mActivityResultSubscriber);
@@ -144,45 +140,12 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
             Intent data = event.getData();
             onActivityResult(requestCode, resultCode, data);
         }
-    };
+    };*/
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-
-        //Se obtiene el resultado del proceso de scaneo y se parsea
-        System.out.println("Prueba 10");
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanningResult != null) {
-            System.out.println("Prueba 11");
-            //Quiere decir que se obtuvo resultado por lo tanto:
-            //Desplegamos en pantalla el contenido del código de barra scaneado
-            System.out.println(scanningResult.getContents());
-            if(scanningResult.getContents()!=null)
-            {
-                String scanContent = scanningResult.getContents();
-                System.out.println(scanContent.toString());
-                //Se Instancia el Campo de Texto para el contenido  del código de barra
-                codbarra = (EditText)getActivity().findViewById(R.id.cbarra);
-                codbarra.setText(scanContent.toString());
-                System.out.println(codbarra.getText().toString());
-                System.out.println("Prueba 12");
-
-                // Rutas de los Web Services
-                final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codbarra.getText().toString();
-                hiloconexion1 = new ObtenerWebService();
-                hiloconexion1.execute(GET,"1");
-
-            }
-
-        }else{
-            //Quiere decir que NO se obtuvo resultado
-            Toast toast = Toast.makeText(this.getActivity().getApplicationContext(),
-                    "!No se ha recibido datos del escaneo¡", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
 
     }
 
@@ -251,7 +214,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
 
                         for(int i=0;i<pruebaJSON.length();i++)
                         {
-                            ((VentanaRegistroProducto)getActivity()).list_tipo_producto.add(new TipoProducto(pruebaJSON.getJSONObject(i).getString("id_tipo_producto"),pruebaJSON.getJSONObject(i).getString("tipo")));
+                                ((VentanaActualizarProducto)getActivity()).list_tipo_producto.add(new TipoProducto(pruebaJSON.getJSONObject(i).getString("id_tipo_producto"),pruebaJSON.getJSONObject(i).getString("tipo")));
                         }
                     }
                     //Si no existe ingredientes devolvemos un String comentado que no existe ingredientes
@@ -349,7 +312,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
 
                         for(int i=0;i<pruebaJSON.length();i++)
                         {
-                            ((VentanaRegistroProducto)getActivity()).list_empresa.add(new Empresa(pruebaJSON.getJSONObject(i).getString("id_empresa"),pruebaJSON.getJSONObject(i).getString("nombre_empresa")));
+                            ((VentanaActualizarProducto)getActivity()).list_empresa.add(new Empresa(pruebaJSON.getJSONObject(i).getString("id_empresa"),pruebaJSON.getJSONObject(i).getString("nombre_empresa")));
                         }
                     }
                     //Si no existe ingredientes devolvemos un String comentado que no existe ingredientes
@@ -386,8 +349,8 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
 
         //txtAgregar.setText("");
 
-        for (int i = 0; i < ((VentanaRegistroProducto)getActivity()).list_tipo_producto.size(); i++) {
-            lables.add(((VentanaRegistroProducto)getActivity()).list_tipo_producto.get(i).getTipo());
+        for (int i = 0; i < ((VentanaActualizarProducto)getActivity()).list_tipo_producto.size(); i++) {
+            lables.add(((VentanaActualizarProducto)getActivity()).list_tipo_producto.get(i).getTipo());
         }
 
 
@@ -404,8 +367,8 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
 
         //txtAgregar.setText("");
 
-        for (int i = 0; i < ((VentanaRegistroProducto)getActivity()).list_empresa.size(); i++) {
-            lables.add(((VentanaRegistroProducto)getActivity()).list_empresa.get(i).getEmpresa());
+        for (int i = 0; i < ((VentanaActualizarProducto)getActivity()).list_empresa.size(); i++) {
+            lables.add(((VentanaActualizarProducto)getActivity()).list_empresa.get(i).getEmpresa());
         }
 
 
@@ -483,9 +446,14 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
                         System.out.println("Prueba 1 " + resultJSON);
 
                         if (resultJSON.equals("1")){      // hay un producto anteriormente creado
-                            idproducto=objetoJSON.getJSONObject("Producto").getString("id_producto");
                             devuelve = "Si hay Producto Registrado";
-                            Existe=true;
+                            //Obtenemos los ingrediente que vamos a mostrar en la aplicación
+                            //JSONArray pruebaJSON = objetoJSON.getJSONArray("Producto");
+                            idproducto=objetoJSON.getJSONObject("Producto").getString("id_producto");
+                            codigobarra=objetoJSON.getJSONObject("Producto").getString("codigo_barra");
+                            nombreprod=objetoJSON.getJSONObject("Producto").getString("nombre_producto");
+                            idtipoproducto=Integer.parseInt(objetoJSON.getJSONObject("Producto").getString("id_tipo_producto"));
+                            idempresa=Integer.parseInt(objetoJSON.getJSONObject("Producto").getString("id_empresa"));
                         }
                         else {
 
@@ -516,7 +484,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
         protected void onPostExecute(String s) {
             //resultado.setText(s);
             super.onPostExecute(s);
-            ProductoYARegistrado();
+            AsignarValores();
             //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
             //adaptador.notifyDataSetChanged();
         }
@@ -532,16 +500,33 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-    private void ProductoYARegistrado()
+    private void AsignarValores()
     {
-        if(Existe.equals(true))
-        {
-            System.out.println("EXISTEEEEE");
-            // Definimos un objeto del activity VentanaEditarUsuario
-            final VentanaRegistroProducto activity = ((VentanaRegistroProducto) getActivity());
-            activity.ProductoYaRegistrado(codbarra.getText().toString(),idproducto);
-        }
+        System.out.println("Prueba 11");
+        //Se Instancia el Campo de Texto para el contenido  del código de barra
+        codbarra = (EditText)getActivity().findViewById(R.id.cbarraactualizar);
+        //Se Instancia el Campo de Texto para el contenido  del nombre del producto
+        nombreproducto= (EditText)getActivity().findViewById(R.id.nomproductoactualizar);
 
+        spinnertipo = (Spinner) getActivity().findViewById(R.id.spinnertipoproductoactualizar);
+        spinnerempresa = (Spinner) getActivity().findViewById(R.id.spinnerempresaactualizar);
+
+        ((VentanaActualizarProducto)getActivity()).list_tipo_producto = new ArrayList<TipoProducto>();
+        ((VentanaActualizarProducto)getActivity()).list_empresa = new ArrayList<Empresa>();
+
+        System.out.println(codigobarra.toString());
+        System.out.println(nombreprod.toString());
+        System.out.println(idtipoproducto);
+        System.out.println(idempresa);
+
+        codbarra.setText(codigobarra.toString());
+        nombreproducto.setText(nombreprod.toString());
+        new Handler().postDelayed(new Runnable(){
+            public void run() {
+                spinnertipo.setSelection(idtipoproducto-1);
+                spinnerempresa.setSelection(idempresa-1);
+            }
+        },1000);
 
     }
 }
