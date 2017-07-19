@@ -1,8 +1,6 @@
 package com.example.juansevillano.testingproductos;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -13,7 +11,9 @@ import android.util.Log;
 
 public class BDUsuarioIngrediente extends SQLiteOpenHelper {
     /**
-     * Constructor de la Clase BDUsuarioIngrediente
+     * @name public BDUsuarioIngrediente(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
+     * @description Constructor de la clase BDUsuarioIngrediente
+     * @return void
      */
     public BDUsuarioIngrediente(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -21,8 +21,8 @@ public class BDUsuarioIngrediente extends SQLiteOpenHelper {
 
 
     /**
-     * Crea una Base de datos
-     *
+     * @name private void onCreate(SQLiteDatabase db)
+     * @description Primer Método que se llama al crear la clase. Crear una Base de datos.
      * @return void
      */
     @Override
@@ -39,8 +39,8 @@ public class BDUsuarioIngrediente extends SQLiteOpenHelper {
     }
 
     /**
-     * Actualiza una Base de datos
-     *
+     * @name private void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+     * @description Método para actualizar la base de datos.
      * @return void
      */
     @Override

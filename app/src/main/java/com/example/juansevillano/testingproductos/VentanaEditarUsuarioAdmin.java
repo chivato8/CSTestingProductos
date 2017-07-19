@@ -24,7 +24,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    public ViewPager viewPager;
     public List<Fragment> fragments = new ArrayList<Fragment>();
 
     //Se crea un ArrayList de tipo Ingrediente para cada uno de los alergenicos.
@@ -42,7 +42,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
     public ArrayList<Ingrediente> list_ingredientes_mostaza= new ArrayList<Ingrediente>();
     public ArrayList<Ingrediente> list_ingredientes_pescado= new ArrayList<Ingrediente>();
     public ArrayList<Ingrediente> list_ingredientes_soja= new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_otros= new ArrayList<Ingrediente>();
+    //public ArrayList<Ingrediente> list_ingredientes_otros= new ArrayList<Ingrediente>();
 
 
     //Definimos una Variable de tipo Cursor
@@ -52,6 +52,11 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
 
     String id_asociado;
 
+    /**
+     * @name private void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +89,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         fragments.add(new AlergenicoMostaza());
         fragments.add(new AlergenicoPescado());
         fragments.add(new AlergenicoSoja());
-        fragments.add(new AlergenicoOtros());
+        //fragments.add(new AlergenicoOtros());
         fragments.add(new FinEditarUsuarioAdmin());
 
         //fragments.add(new FourFragment());
@@ -108,10 +113,20 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
 
     }
 
+    /**
+     * @name public String getMyData()
+     * @description Metodo para devolver el usuario elegido para ser modificado
+     * @return String
+     */
     public String getMyData() {
         return elegido;
     }
 
+    /**
+     * @name private void setupTabIcons()
+     * @description Método para asignar los iconos a cada fragments
+     * @return void
+     */
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setIcon(R.mipmap.registrousuario);
@@ -129,13 +144,14 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         tabLayout.getTabAt(12).setIcon(R.mipmap.mostazamini);
         tabLayout.getTabAt(13).setIcon(R.mipmap.pescadomini);
         tabLayout.getTabAt(14).setIcon(R.mipmap.sojamini);
-        tabLayout.getTabAt(15).setIcon(R.mipmap.otrosmini);
-        tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);
+        //tabLayout.getTabAt(15).setIcon(R.mipmap.otrosmini);
+        tabLayout.getTabAt(15).setIcon(R.mipmap.finregistroico);
     }
 
     /**
-     * Adding fragments to ViewPager
-     * @param viewPager
+     * @name private void setupViewPager(ViewPager viewPager)
+     * @description Método para añadir los fragments a la view.
+     * @return void
      */
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -154,7 +170,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         adapter.addFrag(new AlergenicoMostaza(), "Mostaza");
         adapter.addFrag(new AlergenicoPescado(), "Pescado");
         adapter.addFrag(new AlergenicoSoja(), "Soja");
-        adapter.addFrag(new AlergenicoOtros(), "Otros");
+        //adapter.addFrag(new AlergenicoOtros(), "Otros");
         adapter.addFrag(new FinRegistroUsuario(), "Fin Registro");
         viewPager.setAdapter(adapter);
     }
@@ -186,6 +202,17 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    /**
+     * @name public void onSupportNavigateUp ()
+     * @description Si hacemos clic en el boton hacia atras saldremos de la aplicacion
+     * @return void
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return false;
     }
 
     /**

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.juansevillano.testingproductos.CodigoBarra">
+    tools:context="com.example.juansevillano.testingproductos.CodigoBarraAdmin">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
                 <TextView
-                    android:id="@+id/scan_content"
+                    android:id="@+id/scan_contentAdmin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -59,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" >
                     <ImageButton
-                        android:id="@+id/escanearnuevo"
+                        android:id="@+id/escanearnuevoAdmin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/registroproducto"
@@ -75,7 +75,7 @@
         </TableLayout>
 
         <TextView
-            android:id="@+id/datos_producto"
+            android:id="@+id/datos_productoAdmin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -87,7 +87,7 @@
             android:textStyle="bold" />
 
         <ListView
-            android:id="@+id/lstListaEscaner"
+            android:id="@+id/lstListaEscanerAdmin"
             android:layout_width="match_parent"
             android:layout_height="108dp"
             android:layout_marginBottom="15dp"
@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
                 <ImageView
-                    android:id="@+id/imageApto"
+                    android:id="@+id/imageAptoAdmin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
@@ -124,7 +124,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/texto_veracidad"
+                    android:id="@+id/texto_veracidadAdmin"
                     android:layout_below="@+id/texto_ingrediente"
                     android:textSize="20sp"
                     android:textStyle="bold" />

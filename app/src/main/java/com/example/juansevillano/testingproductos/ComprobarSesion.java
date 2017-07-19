@@ -29,6 +29,11 @@ public class ComprobarSesion extends AppCompatActivity implements GoogleApiClien
     private TextView nameTextView;
     private TextView emailTextView;
 
+    /**
+     * @name protected void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +69,11 @@ public class ComprobarSesion extends AppCompatActivity implements GoogleApiClien
         };
     }
 
+    /**
+     * @name private void setUserData(FirebaseUser user)
+     * @description Metodo para asignar los datos del usuario
+     * @return void
+     */
     private void setUserData(FirebaseUser user) {
         nameTextView.setText(user.getDisplayName());
         emailTextView.setText(user.getEmail());
@@ -77,12 +87,22 @@ public class ComprobarSesion extends AppCompatActivity implements GoogleApiClien
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
     }
 
+    /**
+     * @name private void goLogInScreen()
+     * @description Metodo para cerrar sesión
+     * @return void
+     */
     private void goLogInScreen() {
         Intent intent = new Intent(this, EntrarCon.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    /**
+     * @name public void logOut(View view)
+     * @description Metodo para cerrar sesión
+     * @return void
+     */
     public void logOut(View view) {
         firebaseAuth.signOut();
 
@@ -98,12 +118,22 @@ public class ComprobarSesion extends AppCompatActivity implements GoogleApiClien
         });
     }
 
+    /**
+     * @name public void revoke(View view)
+     * @description Metodo para rebocar la sesión del usuario
+     * @return void
+     */
     public void revoke(View view) {
         Intent intent = new Intent(this, VentanaPrincipal.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    /**
+     * @name public void onConnectionFailed(@NonNull ConnectionResult connectionResult
+     * @description Metodo por si produce un error en la conexión
+     * @return void
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 

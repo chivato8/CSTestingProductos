@@ -68,10 +68,10 @@ public class VentanaPrincipal extends AppCompatActivity
     private ProgressBar progressBar;
 
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService hiloconexion1;
+    obtener_usuarios_existentes hiloconexion1;
 
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService2 hiloconexion2;
+    Insertar_Usuario hiloconexion2;
 
     // IP de mi Url
     String IP = "http://tfgalimentos.16mb.com";
@@ -129,7 +129,9 @@ public class VentanaPrincipal extends AppCompatActivity
         cbarra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ListSong = new Intent(getApplicationContext(), CodigoBarra.class);
+                Intent ListSong = new Intent(VentanaPrincipal.this, CodigoBarraAdmin.class);
+                ListSong.putExtra("id_asociado", id_asociado);
+                ListSong.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(ListSong);
                 finish();
             }
@@ -190,6 +192,11 @@ public class VentanaPrincipal extends AppCompatActivity
         }
     }
 
+    /**
+     * @name boolean onCreateOptionsMenu(Menu menu)
+     * @description Método para crear el menú
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -197,6 +204,11 @@ public class VentanaPrincipal extends AppCompatActivity
         return true;
     }
 
+    /**
+     * @name public boolean onOptionsItemSelected(MenuItem item)
+     * @description Método para comprobar si se a elegido alguna opción
+     * @return boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -260,14 +272,14 @@ public class VentanaPrincipal extends AppCompatActivity
         Glide.with(this).load(user.getPhotoUrl()).into(photoImageView);
 
         String GET = IP + "/obtener_usuarios_existentes.php?id_asociado="+id_asociado.toString();
-        hiloconexion1 = new ObtenerWebService();
+        hiloconexion1 = new obtener_usuarios_existentes();
         hiloconexion1.execute(GET,"1");
 
     }
 
     private void Insertar()
     {
-        hiloconexion2 = new ObtenerWebService2();
+        hiloconexion2 = new Insertar_Usuario();
         hiloconexion2.execute(INSERT, "3", id_asociado.toString(), nameTextView.getText().toString(), emailTextView.getText().toString());
     }
 
@@ -278,12 +290,22 @@ public class VentanaPrincipal extends AppCompatActivity
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
     }
 
+    /**
+     * @name private void goLogInScreen()
+     * @description Metodo para cerrar sesión
+     * @return void
+     */
     private void goLogInScreen() {
         Intent intent = new Intent(this, EntrarCon.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    /**
+     * @name public void logOut(View view)
+     * @description Metodo para cerrar sesión
+     * @return void
+     */
     public void logOut(View view) {
         firebaseAuth.signOut();
 
@@ -299,6 +321,11 @@ public class VentanaPrincipal extends AppCompatActivity
         });
     }
 
+    /**
+     * @name public void revoke(View view)
+     * @description Metodo para rebocar la sesión del usuario
+     * @return void
+     */
     public void revoke(View view) {
         firebaseAuth.signOut();
 
@@ -314,6 +341,11 @@ public class VentanaPrincipal extends AppCompatActivity
         });
     }
 
+    /**
+     * @name public void onConnectionFailed(@NonNull ConnectionResult connectionResult
+     * @description Metodo por si produce un error en la conexión
+     * @return void
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -332,7 +364,7 @@ public class VentanaPrincipal extends AppCompatActivity
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService extends AsyncTask<String,Void,String> {
+    public class obtener_usuarios_existentes extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -432,7 +464,7 @@ public class VentanaPrincipal extends AppCompatActivity
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService2 extends AsyncTask<String,Void,String> {
+    public class Insertar_Usuario extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {

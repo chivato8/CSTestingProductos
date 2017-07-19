@@ -3,32 +3,18 @@ package com.example.juansevillano.testingproductos;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.SystemClock;
-import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -44,17 +30,118 @@ public class RegistroUsuario extends Fragment{
     //Definimos una Variable de tipo Cursor
     public Cursor res;
 
+    int pos=0;
+
+    /**
+     * @name public RegistroUsuario()
+     * @description Constructor Vacio
+     * @return void
+     */
     public RegistroUsuario() {
         // Required empty public constructor
     }
 
+    /**
+     * @name private void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * @name private void onResume()
+     * @description Primer Método cuando la función se está yendo de la pantalla. Muestra en que proceso nos encontramos.
+     * @return void
+     */
+    public void onResume()
+    {
 
+        //Si estamo en la ventana VentanaRegistroUsuario
+        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaRegistroUsuario") == true) {
+            // Definimos un objeto del activity VentanaRegistroUsuario
+            final VentanaRegistroUsuario activity= ((VentanaRegistroUsuario) getActivity());
+            ViewPager viewPager= activity.viewPager;
+            System.out.println(viewPager.getCurrentItem());
+            if(viewPager.getCurrentItem() == pos){
+                pos++;
+                Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                pos--;
+                //Your code here. Executed when fragment is seen by user.
+            }
+        }
+        else
+        {
+            //Si estamos en la ventana VentanaRegistroProducto
+            if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaRegistroProducto") == true) {
+                // Definimos un objeto del activity VentanaRegistroProducto
+                final VentanaRegistroProducto activity= ((VentanaRegistroProducto) getActivity());
+                ViewPager viewPager= activity.viewPager;
+                if(viewPager.getCurrentItem() == pos){
+                    pos++;
+                    Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                    pos--;
+                    //Your code here. Executed when fragment is seen by user.
+                }
+            }
+            else
+            {
+                //Si estamos en la ventana VentanaEditarUsuarioAdmin
+                if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin") == true) {
+                    // Definimos un objeto del activity VentanaEditarUsuarioAdmin
+                    final VentanaEditarUsuarioAdmin activity= ((VentanaEditarUsuarioAdmin) getActivity());
+                    ViewPager viewPager= activity.viewPager;
+                    if(viewPager.getCurrentItem() == pos){
+                        pos++;
+                        Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                        pos--;
+                        //Your code here. Executed when fragment is seen by user.
+                    }
+                }
+                else
+                {
+                    //Si estamos en la ventana VentanaEditarUsuario
+                    if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true) {
+                        // Definimos un objeto del activity VentanaEditarUsuario
+                        final VentanaEditarUsuario activity= ((VentanaEditarUsuario) getActivity());
+                        ViewPager viewPager= activity.viewPager;
+                        if(viewPager.getCurrentItem() == pos){
+                            pos++;
+                            Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                            pos--;
+                            //Your code here. Executed when fragment is seen by user.
+                        }
+                    }
+                    else
+                    {
+                        //Si estamos en la ventana VentanaActualizarProducto
+                        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaActualizarProducto") == true) {
+                            // Definimos un objeto del activity VentanaActualizarProducto
+                            final VentanaActualizarProducto activity= ((VentanaActualizarProducto) getActivity());
+                            ViewPager viewPager= activity.viewPager;
+                            if(viewPager.getCurrentItem() == pos){
+                                pos++;
+                                Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                                pos--;
+                                //Your code here. Executed when fragment is seen by user.
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        super.onResume();
+    }
+
+    /**
+     * @name private View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+     * @description Se crea la vista de la clase
+     * @return View v
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,7 +149,11 @@ public class RegistroUsuario extends Fragment{
         return inflater.inflate(R.layout.activity_registro_usuario, container, false);
     }
 
-
+    /**
+     * @name private void onActivityCreated(Bundle savedInstanceState)
+     * @description Funcion para crear la Actividad
+     * @return void
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

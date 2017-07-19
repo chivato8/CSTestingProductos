@@ -45,7 +45,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     private Spinner spinnerempresa;
 
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService hiloconexion1;
+    Obtener_Producto_CB hiloconexion1;
 
     // array para listar las frutas
     //private ArrayList<TipoProducto> tipoProductos;
@@ -69,16 +69,31 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     //Variable para almacenar el ID del Producto
     String idproducto;
 
+    /**
+     * @name public RegistroProducto()
+     * @description Constructor Vacio
+     * @return void
+     */
     public RegistroProducto() {
         // Required empty public constructor
     }
 
+    /**
+     * @name private void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * @name private View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+     * @description Se crea la vista de la clase
+     * @return View v
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -97,7 +112,22 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
         return v;
     }
 
+    /**
+     * @name private void onResume()
+     * @description Primer Método cuando la función se está yendo de la pantalla. Muestra en que proceso nos encontramos.
+     * @return void
+     */
+    public void onResume()
+    {
+        super.onResume();
+        Toast.makeText(getActivity(), "Proceso 1/16", Toast.LENGTH_SHORT).show();
+    }
 
+    /**
+     * @name private void onActivityCreated(Bundle savedInstanceState)
+     * @description Funcion para crear la Actividad
+     * @return void
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -147,6 +177,11 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     };
 
 
+    /**
+     * @name private void onActivityResult(int requestCode, int resultCode, Intent intent)
+     * @description Para recuperar la información resultante de una segunda actividad.
+     * @return void
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -171,7 +206,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
 
                 // Rutas de los Web Services
                 final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codbarra.getText().toString();
-                hiloconexion1 = new ObtenerWebService();
+                hiloconexion1 = new Obtener_Producto_CB();
                 hiloconexion1.execute(GET,"1");
 
             }
@@ -381,6 +416,11 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
 
     }
 
+    /**
+     * @name private void popularSpinnertipoproducto()
+     * @description Función para rellenar los spinner del tipo de producto.
+     * @return void
+     */
     private void populateSpinnertipoproducto() {
         List<String> lables = new ArrayList<String>();
 
@@ -399,6 +439,11 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
 
     }
 
+    /**
+     * @name private void popularSpinneEmpresa()
+     * @description Función para rellenar los spinner de las empresas
+     * @return void
+     */
     private void populateSpinnerEmpresa() {
         List<String> lables = new ArrayList<String>();
 
@@ -417,6 +462,11 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
 
     }
 
+    /**
+     * @name private void onItemSeleccted()
+     * @description Función para mostrar que spinner ha sido seleccionado
+     * @return void
+     */
     public void onItemSelected(AdapterView<?> parent, View view, int position,
                                long id) {
         Toast.makeText(
@@ -426,7 +476,11 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
 
     }
 
-
+    /**
+     * @name private void onNothingSelected()
+     * @description Funcion si no se seleccionado ninguno
+     * @return void
+     */
     public void onNothingSelected(AdapterView<?> arg0) {
     }
 
@@ -434,7 +488,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService extends AsyncTask<String,Void,String> {
+    public class Obtener_Producto_CB extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -532,11 +586,15 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
         }
     }
 
+    /**
+     * @name private void ProductoYARegistrado()
+     * @description Metodo por si el producto ya se cuentra registrado en la aplicación
+     * @return void
+     */
     private void ProductoYARegistrado()
     {
         if(Existe.equals(true))
         {
-            System.out.println("EXISTEEEEE");
             // Definimos un objeto del activity VentanaEditarUsuario
             final VentanaRegistroProducto activity = ((VentanaRegistroProducto) getActivity());
             activity.ProductoYaRegistrado(codbarra.getText().toString(),idproducto);

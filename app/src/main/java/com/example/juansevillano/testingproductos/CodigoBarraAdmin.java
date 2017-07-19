@@ -40,7 +40,7 @@ import java.util.ArrayList;
 /**
  * Created by Juan Sevillano on 29/03/2017.
  */
-public class CodigoBarra extends AppCompatActivity {
+public class CodigoBarraAdmin extends AppCompatActivity {
 
     protected Activity activity;
     protected ArrayList<Ingrediente> items;
@@ -57,9 +57,6 @@ public class CodigoBarra extends AppCompatActivity {
 
     //Definimos una variable de tipo SQLiteDatabase
     SQLiteDatabase db;
-
-    //Obtenemos el id del usuario;
-    String posicion;
 
     //Id del producto
     String id_producto;
@@ -96,6 +93,9 @@ public class CodigoBarra extends AppCompatActivity {
     //Se crear un objetio de tipo ObtenerWebService
     Obtener_Transtorno hiloconexion5;
 
+    //Se crear un objetio de tipo ObtenerWebService
+    ObtenerIngredientes_Usuario_Ingrediente hiloconexion6;
+
     //Si el ingrediente existe en el producto
     static Boolean existe=false;
 
@@ -109,6 +109,12 @@ public class CodigoBarra extends AppCompatActivity {
 
     //Lista de Ingredientes
     ArrayList<Ingrediente> ingrediente;
+
+    //Id_Asociado a un usuario
+    String id_asociado;
+
+    //ID_Usuario elegido
+    private String id_usuario;
 
 
     public int getCount() {
@@ -133,10 +139,7 @@ public class CodigoBarra extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        setContentView(R.layout.activity_codigo_barra);
-
-        //ID Usuario Elegido.
-        posicion=getIntent().getStringExtra("elegido");
+        setContentView(R.layout.activity_codigo_barra_admin);
 
         //ingrediente = new ArrayList<Ingrediente>();
 
@@ -146,18 +149,18 @@ public class CodigoBarra extends AppCompatActivity {
         //adapter = new ItemProductoAdapter(this, ingrediente);
 
         //Se Instancia el Campo de Texto para el contenido  del código de barra
-        codbarra = (TextView)findViewById(R.id.scan_content);
+        codbarra = (TextView)findViewById(R.id.scan_contentAdmin);
 
         //Se Instancia el Campo de Texto para mostrar los datos del producto
-        producto = (TextView)findViewById(R.id.datos_producto);
+        producto = (TextView)findViewById(R.id.datos_productoAdmin);
 
         //Se Instancia el Campo de Texto para el texto de la veracidad
-        textoveracidad = (TextView)findViewById(R.id.texto_veracidad);
+        textoveracidad = (TextView)findViewById(R.id.texto_veracidadAdmin);
 
-        buttonescnaer= (ImageButton) findViewById(R.id.escanearnuevo);
+        buttonescnaer= (ImageButton) findViewById(R.id.escanearnuevoAdmin);
 
         //Se Insta el Campo de la imagen para el conteido si es apto o no.
-        imagenveracidad= (ImageView)findViewById(R.id.imageApto);
+        imagenveracidad= (ImageView)findViewById(R.id.imageAptoAdmin);
 
         //Se instancia un objeto de la clase IntentIntegrator
         IntentIntegrator scanIntegrator = new IntentIntegrator(this);
@@ -166,11 +169,14 @@ public class CodigoBarra extends AppCompatActivity {
 
         //lstListaEscaner.setAdapter(adapter);
 
+        //ID Usuario Elegido.
+        id_asociado=getIntent().getStringExtra("id_asociado");
+
         buttonescnaer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Se instancia un objeto de la clase IntentIntegrator
-                IntentIntegrator scanIntegrator = new IntentIntegrator(CodigoBarra.this);
+                IntentIntegrator scanIntegrator = new IntentIntegrator(CodigoBarraAdmin.this);
                 //Se procede con el proceso de scaneo
                 scanIntegrator.initiateScan();
             }
@@ -215,7 +221,7 @@ public class CodigoBarra extends AppCompatActivity {
         ingrediente = new ArrayList<Ingrediente>();
 
         //Se crea un objetio de tipo ListView
-        ListView lstListaEscaner = (ListView) findViewById(R.id.lstListaEscaner);
+        ListView lstListaEscaner = (ListView) findViewById(R.id.lstListaEscanerAdmin);
 
         adapter = new ItemProductoAdapter(this, ingrediente);
 
@@ -236,36 +242,19 @@ public class CodigoBarra extends AppCompatActivity {
                 codbarra.setText("C. Barras: " + scanContent.toString());
                 codigobarra=scanContent.toString();
 
-                //ID Usuario Elegido.
-                String elegido=getIntent().getStringExtra("elegido");
+                System.out.println("Prueba:  "+id_asociado);
 
-                System.out.println("Prueba:  "+elegido);
+                String GET = IP + "/ObtenerIngredientes_Usuario_Ingrediente.php?id_asociado="+id_asociado.toString();
+                hiloconexion6 = new ObtenerIngredientes_Usuario_Ingrediente();
+                hiloconexion6.execute(GET,"1");
 
-                //Abrimos la Base de datos "BDUsuario" en modo escritura.
-                BDUsuario bdUsuarios=new BDUsuario(this,"BDUsuarioIngrediente",null,1);
 
-                SQLiteDatabase db = bdUsuarios.getWritableDatabase();
-                res=db.rawQuery("SELECT id_ingrediente FROM Usuario_Ingrediente WHERE id_usuario='"+elegido.toString()+"'",null);
-                //db.close();
-
-                items_ingredientes=new String[res.getCount()];
-
-                //Movemos el cursor al primer elemento
-                res.moveToFirst();
-
-                //Mostramos los datos mediente un bucle for
-                for (int i=0;i<items_ingredientes.length;i++) {
-                    items_ingredientes[i]=res.getString(0);
-                    res.moveToNext();
-                }
+                //////////////////////////////////////
 
                 System.out.println("Prueba 12");
-                // Rutas de los Web Services
-                //Obtenemos los productos segun su codigo de barras
-                final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codigobarra.toString();
-                hiloconexion1 = new Obtener_Producto_CB();
-                hiloconexion1.execute(GET,"1");
 
+
+                ////////////////////////////
             }
             else
             {
@@ -304,17 +293,126 @@ public class CodigoBarra extends AppCompatActivity {
         }
     }
 
-    private ArrayList<Ingrediente> obtenerItems() {
-        ArrayList<Ingrediente> items = new ArrayList<Ingrediente>();
+    /**
+     * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
+     * mediente archivos php.
+     */
+    public class ObtenerIngredientes_Usuario_Ingrediente extends AsyncTask<String,Void,String> {
 
-        items.add(new Ingrediente("1", "Patatas", "Tuberculo",
-                "drawable/ic_verificado_v"));
-        items.add(new Ingrediente("2", "Naranja", "Fruta",
-                "drawable/ic_verificado_v"));
-        items.add(new Ingrediente("3", "Lechuga", "Verdura",
-                "drawable/ic_verificado_x"));
+        @Override
+        protected String doInBackground(String... params) {
 
-        return items;
+            String cadena = params[0];
+            URL url = null; // Url de donde queremos obtener información
+            String devuelve ="";
+
+
+            if(params[1]=="1") //GET
+            {
+                try {
+                    url = new URL(cadena);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();  //Abrir la conexión
+                    /*connection.setRequestProperty("User-Agent", "Mozilla/5.0" +
+                            " (Linux; Android 1.5; es-ES) Ejemplo HTTP");*/
+                    //connection.setHeader("content-type", "application/json");
+
+                    int respuesta = connection.getResponseCode();
+                    StringBuilder result = new StringBuilder();
+
+                    if (respuesta == HttpURLConnection.HTTP_OK){
+
+
+                        InputStream in = new BufferedInputStream(connection.getInputStream());  // preparo la cadena de entrada
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));  // la introduzco en un BufferedReader
+
+                        // El siguiente proceso lo hago porque el JSONOBject necesita un String y tengo
+                        // que tranformar el BufferedReader a String. Esto lo hago a traves de un
+                        // StringBuilder.
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);        // Paso toda la entrada al StringBuilder
+                        }
+
+                        //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
+                        JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+                        //Accedemos al vector de resultados
+                        JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
+
+                        //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
+                        String resultJSON = objetoJSON.getString("estado");
+                        System.out.println("Prueba 1 " + resultJSON.toString());
+
+                        if (resultJSON.equals("1")){      // Ya existe el usuario por lo que no lo volvemos a crear.
+                            devuelve = "Si hay Ingrediente";
+                            System.out.println("Prueba 2");
+                            //Obtenemos los ingrediente que vamos a mostrar en la aplicación
+                            JSONArray pruebaJSON = objetoJSON.getJSONArray("UsuarioIngrediente");
+
+                            items_ingredientes=new String[pruebaJSON.length()];
+                            for(int i=0;i<pruebaJSON.length();i++)
+                            {
+                                items_ingredientes[i]=pruebaJSON.getJSONObject(i).getString("id_ingrediente");
+                            }
+                        }
+                        else
+                        {
+                            devuelve = "No hay Ingrediente";
+                        }
+
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return devuelve;
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //resultado.setText(s);
+            super.onPostExecute(s);
+            Obtener_Producto();
+            //Se notifica al adaptador de que el ArrayList que tiene asociado ha sufrido cambios (forzando asi a ir al metodo getView())
+            //adaptador.notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    /**
+     * @name public void Obtener_Producto()
+     * @description Metodo para obtener el Id_Producto del Producto con Codigo de Barra dado.
+     * @return void
+     */
+    public void Obtener_Producto()
+    {
+        // Rutas de los Web Services
+        //Obtenemos los productos segun su codigo de barras
+        final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codigobarra.toString();
+        hiloconexion1 = new Obtener_Producto_CB();
+        hiloconexion1.execute(GET,"1");
     }
 
 
@@ -457,7 +555,7 @@ public class CodigoBarra extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int id) {
                     //No Realizamos ninguna Acceion
                     finish();
-                    Intent intent = new Intent(CodigoBarra.this, VentanaOpcionesEscaner.class);
+                    Intent intent = new Intent(CodigoBarraAdmin.this, VentanaOpcionesEscaner.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
 
@@ -470,7 +568,7 @@ public class CodigoBarra extends AppCompatActivity {
                     SystemClock.sleep(500);
 
                     finish();
-                    Intent intent = new Intent(CodigoBarra.this, EntrarCon.class);
+                    Intent intent = new Intent(CodigoBarraAdmin.this, EntrarCon.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
@@ -1040,7 +1138,7 @@ public class CodigoBarra extends AppCompatActivity {
     {
 
         finish();
-        Intent intent = new Intent(this, VentanaOpcionesEscaner.class);
+        Intent intent = new Intent(this, VentanaPrincipal.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 

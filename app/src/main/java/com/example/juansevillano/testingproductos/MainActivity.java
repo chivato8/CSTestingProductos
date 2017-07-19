@@ -125,69 +125,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @name private void  funcionBD()
-     * @description Funcion gestion de la base de datos
-     * @return void
-     */
-    /*private void  funcionBD()
-    {
-
-        //Abrimos la Base de datos "BDUsuario" en modo escritura.
-        BDUsuario Usuarios=new BDUsuario(this,"BDUsuario",null,1);
-
-        //Ponemos la Base de datos en Modo Escritura.
-        db= Usuarios.getWritableDatabase();
-
-        //Toast.makeText(getBaseContext(), "Usuario Cargado Correctamente", Toast.LENGTH_LONG).show();
-
-        //Comprobamos que la base de datos existe
-        if(db!=null)
-        {
-
-            //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan','Santander')");
-            //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan2','Santander2')");
-
-            //Comprobamos si la Base de datos con la que estamos trabajando esta VACIA
-            Cursor count=db.rawQuery("SELECT Nombre FROM Usuarios",null);
-
-            if(count.getCount()>0) //La Base de Datos SI tiene Usuario Registrado
-            {
-                //count.moveToFirst();
-                //Toast.makeText(getBaseContext(), "Usuarios Registrados: " + count.getCount(), Toast.LENGTH_LONG).show();
-                Toast.makeText(getBaseContext(), "Accediendo a la Aplicación.", Toast.LENGTH_SHORT).show();
-
-                //Accedemos a la Aplición para la Eleccion del Modo de Escaneo
-                Intent ListSong = new Intent(getApplicationContext(), VentanaOpcionesEscaner.class);
-                startActivity(ListSong);
-                finish();
-
-            }//La Base de Datos NO tiene Ningun Usuario Registrado
-            else
-            {
-                Toast.makeText(getBaseContext(), "!BASE DE DATOS VACIA¡ - Procederemos al Registro de un Usuario.", Toast.LENGTH_SHORT).show();
-
-                //Esperamos 50 milisegundos
-                SystemClock.sleep(50);
-
-                //Cerramos la Base de Datos
-                //db.close();
-
-                //Accedemos a la Pantalla del Registro del Usuario
-                Intent ListSong = new Intent(getApplicationContext(), VentanaRegistroUsuario.class);
-                startActivity(ListSong);
-                finish();
-
-            }
-
-            //Log.i(this.getClass().toString(), "Datos Iniciales INSERTADOS");
-        }
-
-        //Cerramos la Base de Datos
-        //db.close();
-
-    }*/
-
-    /**
      * @name public void onBackPressed ()
      * @description Si hacemos clic en el boton hacia atras saldremos de la aplicacion
      * @return void

@@ -23,7 +23,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    public ViewPager viewPager;
     public List<Fragment> fragments = new ArrayList<Fragment>();
 
     //Se crea un ArrayList de tipo Ingrediente para cada uno de los alergenicos.
@@ -41,12 +41,17 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
     public ArrayList<Ingrediente> list_ingredientes_mostaza = new ArrayList<Ingrediente>();
     public ArrayList<Ingrediente> list_ingredientes_pescado = new ArrayList<Ingrediente>();
     public ArrayList<Ingrediente> list_ingredientes_soja = new ArrayList<Ingrediente>();
-    public ArrayList<Ingrediente> list_ingredientes_otros = new ArrayList<Ingrediente>();
+    //public ArrayList<Ingrediente> list_ingredientes_otros = new ArrayList<Ingrediente>();
 
 
     public ArrayList<TipoProducto> list_tipo_producto;
     public ArrayList<Empresa> list_empresa;
 
+    /**
+     * @name private void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +84,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         fragments.add(new AlergenicoMostaza());
         fragments.add(new AlergenicoPescado());
         fragments.add(new AlergenicoSoja());
-        fragments.add(new AlergenicoOtros());
+        //fragments.add(new AlergenicoOtros());
         fragments.add(new FinRegistroProducto());
 
         //fragments.add(new FourFragment());
@@ -99,32 +104,19 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
-    //////////////////////////////////////////
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        System.out.println("Prueba 10");
         super.onActivityResult(requestCode, resultCode, data);
         ActivityResultBus.getInstance().postQueue(
                 new ActivityResultEvent(requestCode, resultCode, data));
-        System.out.println("Prueba 11");
     }
 
-
-    ////////////////////////////////////////
-
-
-    // In your activity
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("Prueba 10");
-        if (fragments.get(0) != null) {
-            System.out.println("Prueba 11");
-            fragments.get(0).onActivityResult(requestCode, resultCode, data);
-        }
-    }*/
-
+    /**
+     * @name private void setupTabIcons()
+     * @description Método para asignar los iconos a cada fragments
+     * @return void
+     */
     private void setupTabIcons() {
 
         tabLayout.getTabAt(0).setIcon(R.mipmap.registroproducto);
@@ -142,13 +134,14 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         tabLayout.getTabAt(12).setIcon(R.mipmap.mostazamini);
         tabLayout.getTabAt(13).setIcon(R.mipmap.pescadomini);
         tabLayout.getTabAt(14).setIcon(R.mipmap.sojamini);
-        tabLayout.getTabAt(15).setIcon(R.mipmap.otrosmini);
-        tabLayout.getTabAt(16).setIcon(R.mipmap.finregistroico);
+        //tabLayout.getTabAt(15).setIcon(R.mipmap.otrosmini);
+        tabLayout.getTabAt(15).setIcon(R.mipmap.finregistroico);
     }
 
     /**
-     * Adding fragments to ViewPager
-     * @param viewPager
+     * @name private void setupViewPager(ViewPager viewPager)
+     * @description Método para añadir los fragments a la view.
+     * @return void
      */
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -167,7 +160,7 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         adapter.addFrag(new AlergenicoMostaza(), "Mostaza");
         adapter.addFrag(new AlergenicoPescado(), "Pescado");
         adapter.addFrag(new AlergenicoSoja(), "Soja");
-        adapter.addFrag(new AlergenicoOtros(), "Otros");
+        //adapter.addFrag(new AlergenicoOtros(), "Otros");
         adapter.addFrag(new FinRegistroProducto(), "Fin Registro");
         viewPager.setAdapter(adapter);
     }
@@ -199,6 +192,17 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    /**
+     * @name public void onSupportNavigateUp ()
+     * @description Si hacemos clic en el boton hacia atras saldremos de la aplicacion
+     * @return void
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return false;
     }
 
     /**
@@ -265,9 +269,13 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
 
     }
 
+    /**
+     * @name public void ProductoYaRegistrado(final String codigo_barra, final String id_producto)
+     * @description Método para cormprobar si el producto ya existe
+     * @return void
+     */
     public void ProductoYaRegistrado(final String codigo_barra, final String id_producto)
     {
-        System.out.println("EXISTEEEEE 22222");
         android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(VentanaRegistroProducto.this);
 
         alertDialog.setMessage("!Ya Existe un Producto con el Codigo de Barra que as insertado¡. ¿Desea Actualizar dicho Producto?");

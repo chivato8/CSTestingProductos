@@ -3,10 +3,12 @@ package com.example.juansevillano.testingproductos;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,21 +39,36 @@ public class EditarUsuario extends Fragment{
     String IP = "http://tfgalimentos.16mb.com";
 
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService hiloconexion;
+    obtener_usuarios_existentes hiloconexion;
+
+    int pos=0;
 
 
-
+    /**
+     * @name public EditarUsuario()
+     * @description Constructor Vacio
+     * @return void
+     */
     public EditarUsuario() {
         // Required empty public constructor
     }
 
+    /**
+     * @name private void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
     }
 
-
+    /**
+     * @name private View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+     * @description Se crea la vista de la clase
+     * @return View v
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,6 +76,30 @@ public class EditarUsuario extends Fragment{
         return inflater.inflate(R.layout.activity_editar_usuario, container, false);
     }
 
+    /**
+     * @name private void onResume()
+     * @description Primer Método cuando la función se está yendo de la pantalla. Muestra en que proceso nos encontramos.
+     * @return void
+     */
+    public void onResume()
+    {
+
+        final VentanaEditarUsuarioAdmin activity= ((VentanaEditarUsuarioAdmin) getActivity());
+        ViewPager viewPager= activity.viewPager;
+        if(viewPager.getCurrentItem() == pos){
+            pos++;
+            Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+            pos--;
+            //Your code here. Executed when fragment is seen by user.
+        }
+        super.onResume();
+    }
+
+    /**
+     * @name private void onActivityCreated(Bundle savedInstanceState)
+     * @description Funcion para crear la Actividad
+     * @return void
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -77,7 +118,7 @@ public class EditarUsuario extends Fragment{
 
         // Rutas de los Web Services
         String GET_BY_ID = IP + "/obtener_usuarios_existentes.php?id_asociado="+id_asociado.toString();
-        hiloconexion = new ObtenerWebService();
+        hiloconexion = new obtener_usuarios_existentes();
         hiloconexion.execute(GET_BY_ID,"1");
     }
 
@@ -85,7 +126,7 @@ public class EditarUsuario extends Fragment{
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService extends AsyncTask<String,Void,String> {
+    public class obtener_usuarios_existentes extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -194,11 +235,8 @@ public class EditarUsuario extends Fragment{
     public void Asignar_valores()
     {
         nomyapel.setText(nombre);
-        System.out.println("N "+nomyapel.toString());
         cor.setText(correo);
-        System.out.println("C "+cor.toString());
         tel.setText(telefono);
-        System.out.println("T "+tel.toString());
     }
 
 }

@@ -2,10 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.juansevillano.testingproductos">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -23,18 +22,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ComprobarSesion"
+        <activity
+            android:name=".ComprobarSesion"
             android:screenOrientation="portrait" />
-        <activity android:name=".EntrarCon"
+        <activity
+            android:name=".EntrarCon"
             android:screenOrientation="portrait" />
-        <activity android:name=".IniciarSesionGmail"
+        <activity
+            android:name=".CodigoBarra"
             android:screenOrientation="portrait" />
-        <activity android:name=".RegistrarUsuarioGmail"
+        <activity
+            android:name=".CodigoBarraAdmin"
             android:screenOrientation="portrait" />
         <activity
             android:name=".VentanaOpcionesEscaner"
             android:screenOrientation="portrait" />
-        <activity android:name=".CodigoBarra" />
         <activity
             android:name=".VentanaRegistroUsuario"
             android:label="Ventana Registro Usuarios"
@@ -46,30 +48,30 @@
             android:label="Ventana Editar Usuarios"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".VentanaEditarUsuarioAdmin"
             android:label="Ventana Editar Usuarios"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".VentanaRegistroProducto"
             android:label="Ventana Registrar Productos"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".VentanaActualizarProducto"
             android:label="Ventana Actualizar Productos"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".VentanaPrincipal"
             android:label="@string/title_activity_ventana_principal"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

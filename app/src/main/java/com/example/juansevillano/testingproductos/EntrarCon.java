@@ -45,6 +45,11 @@ public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnCo
 
     private ProgressBar progressBar;
 
+    /**
+     * @name protected void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,11 +126,21 @@ public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnCo
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
     }
 
+    /**
+     * @name public void onConnectionFailed(@NonNull ConnectionResult connectionResult
+     * @description Metodo por si produce un error en la conexión
+     * @return void
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
+    /**
+     * @name private void onActivityResult(int requestCode, int resultCode, Intent intent)
+     * @description Para recuperar la información resultante de una segunda actividad.
+     * @return void
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -136,6 +151,11 @@ public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnCo
         }
     }
 
+    /**
+     * @name private void handleSignInResult(GoogleSignInResult result)
+     * @description Metodo para el resultado del inicio de sesión con google
+     * @return void
+     */
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             firebaseAuthWithGoogle(result.getSignInAccount());
@@ -144,6 +164,11 @@ public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnCo
         }
     }
 
+    /**
+     * @name private void firebaseAuthWithGoogle(GoogleSignInAccount signInAccount)
+     * @description Metodo para la autentificación con google.
+     * @return void
+     */
     private void firebaseAuthWithGoogle(GoogleSignInAccount signInAccount) {
 
         progressBar.setVisibility(View.VISIBLE);
@@ -206,9 +231,6 @@ public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnCo
         //Comprobamos que la base de datos existe
         if(db!=null)
         {
-
-            //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan','Santander')");
-            //db.execSQL("INSERT INTO Usuarios (Nombre, Apellidos) VALUES('Juan2','Santander2')");
 
             //Comprobamos si la Base de datos con la que estamos trabajando esta VACIA
             Cursor count=db.rawQuery("SELECT Nombre FROM Usuarios",null);

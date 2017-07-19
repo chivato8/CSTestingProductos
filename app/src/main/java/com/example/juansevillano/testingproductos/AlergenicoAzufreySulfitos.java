@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,32 +48,47 @@ public class AlergenicoAzufreySulfitos extends Fragment{
     //Se crea un objeto de tipo AdaptadorDias
     Adaptador adaptador;
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService hiloconexion;
+    obtener_transtorno_ingrediente hiloconexion;
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService2 hiloconexion2;
+    ObtenerIngredientes_Usuario_Ingrediente hiloconexion2;
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService21 hiloconexion21;
+    ObtenerIngredientes_Producto_Ingrediente hiloconexion21;
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService3 hiloconexion3;
+    obtener_transtorno_ingrediente1 hiloconexion3;
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService4 hiloconexion4;
+    obtener_transtorno_ingrediente2 hiloconexion4;
     //Vector para almacenar los id_ingredientes que existen en la consulta que hemos realizado en la Base de datos.
     String[]id_ingrediente;
 
     Boolean vacio=false;
 
+    int pos=3;
+
+    /**
+     * @name public AlergenicoAzufreySulfitos()
+     * @description Constructor Vacio
+     * @return void
+     */
     public AlergenicoAzufreySulfitos() {
         // Required empty public constructor
     }
 
-
+    /**
+     * @name private void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
     }
 
-
+    /**
+     * @name private View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+     * @description Se crea la vista de la clase
+     * @return View v
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,6 +96,96 @@ public class AlergenicoAzufreySulfitos extends Fragment{
         return inflater.inflate(R.layout.activity_alergenico_azufreysulfitos, container, false);
     }
 
+    /**
+     * @name private void onResume()
+     * @description Primer Método cuando la función se está yendo de la pantalla. Muestra en que proceso nos encontramos.
+     * @return void
+     */
+    public void onResume()
+    {
+
+        //Si estamo en la ventana VentanaRegistroUsuario
+        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaRegistroUsuario") == true) {
+            // Definimos un objeto del activity VentanaRegistroUsuario
+            final VentanaRegistroUsuario activity= ((VentanaRegistroUsuario) getActivity());
+            ViewPager viewPager= activity.viewPager;
+            System.out.println(viewPager.getCurrentItem());
+            if(viewPager.getCurrentItem() == pos){
+                pos++;
+                Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                pos--;
+                //Your code here. Executed when fragment is seen by user.
+            }
+        }
+        else
+        {
+            //Si estamos en la ventana VentanaRegistroProducto
+            if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaRegistroProducto") == true) {
+                // Definimos un objeto del activity VentanaRegistroProducto
+                final VentanaRegistroProducto activity= ((VentanaRegistroProducto) getActivity());
+                ViewPager viewPager= activity.viewPager;
+                if(viewPager.getCurrentItem() == pos){
+                    pos++;
+                    Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                    pos--;
+                    //Your code here. Executed when fragment is seen by user.
+                }
+            }
+            else
+            {
+                //Si estamos en la ventana VentanaEditarUsuarioAdmin
+                if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin") == true) {
+                    // Definimos un objeto del activity VentanaEditarUsuarioAdmin
+                    final VentanaEditarUsuarioAdmin activity= ((VentanaEditarUsuarioAdmin) getActivity());
+                    ViewPager viewPager= activity.viewPager;
+                    if(viewPager.getCurrentItem() == pos){
+                        pos++;
+                        Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                        pos--;
+                        //Your code here. Executed when fragment is seen by user.
+                    }
+                }
+                else
+                {
+                    //Si estamos en la ventana VentanaEditarUsuario
+                    if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true) {
+                        // Definimos un objeto del activity VentanaEditarUsuario
+                        final VentanaEditarUsuario activity= ((VentanaEditarUsuario) getActivity());
+                        ViewPager viewPager= activity.viewPager;
+                        if(viewPager.getCurrentItem() == pos){
+                            pos++;
+                            Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                            pos--;
+                            //Your code here. Executed when fragment is seen by user.
+                        }
+                    }
+                    else
+                    {
+                        //Si estamos en la ventana VentanaActualizarProducto
+                        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaActualizarProducto") == true) {
+                            // Definimos un objeto del activity VentanaActualizarProducto
+                            final VentanaActualizarProducto activity= ((VentanaActualizarProducto) getActivity());
+                            ViewPager viewPager= activity.viewPager;
+                            if(viewPager.getCurrentItem() == pos){
+                                pos++;
+                                Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                                pos--;
+                                //Your code here. Executed when fragment is seen by user.
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        super.onResume();
+    }
+
+    /**
+     * @name private void onActivityCreated(Bundle State)
+     * @description Funcion para crear la Actividad
+     * @return void
+     */
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
 
@@ -123,7 +230,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
             String IP = "http://tfgalimentos.16mb.com";
             // Rutas de los Web Services
             String GET = IP + "/ObtenerIngredientes_Usuario_Ingrediente.php?id_asociado="+idasociadoAdmin.toString();
-            hiloconexion2 = new ObtenerWebService2();
+            hiloconexion2 = new ObtenerIngredientes_Usuario_Ingrediente();
             hiloconexion2.execute(GET, "1");   // Parámetros que recibe doInBackground
         }
         else
@@ -137,7 +244,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
                 String IP = "http://tfgalimentos.16mb.com";
                 // Rutas de los Web Services
                 String GET = IP + "/ObtenerIngredientes_Producto_Ingrediente.php?id_producto="+idproducto.toString();
-                hiloconexion21 = new ObtenerWebService21();
+                hiloconexion21 = new ObtenerIngredientes_Producto_Ingrediente();
                 hiloconexion21.execute(GET, "1");   // Parámetros que recibe doInBackground
             }
             else
@@ -146,7 +253,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
                 String IP = "http://tfgalimentos.16mb.com";
                 // Rutas de los Web Services
                 String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=3";
-                hiloconexion = new ObtenerWebService();
+                hiloconexion = new obtener_transtorno_ingrediente();
                 hiloconexion.execute(GET, "1");   // Parámetros que recibe doInBackground
             }
 
@@ -394,7 +501,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService extends AsyncTask<String,Void,String> {
+    public class obtener_transtorno_ingrediente extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -583,7 +690,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService2 extends AsyncTask<String,Void,String> {
+    public class ObtenerIngredientes_Usuario_Ingrediente extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -692,7 +799,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService21 extends AsyncTask<String,Void,String> {
+    public class ObtenerIngredientes_Producto_Ingrediente extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -800,6 +907,11 @@ public class AlergenicoAzufreySulfitos extends Fragment{
         }
     }
 
+    /**
+     * @name private void ResgistrarIngredientes()
+     * @description Funcion para registrar los Ingredientes
+     * @return void
+     */
     private void RegistrarIngredientes()
     {
         if(vacio==false)
@@ -808,7 +920,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
             String IP = "http://tfgalimentos.16mb.com";
             // Rutas de los Web Services
             String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=3";
-            hiloconexion3 = new ObtenerWebService3();
+            hiloconexion3 = new obtener_transtorno_ingrediente1();
             hiloconexion3.execute(GET, "1");   // Parámetros que recibe doInBackground
         }
         else
@@ -817,7 +929,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
             String IP = "http://tfgalimentos.16mb.com";
             // Rutas de los Web Services
             String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=3";
-            hiloconexion4 = new ObtenerWebService4();
+            hiloconexion4 = new obtener_transtorno_ingrediente2();
             hiloconexion4.execute(GET, "1");   // Parámetros que recibe doInBackground
         }
 
@@ -827,7 +939,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService3 extends AsyncTask<String,Void,String> {
+    public class obtener_transtorno_ingrediente1 extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -968,7 +1080,7 @@ public class AlergenicoAzufreySulfitos extends Fragment{
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService4 extends AsyncTask<String,Void,String> {
+    public class obtener_transtorno_ingrediente2 extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {

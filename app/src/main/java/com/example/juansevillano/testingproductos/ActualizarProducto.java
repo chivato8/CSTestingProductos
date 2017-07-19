@@ -1,11 +1,16 @@
 package com.example.juansevillano.testingproductos;
 
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +35,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 public class ActualizarProducto extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //EditText para almacenar el codigo de barra que leemos.
@@ -51,7 +58,7 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
     String idproducto;
 
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService hiloconexion1;
+    Obtener_Producto_CB hiloconexion1;
 
     // array para listar las frutas
     //private ArrayList<TipoProducto> tipoProductos;
@@ -69,45 +76,76 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
     //URL para el listado de las empresas
     public String URL_LISTA_EMPRESAS = "http://tfgalimentos.16mb.com/Todos_Empresa.php";
 
+    int pos=0;
+
+    /**
+     * @name public ActualizarProducto()
+     * @description Constructor Vacio
+     * @return void
+     */
     public ActualizarProducto() {
         // Required empty public constructor
     }
 
+    /**
+     * @name private void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * @name private void onResume()
+     * @description Primer Método cuando la función se está yendo de la pantalla. Muestra en que proceso nos encontramos.
+     * @return void
+     */
+    public void onResume()
+    {
+        // Definimos un objeto del activity VentanaActualizarProducto
+        final VentanaActualizarProducto activity= ((VentanaActualizarProducto) getActivity());
+        ViewPager viewPager= activity.viewPager;
+        if(viewPager.getCurrentItem() == pos){
+            pos++;
+            Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+            pos--;
+            //Your code here. Executed when fragment is seen by user.
+        }
+
+        super.onResume();
+    }
+
+    /**
+     * @name private View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+     * @description Se crea la vista de la clase
+     * @return View v
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.activity_actualizar_producto, container, false);
 
-        /*spinnertipo = (Spinner) v.findViewById(R.id.spinnertipoproductoactualizar);
-        spinnerempresa = (Spinner) v.findViewById(R.id.spinnerempresaactualizar);
-
-        ((VentanaActualizarProducto)getActivity()).list_tipo_producto = new ArrayList<TipoProducto>();
-        ((VentanaActualizarProducto)getActivity()).list_empresa = new ArrayList<Empresa>();*/
-
-        // seleccionar el tipo de empresa del spinner
-        //spinnertipo.setOnItemSelectedListener(this);
-        // seleccionar el nombre de la empresa del spinner
-        //spinnerempresa.setOnItemSelectedListener(this);
-
         // Definimos un objeto del activity VentanaEditarUsuario
         final VentanaActualizarProducto activity = ((VentanaActualizarProducto) getActivity());
 
         // Rutas de los Web Services
         final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+activity.codigo_barra.toString();
-        hiloconexion1 = new ObtenerWebService();
+        hiloconexion1 = new Obtener_Producto_CB();
         hiloconexion1.execute(GET,"1");
 
         return v;
     }
 
 
+    /**
+     * @name private void onActivityCreated(Bundle savedInstanceState)
+     * @description Funcion para crear la Actividad
+     * @return void
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -118,31 +156,11 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
 
     }
 
-    /*@Override
-    public void onStart() {
-        super.onStart();
-        ActivityResultBus.getInstance().register(mActivityResultSubscriber);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        ActivityResultBus.getInstance().unregister(mActivityResultSubscriber);
-    }
-
-    private Object mActivityResultSubscriber = new Object() {
-        @Subscribe
-        public void onActivityResultReceived(ActivityResultEvent event) {
-            System.out.println("Prueba 6");
-            int requestCode = event.getRequestCode();
-            System.out.println(event.getRequestCode());
-            int resultCode = event.getResultCode();
-            Intent data = event.getData();
-            onActivityResult(requestCode, resultCode, data);
-        }
-    };*/
-
-
+    /**
+     * @name private void onActivityResult(int requestCode, int resultCode, Intent intent)
+     * @description Para recuperar la información resultante de una segunda actividad.
+     * @return void
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -344,6 +362,11 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
 
     }
 
+    /**
+     * @name private void popularSpinnertipoproducto()
+     * @description Función para rellenar los spinner del tipo de producto.
+     * @return void
+     */
     private void populateSpinnertipoproducto() {
         List<String> lables = new ArrayList<String>();
 
@@ -362,6 +385,11 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
 
     }
 
+    /**
+     * @name private void popularSpinneEmpresa()
+     * @description Función para rellenar los spinner de las empresas
+     * @return void
+     */
     private void populateSpinnerEmpresa() {
         List<String> lables = new ArrayList<String>();
 
@@ -380,6 +408,11 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
 
     }
 
+    /**
+     * @name private void onItemSeleccted()
+     * @description Función para mostrar que spinner ha sido seleccionado
+     * @return void
+     */
     public void onItemSelected(AdapterView<?> parent, View view, int position,
                                long id) {
         Toast.makeText(
@@ -389,7 +422,11 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
 
     }
 
-
+    /**
+     * @name private void onNothingSelected()
+     * @description Funcion si no se seleccionado ninguno
+     * @return void
+     */
     public void onNothingSelected(AdapterView<?> arg0) {
     }
 
@@ -397,7 +434,7 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService extends AsyncTask<String,Void,String> {
+    public class Obtener_Producto_CB extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -443,7 +480,6 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
 
                         //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
                         String resultJSON = objetoJSON.getString("estado");
-                        System.out.println("Prueba 1 " + resultJSON);
 
                         if (resultJSON.equals("1")){      // hay un producto anteriormente creado
                             devuelve = "Si hay Producto Registrado";
@@ -500,6 +536,11 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
         }
     }
 
+    /**
+     * @name private void AsignarValores()
+     * @description Funcion para asignar los valores a las variables correspondientes
+     * @return void
+     */
     private void AsignarValores()
     {
         System.out.println("Prueba 11");
@@ -528,5 +569,48 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
             }
         },1000);
 
+    }
+
+    /**
+     * @name public boolean comprobarActivityALaVista(Context context, String nombreClase)
+     * @description Método para comprobar en que activity nos encontramos actualmente
+     * @return boolean
+     */
+    public boolean comprobarActivityALaVista(Context context, String nombreClase){
+
+        // Obtenemos nuestro manejador de activitys
+        ActivityManager am = (ActivityManager)
+                context.getSystemService(Context.ACTIVITY_SERVICE);
+        // obtenemos la informacion de la tarea que se esta ejecutando
+        // actualmente
+        List< ActivityManager.RunningTaskInfo > taskInfo = am.getRunningTasks(1);
+        // Creamos una variable donde vamos a almacenar
+        // la activity que se encuentra a la vista
+        String nombreClaseActual = null;
+
+        try{
+            // Creamos la variable donde vamos a guardar el objeto
+            // del que vamos a tomar el nombre
+            ComponentName componentName = null;
+            // si pudimos obtener la tarea actual, vamos a intentar cargar
+            // nuestro objeto
+            if(taskInfo != null && taskInfo.get(0) != null){
+                componentName = taskInfo.get(0).topActivity;
+            }
+            // Si pudimos cargar nuestro objeto, vamos a obtener
+            // el nombre con el que vamos a comparar
+            if(componentName != null){
+                nombreClaseActual = componentName.getClassName();
+                //System.out.println(nombreClaseActual);
+            }
+
+        }catch (NullPointerException e){
+
+            Log.e(TAG, "Error al tomar el nombre de la clase actual " + e);
+            return false;
+        }
+
+        // devolvemos el resultado de la comparacion
+        return nombreClase.equals(nombreClaseActual);
     }
 }

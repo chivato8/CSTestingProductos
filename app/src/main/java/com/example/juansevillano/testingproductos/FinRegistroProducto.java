@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,10 +58,13 @@ public class FinRegistroProducto extends Fragment {
     //Obtenemos el contenido del spinner seleccionado empresa que lo fabrica
     //Spinner para la empresa que fabrico el producto
     private Spinner spinneremp;
+    //String para la empres que fabrica el prodcuto
     private String empresafabrica;
 
+    //String que corresponde con el id del producto
     private String id_producto;
 
+    //Boolean que nos sirve como bandera
     private Boolean Bandera=false;
 
     CheckBox lMarcado;
@@ -76,24 +80,35 @@ public class FinRegistroProducto extends Fragment {
     RegistroUsuario registroUsuario= new RegistroUsuario();
 
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService hiloconexion1;
+    Obtener_Producto_CB hiloconexion1;
 
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService2 hiloconexion2;
+    Insertar_Producto hiloconexion2;
 
     //Se crear un objetio de tipo ObtenerWebService
-    ObtenerWebService3 hiloconexion3;
+    Insertar_Producto_Ingrediente hiloconexion3;
 
     // IP de mi Url
     String IP = "http://tfgalimentos.16mb.com";
     // Rutas de los Web Services
     final String INSERT = IP + "/Insertar_Producto.php";
 
+    int pos=15;
 
+    /**
+     * @name public FinRegistroProducto()
+     * @description Constructor Vacio
+     * @return void
+     */
     public FinRegistroProducto() {
         // Required empty public constructor
     }
 
+    /**
+     * @name private void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -101,6 +116,11 @@ public class FinRegistroProducto extends Fragment {
 
     }
 
+    /**
+     * @name private View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+     * @description Se crea la vista de la clase
+     * @return View v
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -108,6 +128,96 @@ public class FinRegistroProducto extends Fragment {
         return inflater.inflate(R.layout.activity_fin_registro_producto, container, false);
     }
 
+    /**
+     * @name private void onResume()
+     * @description Primer Método cuando la función se está yendo de la pantalla. Muestra en que proceso nos encontramos.
+     * @return void
+     */
+    public void onResume()
+    {
+
+        //Si estamo en la ventana VentanaRegistroUsuario
+        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaRegistroUsuario") == true) {
+            // Definimos un objeto del activity VentanaRegistroUsuario
+            final VentanaRegistroUsuario activity= ((VentanaRegistroUsuario) getActivity());
+            ViewPager viewPager= activity.viewPager;
+            System.out.println(viewPager.getCurrentItem());
+            if(viewPager.getCurrentItem() == pos){
+                pos++;
+                Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                pos--;
+                //Your code here. Executed when fragment is seen by user.
+            }
+        }
+        else
+        {
+            //Si estamos en la ventana VentanaRegistroProducto
+            if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaRegistroProducto") == true) {
+                // Definimos un objeto del activity VentanaRegistroProducto
+                final VentanaRegistroProducto activity= ((VentanaRegistroProducto) getActivity());
+                ViewPager viewPager= activity.viewPager;
+                if(viewPager.getCurrentItem() == pos){
+                    pos++;
+                    Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                    pos--;
+                    //Your code here. Executed when fragment is seen by user.
+                }
+            }
+            else
+            {
+                //Si estamos en la ventana VentanaEditarUsuarioAdmin
+                if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin") == true) {
+                    // Definimos un objeto del activity VentanaEditarUsuarioAdmin
+                    final VentanaEditarUsuarioAdmin activity= ((VentanaEditarUsuarioAdmin) getActivity());
+                    ViewPager viewPager= activity.viewPager;
+                    if(viewPager.getCurrentItem() == pos){
+                        pos++;
+                        Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                        pos--;
+                        //Your code here. Executed when fragment is seen by user.
+                    }
+                }
+                else
+                {
+                    //Si estamos en la ventana VentanaEditarUsuario
+                    if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true) {
+                        // Definimos un objeto del activity VentanaEditarUsuario
+                        final VentanaEditarUsuario activity= ((VentanaEditarUsuario) getActivity());
+                        ViewPager viewPager= activity.viewPager;
+                        if(viewPager.getCurrentItem() == pos){
+                            pos++;
+                            Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                            pos--;
+                            //Your code here. Executed when fragment is seen by user.
+                        }
+                    }
+                    else
+                    {
+                        //Si estamos en la ventana VentanaActualizarProducto
+                        if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaActualizarProducto") == true) {
+                            // Definimos un objeto del activity VentanaActualizarProducto
+                            final VentanaActualizarProducto activity= ((VentanaActualizarProducto) getActivity());
+                            ViewPager viewPager= activity.viewPager;
+                            if(viewPager.getCurrentItem() == pos){
+                                pos++;
+                                Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+                                pos--;
+                                //Your code here. Executed when fragment is seen by user.
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        super.onResume();
+    }
+
+    /**
+     * @name private void onActivityCreated(Bundle savedInstanceState)
+     * @description Funcion para crear la Actividad
+     * @return void
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -135,7 +245,7 @@ public class FinRegistroProducto extends Fragment {
 
                         // Rutas de los Web Services
                         final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codigobarra.toString();
-                        hiloconexion1 = new ObtenerWebService();
+                        hiloconexion1 = new Obtener_Producto_CB();
                         hiloconexion1.execute(GET,"1");
                 }
 
@@ -192,7 +302,7 @@ public class FinRegistroProducto extends Fragment {
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService extends AsyncTask<String,Void,String> {
+    public class Obtener_Producto_CB extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -301,7 +411,7 @@ public class FinRegistroProducto extends Fragment {
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService2 extends AsyncTask<String,Void,String> {
+    public class Insertar_Producto extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -406,6 +516,11 @@ public class FinRegistroProducto extends Fragment {
         }
     }
 
+    /**
+     * @name private void ProductoYARegistrado()
+     * @description Metodo el producto ya se encuentra registrado
+     * @return void
+     */
     private void ProductoYARegistrado()
     {
         getActivity().runOnUiThread(new Runnable() {
@@ -416,6 +531,11 @@ public class FinRegistroProducto extends Fragment {
 
     }
 
+    /**
+     * @name private void Insertar()
+     * @description Metodo para insertar el producto
+     * @return void
+     */
     private void Insertar()
     {
         //Obtenemos el contenido del spinner del tipo de producto
@@ -423,20 +543,30 @@ public class FinRegistroProducto extends Fragment {
         //Obtenemos el contenido del spinner del nombre de la empresa
         empresafabrica = String.valueOf(spinneremp.getSelectedItemPosition()+1);
 
-        hiloconexion2 = new ObtenerWebService2();
+        hiloconexion2 = new Insertar_Producto();
         hiloconexion2.execute(INSERT, "4", codigobarra.toString(), nombreproducto.toString(), tipoproducto.toString(), empresafabrica.toString());
     }
 
+    /**
+     * @name private void Obtner_Id_Producto()
+     * @description Metodo para obtener el id del producto
+     * @return void
+     */
     private void Obtner_Id_Producto()
     {
         Bandera=true;
         //System.out.println("CODIGO DE BARRA: "+codigobarra.toString());
         // Rutas de los Web Services
         final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codigobarra.toString();
-        hiloconexion1 = new ObtenerWebService();
+        hiloconexion1 = new Obtener_Producto_CB();
         hiloconexion1.execute(GET,"1");
     }
 
+    /**
+     * @name private void Insertar_Alergenicos()
+     * @description Metodo para insertar los alergenicos ingredientes
+     * @return void
+     */
     private void Insertar_Alergenicos()
     {
 
@@ -451,7 +581,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -463,7 +593,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -475,7 +605,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -487,7 +617,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -499,7 +629,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -511,7 +641,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -523,7 +653,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -535,7 +665,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -547,7 +677,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -559,7 +689,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -571,7 +701,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -583,7 +713,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -595,7 +725,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -607,7 +737,7 @@ public class FinRegistroProducto extends Fragment {
                     String id = ingrediente.getid_ingrediente();
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
-                    hiloconexion3 = new ObtenerWebService3();
+                    hiloconexion3 = new Insertar_Producto_Ingrediente();
                     hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
                 }
             }
@@ -662,7 +792,7 @@ public class FinRegistroProducto extends Fragment {
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class ObtenerWebService3 extends AsyncTask<String,Void,String> {
+    public class Insertar_Producto_Ingrediente extends AsyncTask<String,Void,String> {
 
 
         @Override

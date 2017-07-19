@@ -40,6 +40,11 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
     //Definimos una variable de tipo SQLiteDatabase
     SQLiteDatabase db;
 
+    /**
+     * @name private void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,13 +70,12 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
 
             if(elegido.equals("-1"))
             {
-                createRadioListDialog();
+                createRadioListDialogEscaner();
             }
             else
             {
-                Intent ListSong = new Intent(getApplicationContext(), CodigoBarra.class);
-                startActivity(ListSong);
-                finish();
+                //Pedimos al Usuario que elige un usuario de la lista para Escaner Productos con él.
+                createRadioListDialogEscaner();
             }
         }
 
@@ -140,6 +144,70 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 return true;
         }
     }
+
+    /**
+     * @name public int createRadioListDialogEditar()
+     * @description Crea un diálogo con una lista de radios para la Eleccion de Usuario
+     * @return int
+     */
+    public void createRadioListDialogEscaner() {
+
+        //Definimos un vector MenuItem, que representa los elementos que tienen.
+        final CharSequence[] items;
+
+        //Abrimos la Base de datos "BDUsuario" en modo escritura.
+        BDUsuario bdUsuarios=new BDUsuario(this,"BDUsuario",null,1);
+
+        SQLiteDatabase db = bdUsuarios.getWritableDatabase();
+        res=db.rawQuery("SELECT ID, Nombre, Apellidos FROM Usuarios",null);
+        //db.close();
+
+        //Definimos una variable de tipo CharSequence de tamaño res.getCount()
+        items=new CharSequence[res.getCount()];
+
+        //Movemos el cursor al primer elemento
+        res.moveToFirst();
+
+        //Mostramos los datos mediente un bucle for
+        for (int i=0;i<items.length;i++) {
+            items[i]=res.getString(1) + " "+res.getString(2);
+            res.moveToNext();
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Selecciona el Usuario con el que Deseas Escaner Productos:");
+
+        //Mostramos la lista de usuarios a elegir para poder empezar la lectura de codigos de barras
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int item) {
+                //Movemos el cursor al primer elemento
+                res.moveToPosition(item);
+                elegido=res.getString(0);
+                //Toast toast = Toast.makeText(getApplicationContext(), "Haz elegido la opcion: " +res.getString(1)+" "+elegido, Toast.LENGTH_SHORT);
+                //toast.show();
+                dialog.cancel();
+
+                System.out.println("Prueba: "+elegido);
+
+                //Si se ha seleccionado un usuario
+                if(!elegido.equals("-1"))
+                {
+                    System.out.println("Prueba: "+elegido);
+                    //Accedemos a la Ventana Editar Usuario.
+                    Intent ListSong = new Intent (VentanaOpcionesEscaner.this, CodigoBarra.class);
+                    ListSong.putExtra("elegido", elegido);
+                    startActivity(ListSong);
+                    finish();
+                }
+            }
+
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
     /**
      * @name public int createRadioListDialogEditar()
@@ -299,6 +367,11 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
         alert.show();
     }
 
+    /**
+     * @name public void ComporbarSIExisteUsuario()
+     * @description Método para comprobar si existe el usuario o no
+     * @return void
+     */
     public void ComporbarSIExisteUsuario()
     {
         //COMPROBAMOS SI EXISTE ALGUN USUARIO EN LA BASE DE DATOS.
