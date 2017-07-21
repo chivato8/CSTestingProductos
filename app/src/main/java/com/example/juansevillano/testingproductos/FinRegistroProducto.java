@@ -252,6 +252,16 @@ public class FinRegistroProducto extends Fragment {
             }
         });
 
+        Button bt2 = (Button)getView().findViewById(R.id.restablecerproducto);
+        bt2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Definimos un objeto del activity VentanaEditarUsuario
+                final VentanaRegistroProducto activity = ((VentanaRegistroProducto) getActivity());
+                activity.Restablecer();
+
+            }
+        });
     }
 
 

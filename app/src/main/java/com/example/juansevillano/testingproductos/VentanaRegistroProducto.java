@@ -290,7 +290,6 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         });
         alertDialog.setNegativeButton("Confirmar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                System.out.println("CODIGOOOO---"+codigo_barra);
                 Intent intent = new Intent(VentanaRegistroProducto.this, VentanaActualizarProducto.class);
                 intent.putExtra("codigo_barra",codigo_barra.toString());
                 intent.putExtra("id_producto",id_producto.toString());
@@ -299,6 +298,18 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
             }
         });
         alertDialog.show();
+    }
+
+    /**
+     * @name public void Restablecer()
+     * @description Funcion si hacemos click en Restablecer
+     * @return void
+     */
+    public void Restablecer()
+    {
+        Intent intent = new Intent(VentanaRegistroProducto.this, VentanaRegistroProducto.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
 }

@@ -329,4 +329,17 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+    /**
+     * @name public void Restablecer()
+     * @description Funcion si hacemos click en Restablecer
+     * @return void
+     */
+    public void Restablecer()
+    {
+        Intent intent = new Intent(VentanaEditarUsuario.this, VentanaEditarUsuario.class);
+        intent.putExtra("elegido",elegido.toString());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 }

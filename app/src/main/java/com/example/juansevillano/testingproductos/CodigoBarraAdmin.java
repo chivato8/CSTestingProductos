@@ -38,7 +38,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by Juan Sevillano on 29/03/2017.
+ * Created by Juan Sevillano on 15/07/2017.
  */
 public class CodigoBarraAdmin extends AppCompatActivity {
 

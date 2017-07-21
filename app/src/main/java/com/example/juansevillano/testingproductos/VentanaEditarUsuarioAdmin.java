@@ -270,4 +270,17 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+    /**
+     * @name public void Restablecer()
+     * @description Funcion si hacemos click en Restablecer
+     * @return void
+     */
+    public void Restablecer()
+    {
+        Intent intent = new Intent(VentanaEditarUsuarioAdmin.this, VentanaEditarUsuarioAdmin.class);
+        intent.putExtra("id_asociado",id_asociado.toString());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 }

@@ -17,7 +17,7 @@
             <item
                 android:id="@+id/info_alergenico"
                 android:icon="@drawable/ic_info_border_color"
-                android:title="Inf. 14 Alergenicos" />
+                android:title="Inf. 14 Alergénicos" />
             <item
                 android:id="@+id/cerrar_sesion"
                 android:icon="@drawable/ic_cerrar_border_color"

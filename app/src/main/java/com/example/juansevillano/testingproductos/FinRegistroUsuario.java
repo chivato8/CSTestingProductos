@@ -628,6 +628,28 @@ public class FinRegistroUsuario extends Fragment {
             }
         });
 
+        Button bt2 = (Button)getView().findViewById(R.id.restablecerusuario);
+        bt2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaRegistroUsuario") == true) {
+                    // Definimos un objeto del activity VentanaEditarUsuario
+                    final VentanaRegistroUsuario activity = ((VentanaRegistroUsuario) getActivity());
+                    activity.Restablecer();
+                }
+                else
+                {
+                    if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuario") == true) {
+                        // Definimos un objeto del activity VentanaEditarUsuario
+                        final VentanaEditarUsuario activity = ((VentanaEditarUsuario) getActivity());
+                        activity.Restablecer();
+                    }
+                }
+
+            }
+        });
+
     }
 
 

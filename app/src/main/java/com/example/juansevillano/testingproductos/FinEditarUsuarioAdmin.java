@@ -277,6 +277,17 @@ public class FinEditarUsuarioAdmin extends Fragment {
             }
         });
 
+        Button bt2 = (Button)getView().findViewById(R.id.restableceradmin);
+        bt2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Definimos un objeto del activity VentanaEditarUsuarioAdmin
+                final VentanaEditarUsuarioAdmin activity = ((VentanaEditarUsuarioAdmin) getActivity());
+                activity.Restablecer();
+
+            }
+        });
+
     }
 
     /**

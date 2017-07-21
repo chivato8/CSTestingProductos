@@ -322,4 +322,16 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
         startActivity(intent);
 
     }
+
+    /**
+     * @name public void Restablecer()
+     * @description Funcion si hacemos click en Restablecer
+     * @return void
+     */
+    public void Restablecer()
+    {
+        Intent intent = new Intent(VentanaRegistroUsuario.this, VentanaRegistroUsuario.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 }

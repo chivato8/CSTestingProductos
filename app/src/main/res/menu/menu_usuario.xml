@@ -37,6 +37,6 @@
 
     <!--MENU-->
     <item android:id="@+id/irventanausuarios" android:title="Ir a Ventana Principal" />
-    <item android:id="@+id/info14alergenico" android:title="Info. 14 Alergenicos" />
+    <item android:id="@+id/info14alergenico" android:title="Info. 14 Alergénicos" />
     <item android:id="@+id/salirfin" android:title="Salir" />
 </menu>
