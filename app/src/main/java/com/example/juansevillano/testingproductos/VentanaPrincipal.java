@@ -78,6 +78,9 @@ public class VentanaPrincipal extends AppCompatActivity
     // Rutas de los Web Services
     final String INSERT = IP + "/Insertar_Usuario.php";
 
+    //Clave Encriptada
+    Encriptado encriptado= new Encriptado();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -264,23 +267,33 @@ public class VentanaPrincipal extends AppCompatActivity
     }
 
 
-
+    /**
+     * @name private void setUserData(FirebaseUser user)
+     * @description Metodo para obtener todos los datos del usuario y comprobamos si existe para insetar
+     * el usuario en la base de datos o no.
+     * @return void
+     */
     private void setUserData(FirebaseUser user) {
         nameTextView.setText(user.getDisplayName().toString());
         emailTextView.setText(user.getEmail());
         id_asociado=user.getUid();
         Glide.with(this).load(user.getPhotoUrl()).into(photoImageView);
 
-        String GET = IP + "/obtener_usuarios_existentes.php?id_asociado="+id_asociado.toString();
+        String GET = IP + "/obtener_usuarios_existentes.php?id_asociado="+id_asociado.toString()+"&clave="+encriptado.md5();
         hiloconexion1 = new obtener_usuarios_existentes();
         hiloconexion1.execute(GET,"1");
 
     }
 
+    /**
+     * @name private void Insertar()
+     * @description Metodo para insertar el usuario en la base de datos
+     * @return void
+     */
     private void Insertar()
     {
         hiloconexion2 = new Insertar_Usuario();
-        hiloconexion2.execute(INSERT, "3", id_asociado.toString(), nameTextView.getText().toString(), emailTextView.getText().toString());
+        hiloconexion2.execute(INSERT, "3", id_asociado.toString(), nameTextView.getText().toString(), emailTextView.getText().toString(),encriptado.md5().toString());
     }
 
     @Override
@@ -492,6 +505,7 @@ public class VentanaPrincipal extends AppCompatActivity
                     jsonParam.put("id_asociado", params[2]);
                     jsonParam.put("nombre_apellidos", params[3]);
                     jsonParam.put("correo_electronico", params[4]);
+                    jsonParam.put("clave", params[5]);
                     // Envio los parámetros post.
                     OutputStream os = urlConn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(

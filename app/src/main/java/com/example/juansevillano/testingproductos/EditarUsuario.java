@@ -43,6 +43,9 @@ public class EditarUsuario extends Fragment{
 
     int pos=0;
 
+    //Clave Encriptada
+    Encriptado encriptado= new Encriptado();
+
 
     /**
      * @name public EditarUsuario()
@@ -117,7 +120,7 @@ public class EditarUsuario extends Fragment{
         id_asociado=activity2.id_asociado;
 
         // Rutas de los Web Services
-        String GET_BY_ID = IP + "/obtener_usuarios_existentes.php?id_asociado="+id_asociado.toString();
+        String GET_BY_ID = IP + "/obtener_usuarios_existentes.php?id_asociado="+id_asociado.toString()+"&clave="+encriptado.md5();
         hiloconexion = new obtener_usuarios_existentes();
         hiloconexion.execute(GET_BY_ID,"1");
     }
@@ -190,7 +193,7 @@ public class EditarUsuario extends Fragment{
 
 
                         } else if (resultJSON == "2") {
-                            devuelve = "No hay alumnos";
+                            devuelve = "No hay Usuario";
                         }
 
                     }

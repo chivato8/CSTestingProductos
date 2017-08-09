@@ -54,14 +54,17 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     ProgressDialog pDialogproductos;
     ProgressDialog pDialogempresa;
 
+    //Clave Encriptada
+    Encriptado encriptado= new Encriptado();
+
     // IP de mi Url
     String IP = "http://tfgalimentos.16mb.com";
 
     //URL para el listado del tipo de productos
-    public String URL_LISTA_PRODUCTO = "http://tfgalimentos.16mb.com/Todos_Tipo_Producto.php";
+    public String URL_LISTA_PRODUCTO = "http://tfgalimentos.16mb.com/Todos_Tipo_Producto.php?clave="+encriptado.md5();
 
     //URL para el listado de las empresas
-    public String URL_LISTA_EMPRESAS = "http://tfgalimentos.16mb.com/Todos_Empresa.php";
+    public String URL_LISTA_EMPRESAS = "http://tfgalimentos.16mb.com/Todos_Empresa.php?clave="+encriptado.md5();
 
     //Variable booleana para saber si existe o no un producto
     Boolean Existe=false;
@@ -205,7 +208,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
                 System.out.println("Prueba 12");
 
                 // Rutas de los Web Services
-                final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codbarra.getText().toString();
+                final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codbarra.getText().toString()+"&clave="+encriptado.md5();
                 hiloconexion1 = new Obtener_Producto_CB();
                 hiloconexion1.execute(GET,"1");
 
@@ -527,7 +530,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
                         }
 
                         //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
-                        JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+                        JSONArray respuestaJSON = new JSONArray("["+result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
 
                         //Accedemos al vector de resultados
                         JSONObject objetoJSON= respuestaJSON.getJSONObject(0);

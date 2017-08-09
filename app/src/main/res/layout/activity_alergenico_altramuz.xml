@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.juansevillano.testingproductos.AlergenicoAltamuz">
+    tools:context="com.example.juansevillano.testingproductos.AlergenicoAltramuz">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -25,7 +25,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Proceso 2/17"
+            android:text="Proceso 2/16"
             android:textSize="14dp" />
 
         <TextView
@@ -39,7 +39,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:lineSpacingExtra="10sp"
-            android:text="Todos los Ingrediente Alergenicos del tipo Altamuz"
+            android:text="Todos los Ingrediente Alergenicos del tipo Altramuz"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="#000000"

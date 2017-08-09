@@ -89,6 +89,9 @@ public class FinEditarUsuarioAdmin extends Fragment {
 
     int pos=15;
 
+    //Clave Encriptada
+    Encriptado encriptado= new Encriptado();
+
     /**
      * @name public FinEditarUsuarioAdmin()
      * @description Constructor Vacio
@@ -243,7 +246,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                             // Rutas de los Web Services
                             final String DELETE = IP + "/Borrar_Usuario_Ingrediente.php";
                             hiloconexion1 = new Borrar_Usuario_Ingrediente();
-                            hiloconexion1.execute(DELETE, "1", idasociadoAdmin.toString());
+                            hiloconexion1.execute(DELETE, "1", idasociadoAdmin.toString(),encriptado.md5().toString());
                         }
                         //Si el edittext nombre y el edittex correo son vacios mostrarmos un mensaje u notificación advirtiendo
                         //que son campos obligatorios
@@ -322,6 +325,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Creo el Objeto JSON
                     JSONObject jsonParam = new JSONObject();
                     jsonParam.put("id_asociado", params[2]);
+                    jsonParam.put("clave", params[3]);
                     // Envio los parámetros post.
                     OutputStream os = urlConn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(
@@ -410,11 +414,11 @@ public class FinEditarUsuarioAdmin extends Fragment {
         hiloconexion2 = new Actualizar_Usuario();
         if(telefonoAdmin==null)
         {
-            hiloconexion2.execute(UPDATE,"1",idasociadoAdmin.toString(),nombreAdmin.toString(),correoAdmin.toString(),null);
+            hiloconexion2.execute(UPDATE,"1",idasociadoAdmin.toString(),nombreAdmin.toString(),correoAdmin.toString(),null,encriptado.md5().toString());
         }
         else
         {
-            hiloconexion2.execute(UPDATE,"1",idasociadoAdmin.toString(),nombreAdmin.toString(),correoAdmin.toString(),telefonoAdmin.toString());
+            hiloconexion2.execute(UPDATE,"1",idasociadoAdmin.toString(),nombreAdmin.toString(),correoAdmin.toString(),telefonoAdmin.toString(),encriptado.md5().toString());
         }
 
     }
@@ -454,6 +458,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     jsonParam.put("nombre_apellidos", params[3]);
                     jsonParam.put("correo_electronico", params[4]);
                     jsonParam.put("telefono", params[5]);
+                    jsonParam.put("clave", params[6]);
                     // Envio los parámetros post.
                     OutputStream os = urlConn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(
@@ -539,7 +544,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
      */
     private void Obtener_ID_Usuario()
     {
-        String GET = IP + "/obtener_usuarios_existentes.php?id_asociado="+idasociadoAdmin.toString();
+        String GET = IP + "/obtener_usuarios_existentes.php?id_asociado="+idasociadoAdmin.toString()+"&clave="+encriptado.md5();
         hiloconexion4 = new obtener_usuarios_existentes();
         hiloconexion4.execute(GET,"1");
     }
@@ -659,7 +664,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
         {
 
             //Recorremos el fragment asignado para el alergenico altamuz
-            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_altamuz){
+            for(Ingrediente ingrediente : ((VentanaEditarUsuarioAdmin)getActivity()).list_ingredientes_altramuz){
 
                 if (ingrediente.isChekeado())
                 {
@@ -668,7 +673,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
                     System.out.println(id_usuario.toString());
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -680,7 +685,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -692,7 +697,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -704,7 +709,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -716,7 +721,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -728,7 +733,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -740,7 +745,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -752,7 +757,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -764,7 +769,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -776,7 +781,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -788,7 +793,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -800,7 +805,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -812,7 +817,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -824,7 +829,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Usuario_Ingrediente.php";
                     hiloconexion3 = new Insertar_Usuario_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_usuario.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -904,6 +909,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
                     JSONObject jsonParam = new JSONObject();
                     jsonParam.put("id_usuario", Integer.valueOf(params[2]));
                     jsonParam.put("id_ingrediente",Integer.valueOf(params[3]));
+                    jsonParam.put("clave",params[4]);
                     // Envio los parámetros post.
                     OutputStream os = urlConn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(

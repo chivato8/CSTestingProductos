@@ -221,7 +221,7 @@ public class FinRegistroUsuario extends Fragment {
                                 eliminar_idusuario_idingrediente(elusuario[0]);
 
                                 //Recorremos el fragment asignado para el alergenico altamuz
-                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_altamuz){
+                                for(Ingrediente ingrediente : ((VentanaEditarUsuario)getActivity()).list_ingredientes_altramuz){
                                     /*System.out.println("Id: "+ingrediente.getid_ingrediente()+" - nombre: "+ingrediente.getingrediente()
                                             +" - estado: "+ingrediente.isChekeado());*/
                                     if (ingrediente.isChekeado())
@@ -427,7 +427,7 @@ public class FinRegistroUsuario extends Fragment {
                                     insertarUsuario(nombre, apellidos, telefono, correo);
 
                                     //Recorremos el fragment asignado para el alergenico altamuz
-                                    for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_altamuz){
+                                    for(Ingrediente ingrediente : ((VentanaRegistroUsuario)getActivity()).list_ingredientes_altramuz){
                                     /*System.out.println("Id: "+ingrediente.getid_ingrediente()+" - nombre: "+ingrediente.getingrediente()
                                             +" - estado: "+ingrediente.isChekeado());*/
                                         if (ingrediente.isChekeado())

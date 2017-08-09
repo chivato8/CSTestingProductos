@@ -21,7 +21,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Proceso 17/17"
+            android:text="Proceso 16/16"
             android:textSize="14dp"
             />
         <LinearLayout
@@ -66,8 +66,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Usted debe ser consciente que el registro de un producto falseando los datos puede afectar a la salud de las presonas que utilizen dicha aplicación. Si deseas proceder con el registro de un producto debe hacer clic en ACEPTAR si deseas restablecer el formulario al completo debe hacer clic en RESTABLECER"
-                android:textSize="14dp"
-                />
+                android:textAlignment="center"
+                android:textSize="14dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

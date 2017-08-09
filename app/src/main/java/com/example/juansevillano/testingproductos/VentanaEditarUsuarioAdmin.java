@@ -28,7 +28,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
     public List<Fragment> fragments = new ArrayList<Fragment>();
 
     //Se crea un ArrayList de tipo Ingrediente para cada uno de los alergenicos.
-    public ArrayList<Ingrediente> list_ingredientes_altamuz= new ArrayList<Ingrediente>();
+    public ArrayList<Ingrediente> list_ingredientes_altramuz= new ArrayList<Ingrediente>();
     public ArrayList<Ingrediente> list_ingredientes_apio= new ArrayList<Ingrediente>();
     public ArrayList<Ingrediente> list_ingredientes_azufreysulfito= new ArrayList<Ingrediente>();
     public ArrayList<Ingrediente> list_ingredientes_cacahuete= new ArrayList<Ingrediente>();
@@ -75,7 +75,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
         manager = getFragmentManager();
 
         fragments.add(new EditarUsuario());
-        fragments.add(new AlergenicoAltamuz());
+        fragments.add(new AlergenicoAltramuz());
         fragments.add(new AlergenicoApio());
         fragments.add(new AlergenicoAzufreySulfitos());
         fragments.add(new AlergenicoCacahuete());
@@ -156,7 +156,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new RegistroUsuario(), "Editar");
-        adapter.addFrag(new AlergenicoAltamuz(), "Altamuz");
+        adapter.addFrag(new AlergenicoAltramuz(), "Altamuz");
         adapter.addFrag(new AlergenicoApio(), "Apio");
         adapter.addFrag(new AlergenicoAzufreySulfitos(), "Azufre y Sulfitos");
         adapter.addFrag(new AlergenicoCacahuete(), "Cacahuete");

@@ -73,8 +73,4 @@ public class Ingrediente {
         this.estado = estado;
     }
 
-    public void Insertar_Usuario_Ingrediente()
-    {
-
-    }
 }

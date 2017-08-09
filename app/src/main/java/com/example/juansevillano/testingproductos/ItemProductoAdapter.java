@@ -62,7 +62,7 @@ public class ItemProductoAdapter extends BaseAdapter {
         TextView nombre = (TextView) vi.findViewById(R.id.texto_ingrediente);
         nombre.setText(item.getingrediente());
 
-        TextView tipo = (TextView) vi.findViewById(R.id.texto_transtorno);
+        TextView tipo = (TextView) vi.findViewById(R.id.texto_trastorno);
         tipo.setText(item.gettipo_ingrediente());
 
         return vi;

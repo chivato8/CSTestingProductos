@@ -48,21 +48,24 @@ public class AlergenicoCacahuete extends Fragment{
     //Se crea un objeto de tipo AdaptadorDias
     Adaptador adaptador;
     //Se crear un objetio de tipo ObtenerWebService
-    obtener_transtorno_ingrediente hiloconexion;
+    obtener_trastorno_ingrediente hiloconexion;
     //Se crear un objetio de tipo ObtenerWebService
     ObtenerIngredientes_Usuario_Ingrediente hiloconexion2;
     //Se crear un objetio de tipo ObtenerWebService
     ObtenerIngredientes_Producto_Ingrediente hiloconexion21;
     //Se crear un objetio de tipo ObtenerWebService
-    obtener_transtorno_ingrediente1 hiloconexion3;
+    obtener_trastorno_ingrediente1 hiloconexion3;
     //Se crear un objetio de tipo ObtenerWebService
-    obtener_transtorno_ingrediente2 hiloconexion4;
+    obtener_trastorno_ingrediente2 hiloconexion4;
     //Vector para almacenar los id_ingredientes que existen en la consulta que hemos realizado en la Base de datos.
     String[]id_ingrediente;
 
     Boolean vacio=false;
 
     int pos=4;
+
+    //Clave Encriptada
+    Encriptado encriptado= new Encriptado();
 
     /**
      * @name public AlergenicoCacahuete()
@@ -230,7 +233,7 @@ public class AlergenicoCacahuete extends Fragment{
             // IP de mi Url
             String IP = "http://tfgalimentos.16mb.com";
             // Rutas de los Web Services
-            String GET = IP + "/ObtenerIngredientes_Usuario_Ingrediente.php?id_asociado="+idasociadoAdmin.toString();
+            String GET = IP + "/ObtenerIngredientes_Usuario_Ingrediente.php?id_asociado="+idasociadoAdmin.toString()+"&clave="+encriptado.md5();
             hiloconexion2 = new ObtenerIngredientes_Usuario_Ingrediente();
             hiloconexion2.execute(GET, "1");   // Parámetros que recibe doInBackground
         }
@@ -244,7 +247,7 @@ public class AlergenicoCacahuete extends Fragment{
                 // IP de mi Url
                 String IP = "http://tfgalimentos.16mb.com";
                 // Rutas de los Web Services
-                String GET = IP + "/ObtenerIngredientes_Producto_Ingrediente.php?id_producto="+idproducto.toString();
+                String GET = IP + "/ObtenerIngredientes_Producto_Ingrediente.php?id_producto="+idproducto.toString()+"&clave="+encriptado.md5();
                 hiloconexion21 = new ObtenerIngredientes_Producto_Ingrediente();
                 hiloconexion21.execute(GET, "1");   // Parámetros que recibe doInBackground
             }
@@ -253,8 +256,8 @@ public class AlergenicoCacahuete extends Fragment{
                 // IP de mi Url
                 String IP = "http://tfgalimentos.16mb.com";
                 // Rutas de los Web Services
-                String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=4";
-                hiloconexion = new obtener_transtorno_ingrediente();
+                String GET = IP + "/obtener_trastorno_ingrediente.php?id_trastorno=4&clave="+encriptado.md5();
+                hiloconexion = new obtener_trastorno_ingrediente();
                 hiloconexion.execute(GET, "1");   // Parámetros que recibe doInBackground
             }
 
@@ -502,7 +505,7 @@ public class AlergenicoCacahuete extends Fragment{
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class obtener_transtorno_ingrediente extends AsyncTask<String,Void,String> {
+    public class obtener_trastorno_ingrediente extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -551,7 +554,7 @@ public class AlergenicoCacahuete extends Fragment{
                     if (resultJSON.equals("1"))
                     {
                         //Obtenemos los ingrediente que vamos a mostrar en la aplicación
-                        JSONArray pruebaJSON = objetoJSON.getJSONArray("Transtorno_Ingrediente");
+                        JSONArray pruebaJSON = objetoJSON.getJSONArray("Trastorno_Ingrediente");
 
                         if(comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuario")==true)
                         {
@@ -919,8 +922,8 @@ public class AlergenicoCacahuete extends Fragment{
             // IP de mi Url
             String IP = "http://tfgalimentos.16mb.com";
             // Rutas de los Web Services
-            String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=4";
-            hiloconexion3 = new obtener_transtorno_ingrediente1();
+            String GET = IP + "/obtener_trastorno_ingrediente.php?id_trastorno=4&clave="+encriptado.md5();
+            hiloconexion3 = new obtener_trastorno_ingrediente1();
             hiloconexion3.execute(GET, "1");   // Parámetros que recibe doInBackground
         }
         else
@@ -928,8 +931,8 @@ public class AlergenicoCacahuete extends Fragment{
             // IP de mi Url
             String IP = "http://tfgalimentos.16mb.com";
             // Rutas de los Web Services
-            String GET = IP + "/obtener_transtorno_ingrediente.php?id_transtorno=4";
-            hiloconexion4 = new obtener_transtorno_ingrediente2();
+            String GET = IP + "/obtener_trastorno_ingrediente.php?id_trastorno=4&clave="+encriptado.md5();
+            hiloconexion4 = new obtener_trastorno_ingrediente2();
             hiloconexion4.execute(GET, "1");   // Parámetros que recibe doInBackground
         }
 
@@ -939,7 +942,7 @@ public class AlergenicoCacahuete extends Fragment{
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class obtener_transtorno_ingrediente1 extends AsyncTask<String,Void,String> {
+    public class obtener_trastorno_ingrediente1 extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -988,7 +991,7 @@ public class AlergenicoCacahuete extends Fragment{
                         // Comprobamos si hay ingredientes para mostrar
                         if (resultJSON.equals("1")) {
                             //Obtenemos los ingrediente que vamos a mostrar en la aplicación
-                            JSONArray pruebaJSON = objetoJSON.getJSONArray("Transtorno_Ingrediente");
+                            JSONArray pruebaJSON = objetoJSON.getJSONArray("Trastorno_Ingrediente");
 
                             if (comprobarActivityALaVista(getActivity(), "com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin") == true) {
 
@@ -1080,7 +1083,7 @@ public class AlergenicoCacahuete extends Fragment{
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class obtener_transtorno_ingrediente2 extends AsyncTask<String,Void,String> {
+    public class obtener_trastorno_ingrediente2 extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -1128,7 +1131,7 @@ public class AlergenicoCacahuete extends Fragment{
                     // Comprobamos si hay ingredientes para mostrar
                     if (resultJSON.equals("1")) {
                         //Obtenemos los ingrediente que vamos a mostrar en la aplicación
-                        JSONArray pruebaJSON = objetoJSON.getJSONArray("Transtorno_Ingrediente");
+                        JSONArray pruebaJSON = objetoJSON.getJSONArray("Trastorno_Ingrediente");
                         if (comprobarActivityALaVista(getActivity(),"com.example.juansevillano.testingproductos.VentanaEditarUsuarioAdmin") == true)
                         {
                             //Recorremos el objeto anterior mostrando los ingredientes uno a uno

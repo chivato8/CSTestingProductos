@@ -24,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
     //Definimos una variable de tipo SQLiteDatabase
     //SQLiteDatabase db;
 
+    /**
+     * @name private void onCreate( Bundle savedInstanceState)
+     * @description Primer Método que se llama al crear la clase
+     * @return void
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * @name ejecutarAccion
-     * @description Creación de un Hilo de Tipo Runnable para ejecutar la funcionBD despues
-     * de que termine el hilo de la barra cargadora procesbar
+     * @description Creación de un Hilo de Tipo Runnable para abrir la calse Comprobar sesión despues de que se termine el proceso
+     * de la barra cargadora
      * @return void
      */
     final Runnable ejecutarAccion = new Runnable() {

@@ -70,11 +70,14 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
     // IP de mi Url
     String IP = "http://tfgalimentos.16mb.com";
 
+    //Clave Encriptada
+    Encriptado encriptado= new Encriptado();
+
     //URL para el listado del tipo de productos
-    public String URL_LISTA_PRODUCTO = "http://tfgalimentos.16mb.com/Todos_Tipo_Producto.php";
+    public String URL_LISTA_PRODUCTO = "http://tfgalimentos.16mb.com/Todos_Tipo_Producto.php?clave="+encriptado.md5();
 
     //URL para el listado de las empresas
-    public String URL_LISTA_EMPRESAS = "http://tfgalimentos.16mb.com/Todos_Empresa.php";
+    public String URL_LISTA_EMPRESAS = "http://tfgalimentos.16mb.com/Todos_Empresa.php?clave="+encriptado.md5();
 
     int pos=0;
 
@@ -133,7 +136,7 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
         final VentanaActualizarProducto activity = ((VentanaActualizarProducto) getActivity());
 
         // Rutas de los Web Services
-        final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+activity.codigo_barra.toString();
+        final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+activity.codigo_barra.toString()+"&clave="+encriptado.md5();
         hiloconexion1 = new Obtener_Producto_CB();
         hiloconexion1.execute(GET,"1");
 
@@ -473,7 +476,7 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
                         }
 
                         //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
-                        JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+                        JSONArray respuestaJSON = new JSONArray("["+result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
 
                         //Accedemos al vector de resultados
                         JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
@@ -613,4 +616,5 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
         // devolvemos el resultado de la comparacion
         return nombreClase.equals(nombreClaseActual);
     }
+
 }

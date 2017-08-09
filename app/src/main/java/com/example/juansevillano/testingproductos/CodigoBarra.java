@@ -75,8 +75,8 @@ public class CodigoBarra extends AppCompatActivity {
     //Ingredientes que afectan a la dieta del usuario
     String[] items_ingredientes;
 
-    //Transtorno de cada ingrediente
-    String[] transtornos_ingrediente;
+    //Trastorno de cada ingrediente
+    String[] trastornos_ingrediente;
 
     // IP de mi Url
     String IP = "http://tfgalimentos.16mb.com";
@@ -94,7 +94,7 @@ public class CodigoBarra extends AppCompatActivity {
     Obtener_Ingrediente_siOK hiloconexion4;
 
     //Se crear un objetio de tipo ObtenerWebService
-    Obtener_Transtorno hiloconexion5;
+    Obtener_Trastorno hiloconexion5;
 
     //Si el ingrediente existe en el producto
     static Boolean existe=false;
@@ -109,6 +109,9 @@ public class CodigoBarra extends AppCompatActivity {
 
     //Lista de Ingredientes
     ArrayList<Ingrediente> ingrediente;
+
+    //Clave Encriptada
+    Encriptado encriptado= new Encriptado();
 
 
     public int getCount() {
@@ -262,7 +265,7 @@ public class CodigoBarra extends AppCompatActivity {
                 System.out.println("Prueba 12");
                 // Rutas de los Web Services
                 //Obtenemos los productos segun su codigo de barras
-                final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codigobarra.toString();
+                final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codigobarra.toString()+"&clave="+encriptado.md5();
                 hiloconexion1 = new Obtener_Producto_CB();
                 hiloconexion1.execute(GET,"1");
 
@@ -303,20 +306,6 @@ public class CodigoBarra extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    private ArrayList<Ingrediente> obtenerItems() {
-        ArrayList<Ingrediente> items = new ArrayList<Ingrediente>();
-
-        items.add(new Ingrediente("1", "Patatas", "Tuberculo",
-                "drawable/ic_verificado_v"));
-        items.add(new Ingrediente("2", "Naranja", "Fruta",
-                "drawable/ic_verificado_v"));
-        items.add(new Ingrediente("3", "Lechuga", "Verdura",
-                "drawable/ic_verificado_x"));
-
-        return items;
-    }
-
 
     /**
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
@@ -361,7 +350,7 @@ public class CodigoBarra extends AppCompatActivity {
                         }
 
                         //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
-                        JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+                        JSONArray respuestaJSON = new JSONArray("["+result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
 
                         //Accedemos al vector de resultados
                         JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
@@ -434,7 +423,7 @@ public class CodigoBarra extends AppCompatActivity {
             System.out.println("Id del producto: "+id_producto);
             // Rutas de los Web Services
             //Obtenemos los ingredientes que forman parte de dicho producto
-            final String GET = IP + "/ObtenerIngredientes_Producto_Ingrediente.php?id_producto="+id_producto;
+            final String GET = IP + "/ObtenerIngredientes_Producto_Ingrediente.php?id_producto="+id_producto+"&clave="+encriptado.md5();
             hiloconexion2 = new ObtenerIngredientes_Producto_Ingrediente();
             hiloconexion2.execute(GET, "1");
         }
@@ -442,7 +431,7 @@ public class CodigoBarra extends AppCompatActivity {
         {
             id_ingrediente_producto=null;
             items_ingredientes=null;
-            transtornos_ingrediente=null;
+            trastornos_ingrediente=null;
             textoveracidad.setText("");
             imagenveracidad.setVisibility(View.INVISIBLE);
             producto.setText("Nombre del Producto: ");
@@ -550,7 +539,7 @@ public class CodigoBarra extends AppCompatActivity {
 
                             System.out.println("TAMAÑO: "+id_ingrediente_producto.length);
 
-                            ObtenerTranstornoIngrediente(id_ingrediente_producto);
+                            ObtenerTrastornoIngrediente(id_ingrediente_producto);
 
                         } else {
                             devuelve = "No hay Producto Registrado";
@@ -596,20 +585,20 @@ public class CodigoBarra extends AppCompatActivity {
     }
 
     /**
-     * @name private void ObtenerTranstornoIngrediente(String[] id_ingrediente_producto)
-     * @description Metodo para obtener los transtornos ingredientes
+     * @name private void ObtenerTrastornoIngrediente(String[] id_ingrediente_producto)
+     * @description Metodo para obtener los trastornos ingredientes
      * @return void
      */
-    private void ObtenerTranstornoIngrediente(String[] id_ingrediente_producto)
+    private void ObtenerTrastornoIngrediente(String[] id_ingrediente_producto)
     {
-        transtornos_ingrediente= new String[id_ingrediente_producto.length];
+        trastornos_ingrediente= new String[id_ingrediente_producto.length];
 
         for(int i=0;i<id_ingrediente_producto.length;i++)
         {
             // Rutas de los Web Services
             //Obtenemos los ingredientes que forman parte de dicho producto
-            final String GET = IP + "/Obtener_Transtorno.php?id_ingrediente=" + id_ingrediente_producto[i].toString();
-            hiloconexion5 = new Obtener_Transtorno();
+            final String GET = IP + "/Obtener_Trastorno.php?id_ingrediente=" + id_ingrediente_producto[i].toString()+"&clave="+encriptado.md5();
+            hiloconexion5 = new Obtener_Trastorno();
             hiloconexion5.execute(GET, "1");
         }
 
@@ -619,7 +608,7 @@ public class CodigoBarra extends AppCompatActivity {
 
     /**
      * @name private void Comparar(String[] id_ingrediente_producto)
-     * @description Metodo para comparar las lista de transtornos del usuario y la lista de ingredientes del producto
+     * @description Metodo para comparar las lista de trastornos del usuario y la lista de ingredientes del producto
      * @return void
      */
     private void Comparar(String[] id_ingrediente_producto)
@@ -639,7 +628,7 @@ public class CodigoBarra extends AppCompatActivity {
                     colocarNOok=true;
 
                     //Obtenemos los productos segun su codigo de barras
-                    final String GET = IP + "/Obtener_Ingrediente.php?id_ingrediente="+id_ingrediente_producto[i].toString();
+                    final String GET = IP + "/Obtener_Ingrediente.php?id_ingrediente="+id_ingrediente_producto[i].toString()+"&clave="+encriptado.md5();
                     hiloconexion3 = new Obtener_Ingrediente_noOK();
                     hiloconexion3.execute(GET,"1",String.valueOf(i));
                     j=items_ingredientes.length;
@@ -649,7 +638,7 @@ public class CodigoBarra extends AppCompatActivity {
             if(existe.equals(false))
             {
                 //Obtenemos los productos segun su codigo de barras
-                final String GET = IP + "/Obtener_Ingrediente.php?id_ingrediente="+id_ingrediente_producto[i].toString();
+                final String GET = IP + "/Obtener_Ingrediente.php?id_ingrediente="+id_ingrediente_producto[i].toString()+"&clave="+encriptado.md5();
                 hiloconexion4 = new Obtener_Ingrediente_siOK();
                 hiloconexion4.execute(GET,"1",String.valueOf(i));
             }
@@ -750,9 +739,9 @@ public class CodigoBarra extends AppCompatActivity {
                                 id_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("id_ingrediente");
                                 nombre_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("nombre_ingrediente");
 
-                                ingrediente.add(new Ingrediente(id_ingrediente,nombre_ingrediente, transtornos_ingrediente[Integer.valueOf(params[2])],
+                                ingrediente.add(new Ingrediente(id_ingrediente,nombre_ingrediente, trastornos_ingrediente[Integer.valueOf(params[2])],
                                         "drawable/ic_verificado_x"));
-                            System.out.println("PRUEBA TTTT 11111------------------- "+transtornos_ingrediente[Integer.valueOf(params[2])].toString());
+                            System.out.println("PRUEBA TTTT 11111------------------- "+trastornos_ingrediente[Integer.valueOf(params[2])].toString());
                                 num++;
 
 
@@ -864,9 +853,9 @@ public class CodigoBarra extends AppCompatActivity {
                                 System.out.println("prueba");
                                 id_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("id_ingrediente");
                                 nombre_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("nombre_ingrediente");
-                                ingrediente.add(new Ingrediente(id_ingrediente,nombre_ingrediente, transtornos_ingrediente[Integer.valueOf(params[2])],
+                                ingrediente.add(new Ingrediente(id_ingrediente,nombre_ingrediente, trastornos_ingrediente[Integer.valueOf(params[2])],
                                         "drawable/ic_verificado_v"));
-                                System.out.println("PRUEBA TTTT 2222------------------- "+transtornos_ingrediente[Integer.valueOf(params[2])].toString());
+                                System.out.println("PRUEBA TTTT 2222------------------- "+trastornos_ingrediente[Integer.valueOf(params[2])].toString());
                                 num++;
 
 
@@ -918,7 +907,7 @@ public class CodigoBarra extends AppCompatActivity {
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
      * mediente archivos php.
      */
-    public class Obtener_Transtorno extends AsyncTask<String,Void,String> {
+    public class Obtener_Trastorno extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -969,8 +958,8 @@ public class CodigoBarra extends AppCompatActivity {
                         if (resultJSON.equals("1")) {      // hay un producto que acabamos de insertar
 
                                 //Obtenemos el id del producto que acabamos de insertar
-                                transtornos_ingrediente[num]= objetoJSON.getJSONObject("Transtorno").getString("transtorno");
-                                System.out.println("PRUEBA TTTT ------------------- "+transtornos_ingrediente[num].toString());
+                                trastornos_ingrediente[num]= objetoJSON.getJSONObject("Trastorno").getString("trastorno");
+                                System.out.println("PRUEBA TTTT ------------------- "+trastornos_ingrediente[num].toString());
                                 num++;
 
                             }

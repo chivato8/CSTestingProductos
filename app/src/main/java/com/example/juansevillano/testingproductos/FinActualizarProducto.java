@@ -88,6 +88,9 @@ public class FinActualizarProducto extends Fragment {
 
     int pos=15;
 
+    //Clave Encriptada
+    Encriptado encriptado= new Encriptado();
+
     /**
      * @name public FinActualizarProducto()
      * @description Constructor Vacio
@@ -245,7 +248,7 @@ public class FinActualizarProducto extends Fragment {
                             // Rutas de los Web Services
                             final String DELETE = IP + "/Borrar_Producto_Ingrediente.php";
                             hiloconexion1 = new Borrar_Producto_Ingrediente();
-                            hiloconexion1.execute(DELETE, "1", id_producto.toString());
+                            hiloconexion1.execute(DELETE, "1", id_producto.toString(),encriptado.md5().toString());
                         }
                         //Si el edittext nombre y el edittex correo son vacios mostrarmos un mensaje u notificación advirtiendo
                         //que son campos obligatorios
@@ -324,6 +327,7 @@ public class FinActualizarProducto extends Fragment {
                     //Creo el Objeto JSON
                     JSONObject jsonParam = new JSONObject();
                     jsonParam.put("id_producto", Integer.valueOf(params[2]));
+                    jsonParam.put("clave", params[3]);
                     // Envio los parámetros post.
                     OutputStream os = urlConn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(
@@ -410,7 +414,7 @@ public class FinActualizarProducto extends Fragment {
         // Rutas de los Web Services
         final String DELETE = IP + "/Borrar_Producto.php";
         hiloconexion4 = new Borrar_Producto();
-        hiloconexion4.execute(DELETE, "1", id_producto.toString());
+        hiloconexion4.execute(DELETE, "1", id_producto.toString(),encriptado.md5().toString());
     }
 
     /**
@@ -445,6 +449,7 @@ public class FinActualizarProducto extends Fragment {
                     //Creo el Objeto JSON
                     JSONObject jsonParam = new JSONObject();
                     jsonParam.put("id_producto", Integer.valueOf(params[2]));
+                    jsonParam.put("clave", params[3]);
                     // Envio los parámetros post.
                     OutputStream os = urlConn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(
@@ -531,7 +536,7 @@ public class FinActualizarProducto extends Fragment {
         // Rutas de los Web Services
         final String INSERT = IP + "/Insertar_Producto.php";
         hiloconexion2 = new Insertar_Producto();
-        hiloconexion2.execute(INSERT, "4", codigobarra.toString(), nombreproducto.toString(), String.valueOf(idtipoproducto),String.valueOf(idempresa));
+        hiloconexion2.execute(INSERT, "4", codigobarra.toString(), nombreproducto.toString(), String.valueOf(idtipoproducto),String.valueOf(idempresa),encriptado.md5().toString());
 
 
     }
@@ -571,6 +576,7 @@ public class FinActualizarProducto extends Fragment {
                     jsonParam.put("nombre_producto", params[3]);
                     jsonParam.put("id_tipo_producto", Integer.valueOf(params[4]));
                     jsonParam.put("id_empresa", Integer.valueOf(params[5]));
+                    jsonParam.put("clave", params[6]);
                     // Envio los parámetros post.
                     OutputStream os = urlConn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(
@@ -658,7 +664,7 @@ public class FinActualizarProducto extends Fragment {
     {
         //System.out.println("CODIGO DE BARRA: "+codigobarra.toString());
         // Rutas de los Web Services
-        final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codigobarra.toString();
+        final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codigobarra.toString()+"&clave="+encriptado.md5();
         hiloconexion5 = new Obtener_Producto_CB();
         hiloconexion5.execute(GET,"1");
     }
@@ -706,7 +712,7 @@ public class FinActualizarProducto extends Fragment {
                         }
 
                         //Creamos un objeto JSONObject para poder acceder a los atributos (campos) del objeto.
-                        JSONArray respuestaJSON = new JSONArray(result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
+                        JSONArray respuestaJSON = new JSONArray("["+result.toString()+"]");   //Creo un JSONObject a partir del StringBuilder pasado a cadena
 
                         //Accedemos al vector de resultados
                         JSONObject objetoJSON= respuestaJSON.getJSONObject(0);
@@ -774,7 +780,7 @@ public class FinActualizarProducto extends Fragment {
         {
 
             //Recorremos el fragment asignado para el alergenico altamuz
-            for(Ingrediente ingrediente : ((VentanaActualizarProducto)getActivity()).list_ingredientes_altamuz){
+            for(Ingrediente ingrediente : ((VentanaActualizarProducto)getActivity()).list_ingredientes_altramuz){
 
                 if (ingrediente.isChekeado())
                 {
@@ -783,7 +789,7 @@ public class FinActualizarProducto extends Fragment {
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
                     System.out.println(id_producto.toString());
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -795,7 +801,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -807,7 +813,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -819,7 +825,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -831,7 +837,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -843,7 +849,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -855,7 +861,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -867,7 +873,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -879,7 +885,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -891,7 +897,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -903,7 +909,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -915,7 +921,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -927,7 +933,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -939,7 +945,7 @@ public class FinActualizarProducto extends Fragment {
                     //Insertamos Producto e Relaciones establecidad en la Base de Datos
                     String INSERT = IP + "/Insertar_Producto_Ingrediente.php";
                     hiloconexion3 = new Insertar_Producto_Ingrediente();
-                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString());
+                    hiloconexion3.execute(INSERT, "2", id_producto.toString(),id.toString(),encriptado.md5().toString());
                 }
             }
 
@@ -1019,6 +1025,7 @@ public class FinActualizarProducto extends Fragment {
                     JSONObject jsonParam = new JSONObject();
                     jsonParam.put("id_producto", Integer.valueOf(params[2]));
                     jsonParam.put("id_ingrediente",Integer.valueOf(params[3]));
+                    jsonParam.put("clave",params[4]);
                     // Envio los parámetros post.
                     OutputStream os = urlConn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(

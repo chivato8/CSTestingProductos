@@ -189,6 +189,11 @@ public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnCo
         });
     }
 
+    /**
+     * @name private void firebaseAuthWithGoogle(GoogleSignInAccount signInAccount)private void goMainScreen()
+     * @description Metodo para ir a la ventanaPrincipal cuando se inicia con la cuenta de google
+     * @return void
+     */
     private void goMainScreen() {
         Intent intent = new Intent(this, VentanaPrincipal.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

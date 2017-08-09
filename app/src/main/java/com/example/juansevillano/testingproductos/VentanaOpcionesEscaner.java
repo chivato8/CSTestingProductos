@@ -53,9 +53,6 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
         ImageButton cbarra=  (ImageButton) findViewById(R.id.barra);
         cbarra.setOnClickListener(this);
 
-        ImageButton btexto=  (ImageButton) findViewById(R.id.bingredinete);
-        btexto.setOnClickListener(this);
-
     }
 
     /**
@@ -79,17 +76,6 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
             }
         }
 
-        if(v.getId()==R.id.bingredinete)
-        {
-            if(elegido.equals("-1"))
-            {
-
-            }
-            else
-            {
-
-            }
-        }
     }
 
     /**
