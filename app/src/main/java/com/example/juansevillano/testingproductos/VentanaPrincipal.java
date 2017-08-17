@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -166,7 +165,6 @@ public class VentanaPrincipal extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int id) {
                     Toast.makeText(getBaseContext(), "Redireccionando al Menu de Elección de Entrada a la Aplicación....", Toast.LENGTH_SHORT).show();
                     //Esperamos 50 milisegundos
-                    SystemClock.sleep(500);
 
                     firebaseAuth.signOut();
 

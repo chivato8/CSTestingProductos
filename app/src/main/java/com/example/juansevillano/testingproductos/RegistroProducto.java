@@ -15,7 +15,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
@@ -72,6 +71,10 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     //Variable para almacenar el ID del Producto
     String idproducto;
 
+
+    String codi="";
+
+
     /**
      * @name public RegistroProducto()
      * @description Constructor Vacio
@@ -124,7 +127,24 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     {
         super.onResume();
         Toast.makeText(getActivity(), "Proceso 1/16", Toast.LENGTH_SHORT).show();
+
+        VentanaRegistroProducto ventanaRegistroProducto= new VentanaRegistroProducto();
+        String co=ventanaRegistroProducto.cod;
+
+        if(co.toString()!="")
+        {
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                    "DOSS "+co.toString(), Toast.LENGTH_SHORT);
+            toast.show();
+            codbarra=(EditText)getActivity().findViewById(R.id.cbarra);
+            codbarra.setText(co.toString());
+
+            final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codbarra.getText().toString()+"&clave="+encriptado.md5();
+            hiloconexion1 = new Obtener_Producto_CB();
+            hiloconexion1.execute(GET,"1");
+        }
     }
+
 
     /**
      * @name private void onActivityCreated(Bundle savedInstanceState)
@@ -144,7 +164,11 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
                 IntentIntegrator scanIntegrator = new IntentIntegrator(getActivity());
                 //Se procede con el proceso de scaneo
                 scanIntegrator.initiateScan();
-                System.out.println("Prueba 2");
+
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                        "BOTONNNN", Toast.LENGTH_SHORT);
+                toast.show();
+
             }
         });
 
@@ -159,6 +183,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     public void onStart() {
         super.onStart();
         ActivityResultBus.getInstance().register(mActivityResultSubscriber);
+
     }
 
     @Override
@@ -187,8 +212,12 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
+        //super.onActivityResult(requestCode, resultCode, intent);
 
+        Toast toast = Toast.makeText(this.getActivity().getApplicationContext(),
+                "HIJOOOO", Toast.LENGTH_SHORT);
+        toast.show();
+/*
         //Se obtiene el resultado del proceso de scaneo y se parsea
         System.out.println("Prueba 10");
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
@@ -202,9 +231,12 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
                 String scanContent = scanningResult.getContents();
                 System.out.println(scanContent.toString());
                 //Se Instancia el Campo de Texto para el contenido  del código de barra
-                codbarra = (EditText)getActivity().findViewById(R.id.cbarra);
+                codbarra= (TextView)getActivity().findViewById(R.id.cbarra);
                 codbarra.setText(scanContent.toString());
                 System.out.println(codbarra.getText().toString());
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                        scanContent.toString(), Toast.LENGTH_SHORT);
+                toast.show();
                 System.out.println("Prueba 12");
 
                 // Rutas de los Web Services
@@ -221,7 +253,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
             toast.show();
         }
 
-
+*/
     }
 
     /**

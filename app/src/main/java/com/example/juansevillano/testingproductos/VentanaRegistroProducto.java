@@ -12,7 +12,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +50,8 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
 
     public ArrayList<TipoProducto> list_tipo_producto;
     public ArrayList<Empresa> list_empresa;
+
+    public TextView Co;
 
     /**
      * @name private void onCreate( Bundle savedInstanceState)
@@ -104,12 +110,47 @@ public class VentanaRegistroProducto extends AppCompatActivity  {
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
+    //Variable Usada para devolver el codigo de barra escaneado.
+    public static String cod="";
 
+    /**
+     * @name private void onActivityResult(int requestCode, int resultCode, Intent intent)
+     * @description Para recuperar la información resultante de una segunda actividad.
+     * @return void
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        ActivityResultBus.getInstance().postQueue(
-                new ActivityResultEvent(requestCode, resultCode, data));
+
+        //super.onActivityResult(requestCode, resultCode, data);
+
+        //Se obtiene el resultado del proceso de scaneo y se parsea
+        System.out.println("Prueba 10");
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanningResult != null) {
+            System.out.println("Prueba 11");
+            //Quiere decir que se obtuvo resultado por lo tanto:
+            //Desplegamos en pantalla el contenido del código de barra scaneado
+            System.out.println(scanningResult.getContents());
+            if(scanningResult.getContents()!=null)
+            {
+                String scanContent = scanningResult.getContents();
+                System.out.println(scanContent.toString());
+                //Se Instancia el Campo de Texto para el contenido  del código de barra
+                cod=scanContent.toString();
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        scanContent.toString(), Toast.LENGTH_SHORT);
+                toast.show();
+                System.out.println("Prueba 12");
+
+            }
+
+        }else{
+            //Quiere decir que NO se obtuvo resultado
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "!No se ha recibido datos del escaneo¡", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
     }
 
     /**

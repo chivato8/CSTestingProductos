@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -558,7 +557,7 @@ public class CodigoBarraAdmin extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int id) {
                     //No Realizamos ninguna Acceion
                     finish();
-                    Intent intent = new Intent(CodigoBarraAdmin.this, VentanaOpcionesEscaner.class);
+                    Intent intent = new Intent(CodigoBarraAdmin.this, VentanaPrincipal.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
 
@@ -568,11 +567,9 @@ public class CodigoBarraAdmin extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int id) {
                     Toast.makeText(getBaseContext(), "Redireccionando al Menu de Elección de Entrada a la Aplicación....", Toast.LENGTH_SHORT).show();
                     //Esperamos 50 milisegundos
-                    SystemClock.sleep(500);
-
                     finish();
                     Intent intent = new Intent(CodigoBarraAdmin.this, VentanaRegistroProducto.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
             });

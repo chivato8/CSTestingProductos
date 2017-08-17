@@ -46,7 +46,7 @@ import static android.content.ContentValues.TAG;
 public class FinRegistroProducto extends Fragment {
 
     //Obtenemos el contenido del edittext del codigo de barra
-    private EditText codbarra;
+    private TextView codbarra;
     private String codigobarra;
     //Obtenemos el contenido del edittext del nombre del producto
     private EditText nomproducto;
@@ -235,7 +235,7 @@ public class FinRegistroProducto extends Fragment {
                         final VentanaRegistroProducto activity = ((VentanaRegistroProducto) getActivity());
 
                         //Obtenemos el contenido del edittext del codigo de barra
-                        codbarra = (EditText) activity.fragments.get(0).getView().findViewById(R.id.cbarra);
+                        codbarra = (TextView) activity.fragments.get(0).getView().findViewById(R.id.cbarra);
                         codigobarra = codbarra.getText().toString();
                         //Obtenemos el contenido del edittext del nombre del producto
                         nomproducto = (EditText) activity.fragments.get(0).getView().findViewById(R.id.nomproducto);

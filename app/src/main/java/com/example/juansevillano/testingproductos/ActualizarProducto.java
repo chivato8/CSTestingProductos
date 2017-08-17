@@ -548,7 +548,7 @@ public class ActualizarProducto extends Fragment implements AdapterView.OnItemSe
     {
         System.out.println("Prueba 11");
         //Se Instancia el Campo de Texto para el contenido  del código de barra
-        codbarra = (EditText)getActivity().findViewById(R.id.cbarraactualizar);
+        codbarra = (EditText) getActivity().findViewById(R.id.cbarraactualizar);
         //Se Instancia el Campo de Texto para el contenido  del nombre del producto
         nombreproducto= (EditText)getActivity().findViewById(R.id.nomproductoactualizar);
 
