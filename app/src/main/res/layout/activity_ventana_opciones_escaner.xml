@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.juansevillano.testingproductos.VentanaOpcionesEscaner">
+    tools:context="com.example.juansevillano.testingproductos.VentanaPrincipalInvitado">
 
     <ImageButton
         android:id="@+id/barra"

@@ -372,7 +372,7 @@ public class FinRegistroUsuario extends Fragment {
                                 //getView().setId(R.id.restablecer);
 
                                 //Redireccionamos la aplicacion a la venana principal
-                                Intent intent = new Intent(getActivity(), VentanaOpcionesEscaner.class);
+                                Intent intent = new Intent(getActivity(), VentanaPrincipalInvitado.class);
                                 startActivity(intent);
                                 getActivity().finish();
                             }
@@ -592,7 +592,7 @@ public class FinRegistroUsuario extends Fragment {
                                     //getView().setId(R.id.restablecer);
 
                                     //Redireccionamos la aplicacion a la venana principal
-                                    Intent intent = new Intent(getActivity(), VentanaOpcionesEscaner.class);
+                                    Intent intent = new Intent(getActivity(), VentanaPrincipalInvitado.class);
                                     startActivity(intent);
                                     getActivity().finish();
                                 }

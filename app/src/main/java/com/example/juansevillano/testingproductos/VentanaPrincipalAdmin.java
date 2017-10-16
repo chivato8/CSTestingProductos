@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -51,7 +50,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public class VentanaPrincipal extends AppCompatActivity
+public class VentanaPrincipalAdmin extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
     private ImageView photoImageView;
@@ -126,18 +125,95 @@ public class VentanaPrincipal extends AppCompatActivity
             }
         };
 
-        ImageButton cbarra = (ImageButton) findViewById(R.id.barra);
+        ImageView cbarra = (ImageView) findViewById(R.id.escanerimagen);
 
         cbarra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ListSong = new Intent(VentanaPrincipal.this, CodigoBarraAdmin.class);
+                Intent ListSong = new Intent(VentanaPrincipalAdmin.this,CodigoBarraAdmin.class);
                 ListSong.putExtra("id_asociado", id_asociado);
                 ListSong.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(ListSong);
                 finish();
             }
         });
+
+        ImageView ceditar = (ImageView) findViewById(R.id.editarimagen);
+
+        ceditar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ListSong = new Intent(VentanaPrincipalAdmin.this, VentanaEditarUsuarioAdmin.class);
+                ListSong.putExtra("id_asociado", id_asociado);
+                ListSong.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(ListSong);
+                finish();
+            }
+        });
+
+        ImageView cregistrar = (ImageView) findViewById(R.id.registrarproductoimagen);
+
+        cregistrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ListSong = new Intent(VentanaPrincipalAdmin.this, CamaraLector.class);
+                ListSong.putExtra("ventana", "RegistrarProducto");
+                ListSong.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(ListSong);
+                finish();
+            }
+        });
+
+        ImageView cpdf = (ImageView) findViewById(R.id.pdfimagen);
+
+        cpdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        DownloadFiles();
+                    }
+                }).start();
+            }
+        });
+
+
+        ImageView crecetas = (ImageView) findViewById(R.id.recetaimagen);
+
+        crecetas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse("http://buenoysin.es//");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
+        ImageView cinfo = (ImageView) findViewById(R.id.infoimagen);
+
+        cinfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ListSong = new Intent(VentanaPrincipalAdmin.this, InfoAlergenos.class);
+                ListSong.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(ListSong);
+                finish();
+            }
+        });
+
+        ImageView cbuscar = (ImageView) findViewById(R.id.buscarimagen);
+
+        cbuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ListSong = new Intent(VentanaPrincipalAdmin.this, CamaraLector.class);
+                ListSong.putExtra("ventana", "VentanaBuscarProducto");
+                ListSong.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(ListSong);
+                finish();
+            }
+        });
+
     }
 
     /**
@@ -237,9 +313,11 @@ public class VentanaPrincipal extends AppCompatActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } else if (id == R.id.registrar_producto) {
-            Intent intent = new Intent(this, VentanaRegistroProducto.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            Intent ListSong = new Intent(VentanaPrincipalAdmin.this, CamaraLector.class);
+            ListSong.putExtra("ventana", "RegistrarProducto");
+            ListSong.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(ListSong);
+            finish();
 
         } else if (id == R.id.info_alergenico) {
             new Thread(new Runnable() {
@@ -307,7 +385,7 @@ public class VentanaPrincipal extends AppCompatActivity
      * @return void
      */
     private void goLogInScreen() {
-        Intent intent = new Intent(this, EntrarCon.class);
+        Intent intent = new Intent(this, IniciarSesionCon.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -563,7 +641,7 @@ public class VentanaPrincipal extends AppCompatActivity
         protected void onPostExecute(String s) {
             //resultado.setText(s);
             super.onPostExecute(s);
-            Intent intent = new Intent(VentanaPrincipal.this, VentanaEditarUsuarioAdmin.class);
+            Intent intent = new Intent(VentanaPrincipalAdmin.this, VentanaEditarUsuarioAdmin.class);
             intent.putExtra("id_asociado", id_asociado);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

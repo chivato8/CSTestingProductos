@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
 
     <application
         android:allowBackup="true"
@@ -26,7 +29,7 @@
             android:name=".ComprobarSesion"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".EntrarCon"
+            android:name=".IniciarSesionCon"
             android:screenOrientation="portrait" />
         <activity
             android:name=".CodigoBarra"
@@ -35,8 +38,18 @@
             android:name=".CodigoBarraAdmin"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".VentanaOpcionesEscaner"
+            android:name=".VentanaPrincipalInvitado"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".InfoAlergenos"
+            android:label="Informacion de Alergenos"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".CamaraLector"
+            android:label="Escaneando Código de Barras"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".VentanaRegistroUsuario"
             android:label="Ventana Registro Usuarios"
@@ -68,10 +81,16 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".VentanaPrincipal"
+            android:name=".VentanaPrincipalAdmin"
             android:label="@string/title_activity_ventana_principal"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VentanaBuscarProducto"
+            android:label="Ventana Buscar Productos"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

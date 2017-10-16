@@ -246,9 +246,11 @@ public class FinActualizarProducto extends Fragment {
                         if (!codigobarra.equals("") && !nombreproducto.equals(""))
                         {
                             // Rutas de los Web Services
-                            final String DELETE = IP + "/Borrar_Producto_Ingrediente.php";
+                            /*final String DELETE = IP + "/Borrar_Producto_Ingrediente.php";
                             hiloconexion1 = new Borrar_Producto_Ingrediente();
-                            hiloconexion1.execute(DELETE, "1", id_producto.toString(),encriptado.md5().toString());
+                            hiloconexion1.execute(DELETE, "1", id_producto.toString(),encriptado.md5().toString());*/
+
+                            Insertar_Alergenicos();
                         }
                         //Si el edittext nombre y el edittex correo son vacios mostrarmos un mensaje u notificación advirtiendo
                         //que son campos obligatorios
@@ -282,7 +284,7 @@ public class FinActualizarProducto extends Fragment {
             }
         });
 
-        Button bt2 = (Button)getView().findViewById(R.id.restableceractualizarproducto);
+        /*Button bt2 = (Button)getView().findViewById(R.id.restableceractualizarproducto);
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -291,7 +293,7 @@ public class FinActualizarProducto extends Fragment {
                 activity.Restablecer();
 
             }
-        });
+        });*/
 
     }
 
@@ -961,7 +963,7 @@ public class FinActualizarProducto extends Fragment {
             //getView().setId(R.id.restablecer);
 
             //Redireccionamos la aplicacion a la venana principal
-            Intent intent = new Intent(getActivity(), VentanaPrincipal.class);
+            Intent intent = new Intent(getActivity(), VentanaPrincipalAdmin.class);
             startActivity(intent);
             getActivity().finish();
 

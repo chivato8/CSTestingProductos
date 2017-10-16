@@ -276,7 +276,7 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
                             //Esperamos 50 milisegundos
                             SystemClock.sleep(500);
                             finish();
-                            Intent intent = new Intent(VentanaRegistroUsuario.this, EntrarCon.class);
+                            Intent intent = new Intent(VentanaRegistroUsuario.this, IniciarSesionCon.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
 
@@ -317,7 +317,7 @@ public class VentanaRegistroUsuario extends AppCompatActivity  {
     {
 
         finish();
-        Intent intent = new Intent(this, VentanaOpcionesEscaner.class);
+        Intent intent = new Intent(this, VentanaPrincipalInvitado.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 

@@ -1,10 +1,10 @@
 package com.example.juansevillano.testingproductos;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,7 +69,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     String idproducto;
 
 
-    String codi="";
+    int pos=0;
 
 
     /**
@@ -107,6 +104,7 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
         View v = inflater.inflate(R.layout.activity_registro_producto, container, false);
         spinnertipo = (Spinner) v.findViewById(R.id.spinnertipoproducto);
         spinnerempresa = (Spinner) v.findViewById(R.id.spinnerempresa);
+        codbarra=(EditText)v.findViewById(R.id.cbarra);
 
         ((VentanaRegistroProducto)getActivity()).list_tipo_producto = new ArrayList<TipoProducto>();
         ((VentanaRegistroProducto)getActivity()).list_empresa = new ArrayList<Empresa>();
@@ -125,24 +123,18 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
      */
     public void onResume()
     {
-        super.onResume();
-        Toast.makeText(getActivity(), "Proceso 1/16", Toast.LENGTH_SHORT).show();
-
-        VentanaRegistroProducto ventanaRegistroProducto= new VentanaRegistroProducto();
-        String co=ventanaRegistroProducto.cod;
-
-        if(co.toString()!="")
-        {
-            Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                    "DOSS "+co.toString(), Toast.LENGTH_SHORT);
-            toast.show();
-            codbarra=(EditText)getActivity().findViewById(R.id.cbarra);
-            codbarra.setText(co.toString());
-
-            final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codbarra.getText().toString()+"&clave="+encriptado.md5();
-            hiloconexion1 = new Obtener_Producto_CB();
-            hiloconexion1.execute(GET,"1");
+        // Definimos un objeto del activity VentanaActualizarProducto
+        final VentanaRegistroProducto activity= ((VentanaRegistroProducto) getActivity());
+        ViewPager viewPager= activity.viewPager;
+        if(viewPager.getCurrentItem() == pos){
+            pos++;
+            Toast.makeText(getActivity(), "Proceso "+pos+"/16", Toast.LENGTH_SHORT).show();
+            pos--;
+            //Your code here. Executed when fragment is seen by user.
         }
+
+        super.onResume();
+
     }
 
 
@@ -155,106 +147,24 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.getView().findViewById(R.id.scaner).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        final VentanaRegistroProducto ventanaRegistroProducto=((VentanaRegistroProducto) getActivity());
 
-                System.out.println("Prueba 1");
-                //Se instancia un objeto de la clase IntentIntegrator
-                IntentIntegrator scanIntegrator = new IntentIntegrator(getActivity());
-                //Se procede con el proceso de scaneo
-                scanIntegrator.initiateScan();
 
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                        "BOTONNNN", Toast.LENGTH_SHORT);
-                toast.show();
+        if(ventanaRegistroProducto.codigobarra!=""||ventanaRegistroProducto.codigobarra!=null)
+        {
 
-            }
-        });
+            codbarra.setText(ventanaRegistroProducto.codigobarra.toString());
+
+            final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codbarra.getText().toString()+"&clave="+encriptado.md5();
+            hiloconexion1 = new Obtener_Producto_CB();
+            hiloconexion1.execute(GET,"1");
+        }
 
         new ObtenerListaProducto().execute();
 
         new ObtenerListaEmpresa().execute();
-
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        ActivityResultBus.getInstance().register(mActivityResultSubscriber);
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        ActivityResultBus.getInstance().unregister(mActivityResultSubscriber);
-    }
-
-    private Object mActivityResultSubscriber = new Object() {
-        @Subscribe
-        public void onActivityResultReceived(ActivityResultEvent event) {
-            System.out.println("Prueba 6");
-            int requestCode = event.getRequestCode();
-            System.out.println(event.getRequestCode());
-            int resultCode = event.getResultCode();
-            Intent data = event.getData();
-            onActivityResult(requestCode, resultCode, data);
-        }
-    };
-
-
-    /**
-     * @name private void onActivityResult(int requestCode, int resultCode, Intent intent)
-     * @description Para recuperar la información resultante de una segunda actividad.
-     * @return void
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        //super.onActivityResult(requestCode, resultCode, intent);
-
-        Toast toast = Toast.makeText(this.getActivity().getApplicationContext(),
-                "HIJOOOO", Toast.LENGTH_SHORT);
-        toast.show();
-/*
-        //Se obtiene el resultado del proceso de scaneo y se parsea
-        System.out.println("Prueba 10");
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanningResult != null) {
-            System.out.println("Prueba 11");
-            //Quiere decir que se obtuvo resultado por lo tanto:
-            //Desplegamos en pantalla el contenido del código de barra scaneado
-            System.out.println(scanningResult.getContents());
-            if(scanningResult.getContents()!=null)
-            {
-                String scanContent = scanningResult.getContents();
-                System.out.println(scanContent.toString());
-                //Se Instancia el Campo de Texto para el contenido  del código de barra
-                codbarra= (TextView)getActivity().findViewById(R.id.cbarra);
-                codbarra.setText(scanContent.toString());
-                System.out.println(codbarra.getText().toString());
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                        scanContent.toString(), Toast.LENGTH_SHORT);
-                toast.show();
-                System.out.println("Prueba 12");
-
-                // Rutas de los Web Services
-                final String GET = IP + "/Obtener_Producto_CB.php?codigo_barra="+codbarra.getText().toString()+"&clave="+encriptado.md5();
-                hiloconexion1 = new Obtener_Producto_CB();
-                hiloconexion1.execute(GET,"1");
-
-            }
-
-        }else{
-            //Quiere decir que NO se obtuvo resultado
-            Toast toast = Toast.makeText(this.getActivity().getApplicationContext(),
-                    "!No se ha recibido datos del escaneo¡", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
-*/
-    }
 
     /**
      * Clase que se encarga de realizar la ejecución de la consulta sql mediente un servicio web alojado en un hosting
@@ -637,4 +547,5 @@ public class RegistroProducto extends Fragment implements AdapterView.OnItemSele
 
 
     }
+
 }

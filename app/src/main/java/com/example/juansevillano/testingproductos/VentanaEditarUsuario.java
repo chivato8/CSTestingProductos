@@ -325,7 +325,7 @@ public class VentanaEditarUsuario extends AppCompatActivity  {
     public void Salir()
     {
         finish();
-        Intent intent = new Intent(this, VentanaOpcionesEscaner.class);
+        Intent intent = new Intent(this, VentanaPrincipalInvitado.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

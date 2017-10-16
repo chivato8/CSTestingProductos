@@ -26,7 +26,7 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-public class VentanaOpcionesEscaner extends AppCompatActivity implements View.OnClickListener {
+public class VentanaPrincipalInvitado extends AppCompatActivity implements View.OnClickListener {
 
     //Usamos la Clase BDUsuario para acceder a los datos de la Base de Datos.
     //BDUsuario bdUsuario=new BDUsuario(this,"BDUsuario",null,1);
@@ -114,7 +114,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 createRadioListDialogBorrar();
                 return true;
             case R.id.irventanausuarios:
-                Intent intentventanausuarios = new Intent (this,EntrarCon.class);
+                Intent intentventanausuarios = new Intent (this,IniciarSesionCon.class);
                 startActivity(intentventanausuarios);
                 finish();
                 return true;
@@ -181,7 +181,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 {
                     System.out.println("Prueba: "+elegido);
                     //Accedemos a la Ventana Editar Usuario.
-                    Intent ListSong = new Intent (VentanaOpcionesEscaner.this, CodigoBarra.class);
+                    Intent ListSong = new Intent (VentanaPrincipalInvitado.this, CodigoBarra.class);
                     ListSong.putExtra("elegido", elegido);
                     startActivity(ListSong);
                     finish();
@@ -242,7 +242,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 if(!elegido.equals("-1"))
                 {
                     //Accedemos a la Ventana Editar Usuario.
-                    Intent ListSong = new Intent (VentanaOpcionesEscaner.this, VentanaEditarUsuario.class);
+                    Intent ListSong = new Intent (VentanaPrincipalInvitado.this, VentanaEditarUsuario.class);
                     ListSong.putExtra("elegido", elegido);
                     startActivity(ListSong);
                     finish();
@@ -304,7 +304,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 {
 
                     //Pedimos confirmación si desea eliminar el usuario definitivamente de la aplicación.
-                    android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(VentanaOpcionesEscaner.this);
+                    android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(VentanaPrincipalInvitado.this);
 
                     alertDialog.setMessage("¿Deseas Eliminar al Usuario Seleccionado definitivamente de la Aplicación?");
                     alertDialog.setTitle("Importante");
@@ -320,7 +320,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                         public void onClick(DialogInterface dialog, int id) {
 
                             //Abrimos la Base de datos "BDUsuarioIngrediente" en modo escritura.
-                            BDUsuario bdUsuariosIngrediente=new BDUsuario(VentanaOpcionesEscaner.this,"BDUsuarioIngrediente",null,1);
+                            BDUsuario bdUsuariosIngrediente=new BDUsuario(VentanaPrincipalInvitado.this,"BDUsuarioIngrediente",null,1);
 
                             SQLiteDatabase dbUI = bdUsuariosIngrediente.getWritableDatabase();
                             //Sentenica SQL para borrar todos los Usuario_Ingredientes que existan.
@@ -328,7 +328,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
 
                             //Borramos al Usuario
                             //Abrimos la Base de datos "BDUsuario" en modo escritura.
-                            BDUsuario bdUsuarios=new BDUsuario(VentanaOpcionesEscaner.this,"BDUsuario",null,1);
+                            BDUsuario bdUsuarios=new BDUsuario(VentanaPrincipalInvitado.this,"BDUsuario",null,1);
 
                             SQLiteDatabase db = bdUsuarios.getWritableDatabase();
                             //Sentencia SQL para borrar al usuario
@@ -406,7 +406,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        Intent intent = new Intent(VentanaOpcionesEscaner.this, VentanaRegistroUsuario.class);
+                        Intent intent = new Intent(VentanaPrincipalInvitado.this, VentanaRegistroUsuario.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     }
@@ -542,7 +542,7 @@ public class VentanaOpcionesEscaner extends AppCompatActivity implements View.On
     {
 
         finish();
-        Intent intent = new Intent(this, EntrarCon.class);
+        Intent intent = new Intent(this, IniciarSesionCon.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

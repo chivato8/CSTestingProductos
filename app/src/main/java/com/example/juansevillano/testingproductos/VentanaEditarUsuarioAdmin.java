@@ -266,7 +266,7 @@ public class VentanaEditarUsuarioAdmin extends AppCompatActivity  {
     {
 
         finish();
-        Intent intent = new Intent(this, VentanaPrincipal.class);
+        Intent intent = new Intent(this, VentanaPrincipalAdmin.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

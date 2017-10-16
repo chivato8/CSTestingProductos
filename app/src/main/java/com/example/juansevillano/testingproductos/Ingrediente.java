@@ -10,20 +10,23 @@ public class Ingrediente {
     private String ingrediente;
     private String tipo_ingrediente;
     private boolean estado;
+    private String verificado;
     private String ruta_imagen;
 
     Ingrediente()
     {
         this.id_ingrediente="";
         this.ingrediente="";
+        this.verificado="";
         this.ruta_imagen="";
     }
 
-    Ingrediente(String id_ingrediente, String ingrediente, String tipo_ingrediente, String ruta_imagen)
+    Ingrediente(String id_ingrediente, String ingrediente, String tipo_ingrediente, String verificado, String ruta_imagen)
     {
         this.id_ingrediente=id_ingrediente;
         this.ingrediente=ingrediente;
         this.tipo_ingrediente=tipo_ingrediente;
+        this.verificado=verificado;
         this.ruta_imagen=ruta_imagen;
     }
 
@@ -59,6 +62,8 @@ public class Ingrediente {
     public String gettipo_ingrediente(){return tipo_ingrediente;}
 
     public void settipo_ingrediente(String tipo_ingrediente){this.tipo_ingrediente=tipo_ingrediente;}
+
+    public String getverificado(){return verificado;}
 
     public String getruta_imagen(){return ruta_imagen;}
 

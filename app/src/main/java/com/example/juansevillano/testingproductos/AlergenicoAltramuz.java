@@ -256,7 +256,7 @@ public class AlergenicoAltramuz extends Fragment{
                 // IP de mi Url
                 String IP = "http://tfgalimentos.16mb.com";
                 // Rutas de los Web Services
-                String GET = IP + "/obtener_trastorno_ingrediente.php?id_trastorno=1&clave="+encriptado.md5();
+                String GET = IP + "/obtener_trastorno_ingrediente.php?id_trastorno=1&clave=" + encriptado.md5();
                 hiloconexion = new obtener_trastorno_ingrediente();
                 hiloconexion.execute(GET, "1");   // Parámetros que recibe doInBackground
             }
@@ -289,7 +289,7 @@ public class AlergenicoAltramuz extends Fragment{
                     }
                     else
                     {
-                        adaptador = new Adaptador(this.getActivity(), ((VentanaActualizarProducto)getActivity()).list_ingredientes_altramuz);
+                        adaptador = new Adaptador(this.getActivity(), ((VentanaActualizarProducto) getActivity()).list_ingredientes_altramuz);
                     }
                 }
             }
@@ -355,11 +355,11 @@ public class AlergenicoAltramuz extends Fragment{
                             else
                             {
                                 //En caso de que la posicion seleccionada gracias a "arg2" sea true que lo cambie a false
-                                if (((VentanaActualizarProducto)getActivity()).list_ingredientes_altramuz.get(arg2).isChekeado()) {
-                                    ((VentanaActualizarProducto)getActivity()).list_ingredientes_altramuz.get(arg2).setChekeado(false);
+                                if (((VentanaActualizarProducto) getActivity()).list_ingredientes_altramuz.get(arg2).isChekeado()) {
+                                    ((VentanaActualizarProducto) getActivity()).list_ingredientes_altramuz.get(arg2).setChekeado(false);
                                 } else {
                                     //aqui al contrario que la anterior, que lo pase a true.
-                                    ((VentanaActualizarProducto)getActivity()).list_ingredientes_altramuz.get(arg2).setChekeado(true);
+                                    ((VentanaActualizarProducto) getActivity()).list_ingredientes_altramuz.get(arg2).setChekeado(true);
                                 }
                             }
                         }
@@ -1026,25 +1026,23 @@ public class AlergenicoAltramuz extends Fragment{
                                         marcador=false;
                                 }
                             } else {
-                                 Boolean marcador=false;
+                                Boolean marcador = false;
 
                                 for (int j = 0; j < pruebaJSON.length(); j++) {
-                                    for(int i=0;i<id_ingrediente.length;i++)
-                                    {
+                                    for (int i = 0; i < id_ingrediente.length; i++) {
                                         if (id_ingrediente[i].equals(pruebaJSON.getJSONObject(j).getString("id_ingrediente"))) {
                                             ((VentanaActualizarProducto) getActivity()).list_ingredientes_altramuz.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
                                                     pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
                                                     true));
-                                            marcador=true;
+                                            marcador = true;
                                         }
                                     }
-                                        if(marcador==false)
-                                        {
-                                            ((VentanaActualizarProducto) getActivity()).list_ingredientes_altramuz.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
-                                                    pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
-                                                    false));
-                                        }
-                                        marcador=false;
+                                    if (marcador == false) {
+                                        ((VentanaActualizarProducto) getActivity()).list_ingredientes_altramuz.add(new Ingrediente(pruebaJSON.getJSONObject(j).getString("id_ingrediente"),
+                                                pruebaJSON.getJSONObject(j).getString("nombre_ingrediente"),
+                                                false));
+                                    }
+                                    marcador = false;
                                 }
                             }
 
@@ -1159,9 +1157,8 @@ public class AlergenicoAltramuz extends Fragment{
                         else
                         {
                             //Recorremos el objeto anterior mostrando los ingredientes uno a uno
-                            for(int i=0;i<pruebaJSON.length();i++)
-                            {
-                                ((VentanaActualizarProducto)getActivity()).list_ingredientes_altramuz.add(new Ingrediente(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
+                            for (int i = 0; i < pruebaJSON.length(); i++) {
+                                ((VentanaActualizarProducto) getActivity()).list_ingredientes_altramuz.add(new Ingrediente(pruebaJSON.getJSONObject(i).getString("id_ingrediente"),
                                         pruebaJSON.getJSONObject(i).getString("nombre_ingrediente"),
                                         false));
                             }

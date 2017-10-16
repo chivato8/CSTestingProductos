@@ -93,7 +93,7 @@ public class ComprobarSesion extends AppCompatActivity implements GoogleApiClien
      * @return void
      */
     private void goLogInScreen() {
-        Intent intent = new Intent(this, EntrarCon.class);
+        Intent intent = new Intent(this, IniciarSesionCon.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -124,7 +124,7 @@ public class ComprobarSesion extends AppCompatActivity implements GoogleApiClien
      * @return void
      */
     public void revoke(View view) {
-        Intent intent = new Intent(this, VentanaPrincipal.class);
+        Intent intent = new Intent(this, VentanaPrincipalAdmin.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

@@ -115,7 +115,7 @@ public class EditarUsuario extends Fragment{
         cor = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.editcorreo);
         tel = (EditText)activity2.fragments.get(0).getView().findViewById(R.id.edittelefono);
 
-        //final VentanaPrincipal ventanaPrincipal = ((VentanaPrincipal) getActivity());
+        //final VentanaPrincipalAdmin ventanaPrincipal = ((VentanaPrincipalAdmin) getActivity());
         //String id_asociado=ventanaPrincipal.id_asociado;
         id_asociado=activity2.id_asociado;
 

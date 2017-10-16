@@ -65,6 +65,9 @@ public class ItemProductoAdapter extends BaseAdapter {
         TextView tipo = (TextView) vi.findViewById(R.id.texto_trastorno);
         tipo.setText(item.gettipo_ingrediente());
 
+        TextView veracidad = (TextView) vi.findViewById(R.id.texto_verificado);
+        veracidad.setText(item.getverificado());
+
         return vi;
     }
 }

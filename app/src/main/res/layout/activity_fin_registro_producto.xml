@@ -65,7 +65,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Usted debe ser consciente que el registro de un producto falseando los datos puede afectar a la salud de las presonas que utilizen dicha aplicación. Si deseas proceder con el registro de un producto debe hacer clic en ACEPTAR si deseas restablecer el formulario al completo debe hacer clic en RESTABLECER"
+                android:text="Usted debe ser consciente que el registro de un producto falseando los datos puede afectar a la salud de las presonas que utilicen dicha aplicación. Si deseas proceder con el registro de un producto debe hacer clic en ACEPTAR si deseas restablecer el formulario al completo debe hacer clic en RESTABLECER"
                 android:textAlignment="center"
                 android:textSize="14dp" />
 

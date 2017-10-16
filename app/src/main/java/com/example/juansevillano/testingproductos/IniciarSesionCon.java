@@ -27,7 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class IniciarSesionCon extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     ImageView imageViewInvitado;
 
@@ -195,7 +195,7 @@ public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnCo
      * @return void
      */
     private void goMainScreen() {
-        Intent intent = new Intent(this, VentanaPrincipal.class);
+        Intent intent = new Intent(this, VentanaPrincipalAdmin.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -250,7 +250,7 @@ public class EntrarCon extends AppCompatActivity implements GoogleApiClient.OnCo
                 db.close();
 
                 //Accedemos a la Aplición para la Eleccion del Modo de Escaneo
-                Intent ListSong = new Intent(getApplicationContext(), VentanaOpcionesEscaner.class);
+                Intent ListSong = new Intent(getApplicationContext(), VentanaPrincipalInvitado.class);
                 startActivity(ListSong);
                 finish();
 

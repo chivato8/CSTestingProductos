@@ -845,7 +845,7 @@ public class FinEditarUsuarioAdmin extends Fragment {
             //getView().setId(R.id.restablecer);
 
             //Redireccionamos la aplicacion a la venana principal
-            Intent intent = new Intent(getActivity(), VentanaPrincipal.class);
+            Intent intent = new Intent(getActivity(), VentanaPrincipalAdmin.class);
             startActivity(intent);
             getActivity().finish();
 

@@ -18,10 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-import com.squareup.otto.Subscribe;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,10 +59,13 @@ public class CodigoBarraAdmin extends AppCompatActivity {
     String nombre_producto;
 
     //Codigo de barra del producto
-    String codigobarra;
+    static String codigobarra="";
 
     //Ingredientes que forman parte de un producto
     String [] id_ingrediente_producto;
+
+    //Numero de usuarios que ha verificado el producto
+    String [] producto_verificado;
 
     //Ingredientes que afectan a la dieta del usuario
     String[] items_ingredientes;
@@ -104,13 +103,14 @@ public class CodigoBarraAdmin extends AppCompatActivity {
     //Si no existe el producto
     static Boolean NoExisteProducto=false;
 
-    static int num=0;
+    int num=0;
+    int num1=0;
 
     //Lista de Ingredientes
     ArrayList<Ingrediente> ingrediente;
 
     //Id_Asociado a un usuario
-    String id_asociado;
+    static String id_asociado="";
 
     //ID_Usuario elegido
     private String id_usuario;
@@ -164,118 +164,67 @@ public class CodigoBarraAdmin extends AppCompatActivity {
         //Se Insta el Campo de la imagen para el conteido si es apto o no.
         imagenveracidad= (ImageView)findViewById(R.id.imageAptoAdmin);
 
-        //Se instancia un objeto de la clase IntentIntegrator
-        IntentIntegrator scanIntegrator = new IntentIntegrator(this);
-        //Se procede con el proceso de scaneo
-        scanIntegrator.initiateScan();
+        if(id_asociado.equals(""))
+        {
+            //ID Usuario Elegido.
+            id_asociado=getIntent().getStringExtra("id_asociado");
+            System.out.println("------------ID ASOCIADO: "+id_asociado);
 
-        //lstListaEscaner.setAdapter(adapter);
+            Intent ListSong = new Intent(CodigoBarraAdmin.this, CamaraLector.class);
+            ListSong.putExtra("ventana", "CodigoBarraAdmin");
+            ListSong.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(ListSong);
+            finish();
 
-        //ID Usuario Elegido.
-        id_asociado=getIntent().getStringExtra("id_asociado");
+        }
+        else
+        {
+            codigobarra = getIntent().getStringExtra("codigobarra");
+
+            if(codigobarra==""||codigobarra==null)
+            {
+                Intent ListSong = new Intent(CodigoBarraAdmin.this, CamaraLector.class);
+                ListSong.putExtra("ventana", "CodigoBarraAdmin");
+                ListSong.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(ListSong);
+                finish();
+            }
+            else
+            {
+                //Codigo de Barra Escaneado.
+                codigobarra = getIntent().getStringExtra("codigobarra");
+                codbarra.setText("C. Barras: " + codigobarra.toString());
+
+                System.out.println(codigobarra);
+
+                textoveracidad.setText("SI es APTO para su dieta.");
+                textoveracidad.setTextColor(textoveracidad.getContext().getResources().getColor(R.color.VVIVO));
+
+                ingrediente = new ArrayList<Ingrediente>();
+
+                //Se crea un objetio de tipo ListView
+                ListView lstListaEscaner = (ListView) findViewById(R.id.lstListaEscanerAdmin);
+
+                adapter = new ItemProductoAdapter(this, ingrediente);
+
+                lstListaEscaner.setAdapter(adapter);
+
+                String GET = IP + "/ObtenerIngredientes_Usuario_Ingrediente.php?id_asociado=" + id_asociado.toString() + "&clave=" + encriptado.md5();
+                hiloconexion6 = new ObtenerIngredientes_Usuario_Ingrediente();
+                hiloconexion6.execute(GET, "1");
+            }
+        }
 
         buttonescnaer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Se instancia un objeto de la clase IntentIntegrator
-                IntentIntegrator scanIntegrator = new IntentIntegrator(CodigoBarraAdmin.this);
-                //Se procede con el proceso de scaneo
-                scanIntegrator.initiateScan();
-            }
-        });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        ActivityResultBus.getInstance().register(mActivityResultSubscriber);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        ActivityResultBus.getInstance().unregister(mActivityResultSubscriber);
-    }
-
-    private Object mActivityResultSubscriber = new Object() {
-        @Subscribe
-        public void onActivityResultReceived(ActivityResultEvent event) {
-            System.out.println("Prueba 6");
-            int requestCode = event.getRequestCode();
-            System.out.println(event.getRequestCode());
-            int resultCode = event.getResultCode();
-            Intent data = event.getData();
-            onActivityResult(requestCode, resultCode, data);
-        }
-    };
-
-    /**
-     * @name private void onActivityResult(int requestCode, int resultCode, Intent intent)
-     * @description Para recuperar la información resultante de una segunda actividad.
-     * @return void
-     */
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        textoveracidad.setText("SI es APTO para su dieta.");
-        textoveracidad.setTextColor(textoveracidad.getContext().getResources().getColor(R.color.VVIVO));
-
-        ingrediente = new ArrayList<Ingrediente>();
-
-        //Se crea un objetio de tipo ListView
-        ListView lstListaEscaner = (ListView) findViewById(R.id.lstListaEscanerAdmin);
-
-        adapter = new ItemProductoAdapter(this, ingrediente);
-
-        lstListaEscaner.setAdapter(adapter);
-
-        //Se obtiene el resultado del proceso de scaneo y se parsea
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-
-        if (scanningResult != null) {
-            System.out.println("Prueba 11");
-            //Quiere decir que se obtuvo resultado por lo tanto:
-            //Desplegamos en pantalla el contenido del código de barra scaneado
-            System.out.println(scanningResult.getContents());
-            if(scanningResult.getContents()!=null) {
-                //Quiere decir que se obtuvo resultado pro lo tanto:
-                //Desplegamos en pantalla el contenido del código de barra scaneado
-                String scanContent = scanningResult.getContents();
-                codbarra.setText("C. Barras: " + scanContent.toString());
-                codigobarra=scanContent.toString();
-
-                System.out.println("Prueba:  "+id_asociado);
-
-                String GET = IP + "/ObtenerIngredientes_Usuario_Ingrediente.php?id_asociado="+id_asociado.toString()+"&clave="+encriptado.md5();
-                hiloconexion6 = new ObtenerIngredientes_Usuario_Ingrediente();
-                hiloconexion6.execute(GET,"1");
-
-
-                //////////////////////////////////////
-
-                System.out.println("Prueba 12");
-
-
-                ////////////////////////////
-            }
-            else
-            {
-                //Quiere decir que NO se obtuvo resultado
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "¡No se ha recibido datos del scaneo!", Toast.LENGTH_SHORT);
-                toast.show();
-                Intent ListSong = new Intent(getApplicationContext(), VentanaPrincipal.class);
+                Intent ListSong = new Intent(CodigoBarraAdmin.this, CamaraLector.class);
+                ListSong.putExtra("ventana", "CodigoBarraAdmin");
+                ListSong.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(ListSong);
                 finish();
             }
-
-        }else{
-            //Quiere decir que NO se obtuvo resultado
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "¡No se ha recibido datos del scaneo!", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
+        });
     }
 
     /**
@@ -344,11 +293,9 @@ public class CodigoBarraAdmin extends AppCompatActivity {
 
                         //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
                         String resultJSON = objetoJSON.getString("estado");
-                        System.out.println("Prueba 1 " + resultJSON.toString());
 
                         if (resultJSON.equals("1")){      // Ya existe el usuario por lo que no lo volvemos a crear.
                             devuelve = "Si hay Ingrediente";
-                            System.out.println("Prueba 2");
                             //Obtenemos los ingrediente que vamos a mostrar en la aplicación
                             JSONArray pruebaJSON = objetoJSON.getJSONArray("UsuarioIngrediente");
 
@@ -468,7 +415,6 @@ public class CodigoBarraAdmin extends AppCompatActivity {
 
                         //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
                         String resultJSON = objetoJSON.getString("estado");
-                        System.out.println("Prueba 1: " + resultJSON);
 
                         if (resultJSON.equals("1")) {      // hay un producto que acabamos de insertar
                             devuelve = "Si hay Producto Registrado";
@@ -543,6 +489,7 @@ public class CodigoBarraAdmin extends AppCompatActivity {
             id_ingrediente_producto=null;
             items_ingredientes=null;
             trastornos_ingrediente=null;
+            producto_verificado=null;
             textoveracidad.setText("");
             imagenveracidad.setVisibility(View.INVISIBLE);
             producto.setText("Nombre del Producto: ");
@@ -557,7 +504,7 @@ public class CodigoBarraAdmin extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int id) {
                     //No Realizamos ninguna Acceion
                     finish();
-                    Intent intent = new Intent(CodigoBarraAdmin.this, VentanaPrincipal.class);
+                    Intent intent = new Intent(CodigoBarraAdmin.this, VentanaPrincipalAdmin.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
 
@@ -569,7 +516,8 @@ public class CodigoBarraAdmin extends AppCompatActivity {
                     //Esperamos 50 milisegundos
                     finish();
                     Intent intent = new Intent(CodigoBarraAdmin.this, VentanaRegistroProducto.class);
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("codigobarra", codigobarra);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
             });
@@ -631,7 +579,6 @@ public class CodigoBarraAdmin extends AppCompatActivity {
 
                         //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
                         String resultJSON = objetoJSON.getString("estado");
-                        System.out.println("Prueba 1 " + resultJSON);
 
                         if (resultJSON.equals("1")) {      // hay un producto que acabamos de insertar
 
@@ -639,14 +586,14 @@ public class CodigoBarraAdmin extends AppCompatActivity {
                             JSONArray pruebaJSON = objetoJSON.getJSONArray("ProductoIngrediente");
 
                             id_ingrediente_producto= new String[pruebaJSON.length()];
+                            producto_verificado= new String[pruebaJSON.length()];
 
                             for(int i=0;i<pruebaJSON.length();i++)
                             {
                                 //Obtenemos el id del producto que acabamos de insertar
                                 id_ingrediente_producto[i] = pruebaJSON.getJSONObject(i).getString("id_ingrediente");
+                                producto_verificado[i] = "Verificado por: " +pruebaJSON.getJSONObject(i).getString("verificado")+" Usuario";
                             }
-
-                            System.out.println("TAMAÑO: "+id_ingrediente_producto.length);
 
                             ObtenerTrastornoIngrediente(id_ingrediente_producto);
 
@@ -700,6 +647,8 @@ public class CodigoBarraAdmin extends AppCompatActivity {
      */
     private void ObtenerTrastornoIngrediente(String[] id_ingrediente_producto)
     {
+        num=0;
+
         trastornos_ingrediente= new String[id_ingrediente_producto.length];
 
         for(int i=0;i<id_ingrediente_producto.length;i++)
@@ -711,8 +660,6 @@ public class CodigoBarraAdmin extends AppCompatActivity {
             hiloconexion5.execute(GET, "1");
         }
 
-        Comparar(id_ingrediente_producto);
-
     }
 
     /**
@@ -723,7 +670,6 @@ public class CodigoBarraAdmin extends AppCompatActivity {
     private void Comparar(String[] id_ingrediente_producto)
     {
 
-        this.num=0;
 
         for(int i=0;i<id_ingrediente_producto.length;i++)
         {
@@ -743,6 +689,7 @@ public class CodigoBarraAdmin extends AppCompatActivity {
                     j=items_ingredientes.length;
                 }
             }
+            num=i+1;
 
             if(existe.equals(false))
             {
@@ -832,7 +779,6 @@ public class CodigoBarraAdmin extends AppCompatActivity {
 
                         //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
                         String resultJSON = objetoJSON.getString("estado");
-                        System.out.println("Prueba 1 " + resultJSON);
 
                         if (resultJSON.equals("1")) {      // hay un producto que acabamos de insertar
 
@@ -843,14 +789,12 @@ public class CodigoBarraAdmin extends AppCompatActivity {
                             String id_ingrediente;
                             //Obtenemos el id del producto que acabamos de insertar
 
-                                System.out.println("PRUEBA 2: "+existe);
-                                System.out.println("PRUEBA");
-                                id_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("id_ingrediente");
-                                nombre_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("nombre_ingrediente");
+                            id_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("id_ingrediente");
+                            nombre_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("nombre_ingrediente");
 
-                                ingrediente.add(new Ingrediente(id_ingrediente,nombre_ingrediente, trastornos_ingrediente[Integer.valueOf(params[2])],
-                                        "drawable/ic_verificado_x"));
-                                num++;
+                            ingrediente.add(new Ingrediente(id_ingrediente,nombre_ingrediente, trastornos_ingrediente[Integer.valueOf(params[2])],
+                                    producto_verificado[num1],"drawable/ic_verificado_x"));
+                            num1++;
 
 
                         } else {
@@ -947,7 +891,6 @@ public class CodigoBarraAdmin extends AppCompatActivity {
 
                         //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
                         String resultJSON = objetoJSON.getString("estado");
-                        System.out.println("Prueba 1 " + resultJSON);
 
                         if (resultJSON.equals("1")) {      // hay un producto que acabamos de insertar
 
@@ -957,13 +900,12 @@ public class CodigoBarraAdmin extends AppCompatActivity {
                             String nombre_ingrediente;
                             String id_ingrediente;
                             //Obtenemos el id del producto que acabamos de insertar
-                            System.out.println("PRUEBA 2: "+existe);
-                                System.out.println("prueba");
-                                id_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("id_ingrediente");
-                                nombre_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("nombre_ingrediente");
-                                ingrediente.add(new Ingrediente(id_ingrediente,nombre_ingrediente, trastornos_ingrediente[Integer.valueOf(params[2])],
-                                        "drawable/ic_verificado_v"));
-                                num++;
+
+                            id_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("id_ingrediente");
+                            nombre_ingrediente = objetoJSON.getJSONObject("Ingrediente").getString("nombre_ingrediente");
+                            ingrediente.add(new Ingrediente(id_ingrediente,nombre_ingrediente, trastornos_ingrediente[Integer.valueOf(params[2])],
+                                    producto_verificado[num1],"drawable/ic_verificado_v"));
+                            num1++;
 
 
                         } else {
@@ -1060,7 +1002,6 @@ public class CodigoBarraAdmin extends AppCompatActivity {
 
                         //Obtenemos el estado que es el nombre del campo en el JSON donde se asigna si tiene valor o no el archivo JSON
                         String resultJSON = objetoJSON.getString("estado");
-                        System.out.println("Prueba 1 " + resultJSON);
 
                         if (resultJSON.equals("1")) {      // hay un producto que acabamos de insertar
 
@@ -1069,6 +1010,12 @@ public class CodigoBarraAdmin extends AppCompatActivity {
                                 num++;
 
                             }
+
+                        if(num==producto_verificado.length)
+                        {
+                            num=0;
+                            Comparar(id_ingrediente_producto);
+                        }
 
                             System.out.println("TAMAÑO: "+id_ingrediente_producto.length);
 
@@ -1134,10 +1081,13 @@ public class CodigoBarraAdmin extends AppCompatActivity {
     public void Salir()
     {
 
+        codigobarra="";
+        id_asociado="";
         finish();
-        Intent intent = new Intent(this, VentanaPrincipal.class);
+        Intent intent = new Intent(this, VentanaPrincipalAdmin.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
     }
+
 }
